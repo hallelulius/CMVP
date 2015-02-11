@@ -17,7 +17,10 @@ namespace CMVP
             System.Console.ReadLine();
 
             cout("C++ style");
+            System.Console.WriteLine("MattiasTest");
+            new ImageProcessing();
             System.Console.ReadLine();
+    
         }
 
         public static void cout(String str){
