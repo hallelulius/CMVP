@@ -4,12 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CMVP
 {
     class Program
     {
         public static void Main()
+        {
+            mainGUI mainFrame = new mainGUI();
+            Application.Run(mainFrame);
+        }
+        
+        /**
+        public static void old()
         {
             System.Console.WriteLine("Hello World");
             System.Console.Out.WriteLine("Hej Viktor");
@@ -18,7 +26,6 @@ namespace CMVP
             counter(10);
             System.Console.ReadLine();
         }
-
         public static void cout(String str){
             System.Console.WriteLine(str);
         }
@@ -29,6 +36,7 @@ namespace CMVP
                 System.Console.WriteLine(j);
             }
         }
+         */
         
     }
 }
