@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMVP
 {
-    class test
+    class Program
     {
         public static void Main()
         {
