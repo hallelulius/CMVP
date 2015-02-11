@@ -15,6 +15,13 @@ namespace CMVP
             System.Console.ReadLine();
             System.Console.Out.WriteLine("Hej Viktor");
             System.Console.ReadLine();
+
+            cout("C++ style");
+            System.Console.ReadLine();
+        }
+
+        public static void cout(String str){
+            System.Console.WriteLine(str);
         }
     }
 }
