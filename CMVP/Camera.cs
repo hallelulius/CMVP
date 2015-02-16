@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 
+
 using AForge;
 using AForge.Video;
 using AForge.Video.DirectShow;
@@ -25,7 +26,7 @@ namespace CMVP
         private static List<Camera> cams;
         private int id;
         private Bitmap img;
-        private VideoCaptureDevice videoSource=null;
+        private VideoCaptureDevice videoSource = null;
 
         public Camera(VideoCaptureDevice videoSource)
         {
@@ -40,7 +41,7 @@ namespace CMVP
         private void video_NewFrame(object sender, NewFrameEventArgs e)
         {
             Boolean done = false;
-            while(!done)
+            while (!done)
             {
                 try
                 {
@@ -57,7 +58,7 @@ namespace CMVP
         }
         public void startCamera()
         {
-            if(!videoSource.IsRunning)
+            if (!videoSource.IsRunning)
                 videoSource.Start();
         }
         public void stopCamera()
@@ -71,7 +72,7 @@ namespace CMVP
         }
         public void closeVideoSource()
         {
-            if(videoSource != null && videoSource.IsRunning)
+            if (videoSource != null && videoSource.IsRunning)
             {
                 videoSource.SignalToStop();
                 videoSource = null;
@@ -84,17 +85,17 @@ namespace CMVP
         }
         //preview of the camera on the setting tab
 
-         public void updatePreview()
-         {
-             Bitmap copy = cameraController.grabOneFrame(this);
-             cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
-         }
+        public void updatePreview()
+        {
+            Bitmap copy = cameraController.grabOneFrame(this);
+            cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
+        }
         //checkbox to include camera in simulation
         private void includeCameraBox_CheckedChanged(object sender, EventArgs e)
         {
             isIncluded = includedCameraBox.Checked;
 
-            if((isIncluded))
+            if ((isIncluded))
             {
                 cameraStatusLabel.ForeColor = Color.Green;
                 cameraStatusLabl.Text = "Camera Included";
@@ -102,8 +103,9 @@ namespace CMVP
             else
             {
                 CameraStatusLabel.ForeColor.Red;
-                cameraStatusLabel.Text ="Camera Excluded";
+                cameraStatusLabel.Text = "Camera Excluded";
             }
 
         }
-    }      
+    }
+}  

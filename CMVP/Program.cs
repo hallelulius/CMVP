@@ -15,7 +15,7 @@ namespace CMVP
         //Global variables
         //object of different modules
         public Communication communication; //communication protokoll
-        public Cameracontroller cameraController; //controls all communication
+        public CameraController cameraController;//controls all communication
         public ImageProcessing imageProcessing;
         public static void Main()
         {

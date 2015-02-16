@@ -35,11 +35,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
-    <Compile Include="CameraController.cs">
+    <Compile Include="Camera.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Communication.cs" />
+    <Compile Include="CameraController.cs" />
     <Compile Include="mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
