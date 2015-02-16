@@ -16,7 +16,7 @@ namespace CMVP
             Application.Run(mainFrame);
         }
         
-        /**
+        /*
         public static void old()
         {
             System.Console.WriteLine("Hello World");
@@ -35,7 +35,7 @@ namespace CMVP
             for(int j =0 ; j<=i; j++){
                 System.Console.WriteLine(j);
             }
-        }
+        }*/
         
     }
 }
