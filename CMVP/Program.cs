@@ -6,10 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using AForge;
+
 namespace CMVP
 {
     class Program
     {
+        //Global variables
+        //object of different modules
+        public Communication communication; //communication protokoll
+        public Cameracontroller cameraController; //controls all communication
+        public ImageProcessing imageProcessing;
         public static void Main()
         {
             mainGUI mainFrame = new mainGUI();

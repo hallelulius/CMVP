@@ -77,5 +77,33 @@ namespace CMVP
                 videoSource = null;
             }
         }
-    }
-}
+        //Prevent sudden close while device is runnng
+        private void Display_FormaClosed(object sender, FormClosedEventArgs e)
+        {
+            closeVideoSource();
+        }
+        //preview of the camera on the setting tab
+
+         public void updatePreview()
+         {
+             Bitmap copy = cameraController.grabOneFrame(this);
+             cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
+         }
+        //checkbox to include camera in simulation
+        private void includeCameraBox_CheckedChanged(object sender, EventArgs e)
+        {
+            isIncluded = includedCameraBox.Checked;
+
+            if((isIncluded))
+            {
+                cameraStatusLabel.ForeColor = Color.Green;
+                cameraStatusLabl.Text = "Camera Included";
+            }
+            else
+            {
+                CameraStatusLabel.ForeColor.Red;
+                cameraStatusLabel.Text ="Camera Excluded";
+            }
+
+        }
+    }      
