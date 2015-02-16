@@ -35,9 +35,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Car.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="mainGUI.cs">
@@ -48,6 +46,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ImageProcessing.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AForge">
@@ -122,6 +125,10 @@
   <ItemGroup>
     <EmbeddedResource Include="mainGUI.resx">
       <DependentUpon>mainGUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
