@@ -20,7 +20,62 @@ using AForge.Math;
 
 namespace CMVP
 {
-    class Camera
+    public partial class Camera : UserControl
     {
+        private static List<Camera> cams;
+        private int id;
+        private Bitmap img;
+        private VideoCaptureDevice videoSource=null;
+
+        public Camera(VideoCaptureDevice videoSource)
+        {
+            this.videoSource = videoSource;
+            this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
+            this.id = cams.Count;
+            cams.Add(this);
+            img = new Bitmap(4000, 4000);
+        }
+        //Eventhandler to updateImage
+        //Not ready yet
+        private void video_NewFrame(object sender, NewFrameEventArgs e)
+        {
+            Boolean done = false;
+            while(!done)
+            {
+                try
+                {
+                    Bitmap imgCatch = img;
+                    img = (Bitmap)e.Frame.Clone();
+                    done = true;
+                    //Här ska kod läggas till för att lägga bilden på lämpligt ställe.
+                }
+                catch
+                {
+                    Console.WriteLine("Error in try statemen in camera, could not upload new img");
+                }
+            }
+        }
+        public void startCamera()
+        {
+            if(!videoSource.IsRunning)
+                videoSource.Start();
+        }
+        public void stopCamera()
+        {
+            if (videoSource.IsRunning)
+                videoSource.Stop();
+        }
+        public bool isRunning()
+        {
+            return videoSource.IsRunning;
+        }
+        public void closeVideoSource()
+        {
+            if(videoSource != null && videoSource.IsRunning)
+            {
+                videoSource.SignalToStop();
+                videoSource = null;
+            }
+        }
     }
 }
