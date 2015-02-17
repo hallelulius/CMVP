@@ -14,15 +14,21 @@ namespace CMVP
     {
         //Global variables
         //object of different modules
-        public Communication communication; //communication protokoll
-        public CameraController cameraController;//controls all communication
-        public ImageProcessing imageProcessing;
+        public static Communication communication; //communication protokoll
+        public static CameraController cameraController;//controls all communication
+        public static ImageProcessing imageProcessing;
+
+        //Simulation variables
+        private static bool simulating;
         public static void Main()
         {
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
         }
-        
+        public static bool isSimulating()
+        {
+            return simulating;
+        }
         /*
         public static void old()
         {

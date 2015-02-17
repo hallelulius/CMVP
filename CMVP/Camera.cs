@@ -27,14 +27,38 @@ namespace CMVP
         private int id;
         private Bitmap img;
         private VideoCaptureDevice videoSource = null;
+        private System.Drawing.Point offset;
 
+        public Camera(VideoCaptureDevice videoSource,System.Drawing.Point offset)
+        {
+            init(videoSource, offset);
+
+
+        }
         public Camera(VideoCaptureDevice videoSource)
         {
+            init(videoSource, new System.Drawing.Point(0, 0));
+        }
+        private void init(VideoCaptureDevice videosource, System.Drawing.Point offset)
+        {
+            this.offset = offset;
+            this.id = cams.Count;
             this.videoSource = videoSource;
             this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-            this.id = cams.Count;
             cams.Add(this);
             img = new Bitmap(4000, 4000);
+        }
+        public System.Drawing.Point getOffset()
+        {
+            return offset;
+        }
+        public Bitmap getImg()
+        {
+            return img;
+        }
+        public int getId()
+        {
+            return id;
         }
         //Eventhandler to updateImage
         //Not ready yet
@@ -83,14 +107,42 @@ namespace CMVP
         {
             closeVideoSource();
         }
-        //preview of the camera on the setting tab
+        public VideoCaptureDevice getVideoSouce()
+        {
+            return videoSource;
+        }
+        public VideoCapabilities[] getVideoCapabilities()
+        {
+            return videoSource.VideoCapabilities;
+        }
+        public void setResolution(IntPoint resolution)
+        {
+            foreach(VideoCapabilities cap in videoSource.VideoCapabilities)
+            {
+                if(cap.FrameSize.Width == resolution.X && cap.FrameSize.Height == resolution.Y)
+                {
+                    videoSource.VideoResolution = cap;
+                    if(videoSource.IsRunning)
+                    {
+                        videoSource.Stop();
+                        videoSource.Start();
+                    }
+                    return;
+                }
+            }
+            throw new FormatException("ERROR: Resolution " + resolution.X + " x " + resolution.Y + "is not supported by all included cameras.");
 
+        }
+        //preview of the camera on the setting tab
+        //Onödig funktion?
         public void updatePreview()
         {
-            Bitmap copy = cameraController.grabOneFrame(this);
-            cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
+            Bitmap copy = Program.cameraController.grabOneFrame(this);
+            //Hur ska komunikationen med GUI vara?
+            //cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
         }
         //checkbox to include camera in simulation
+        /* Onödig? Bör implemetenteras i GuI?
         private void includeCameraBox_CheckedChanged(object sender, EventArgs e)
         {
             isIncluded = includedCameraBox.Checked;
@@ -106,6 +158,6 @@ namespace CMVP
                 cameraStatusLabel.Text = "Camera Excluded";
             }
 
-        }
+        }*/
     }
 }  
