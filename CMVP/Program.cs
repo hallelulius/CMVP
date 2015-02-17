@@ -34,8 +34,9 @@ namespace CMVP
         {
             for(int j =0 ; j<=i; j++){
                 System.Console.WriteLine(j);
-            }
+         
+           }
         }
-        
+        */
     }
 }
