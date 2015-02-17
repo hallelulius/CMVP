@@ -16,16 +16,69 @@ namespace CMVP
     class Communication
     {
         private SerialPort port;
-        private string portName;
+        private bool active = false;
 
-        public Communication(String portName)
+        /**
+         * Takes the first COM port it find and opens up a serial communcation with it.
+         * May need to do smarter if any problems because of many devices at the same time
+         * */
+        public Communication()
         {
-            //TODO
-            port = new SerialPort();
-            port.BaudRate = 9600; //set to higher later and remeber to sync with arduino
-            port.PortName = portName;
-            this.portName = portName;
-            port.WriteLine("Connected");
+            if (getFirstPort() != null)
+            {
+                port = new SerialPort(getFirstPort(), 115200); //remeber to sync baudrate with arduino
+                active = true;
+            }
         }
+
+        
+        public void updateSteering(int carID, int value)
+        {
+            if (port != null) 
+            {
+                port.Open();
+                byte[] bits = { (byte)carID, (byte)value };
+                port.Write(bits, 0, 2);
+                port.Close();
+            }
+        }
+
+        public void updateThrottle(int carID, int value)
+        {
+            if (port != null)
+            {
+                carID += 2; // change to throttle DAC
+                port.Open();
+                byte[] bits = { (byte)carID, (byte)value };
+                port.Write(bits, 0, 2);
+                port.Close();
+            }
+        }
+
+        public bool isActive()
+        {
+            return active;
+        }
+
+        private String getFirstPort()
+        {
+            List<String> allPorts = new List<String>();
+            foreach (String portName in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                allPorts.Add(portName);
+            }
+            try
+            {
+                return allPorts[0];
+            }
+            catch (System.ArgumentOutOfRangeException e)        
+            {
+                System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC. \n");
+                System.Console.WriteLine(e.ToString());
+                //System.Console.ReadKey();
+                return null;
+            }
+        }
+
     }
 }

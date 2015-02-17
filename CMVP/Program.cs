@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
 
 namespace CMVP
 {
@@ -14,28 +16,11 @@ namespace CMVP
         {
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
-        }
-        
-        /**
-        public static void old()
-        {
-            System.Console.WriteLine("Hello World");
-            System.Console.Out.WriteLine("Hej Viktor");
-            System.Console.ReadLine();
-            cout("C++ style");
-            counter(10);
-            System.Console.ReadLine();
-        }
-        public static void cout(String str){
-            System.Console.WriteLine(str);
+            Communication communication = new Communication();
+            communication.updateSteering(0, 255);
+            Thread.Sleep(1000);
+            communication.updateSteering(0, 0);  
         }
 
-        public static void counter(int i)
-        {
-            for(int j =0 ; j<=i; j++){
-                System.Console.WriteLine(j);
-            }
-        }
-        
     }
 }
