@@ -9,8 +9,7 @@ namespace CMVP
 {
 
        /**
-        * This class sends the right steering and throttle parametres to the arduino
-        * 
+        * This class sends the right steering and throttle parametres to the arduino 
         **/
 
     class Communication
@@ -18,10 +17,10 @@ namespace CMVP
         private SerialPort port;
         private bool active = false;
 
-        /**
+        /*
          * Takes the first COM port it find and opens up a serial communcation with it.
-         * May need to do smarter if any problems because of many devices at the same time
-         * */
+         * May need to be smarter if any problems occur because of many devices are used at the same time
+         */
         public Communication()
         {
             if (getFirstPort() != null)
@@ -34,12 +33,14 @@ namespace CMVP
         private byte convertCarID(int id)
         {
             //should convert it to proper binary values according to the transmitters voltage
+            //depends on input from controller class
             return (byte) id;
         }
 
         private byte convertValue(int value)
         {
             //should convert it to proper binary values according to the transmitters voltage
+            //depends on input from controller class
             return (byte) value;
         }
 
