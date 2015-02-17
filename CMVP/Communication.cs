@@ -31,34 +31,53 @@ namespace CMVP
             }
         }
 
-        
+        private byte convertCarId(int id)
+        {
+            return 0;
+        }
+
+        private byte convertValue(int id)
+        {
+            return 0;
+        }
+
         public void updateSteering(int carID, int value)
+        {
+            byte id = convertCarID(carID);
+            byte val = convertValue(value);
+            updateSteering(id, val);
+        }
+
+        public void updateThrottle(int carID, int value)
+        {
+            byte id = convertCardID(carID);
+            byte val = convertValue(value);
+            updateThrottle(id, val);
+        }
+
+        private void updateSteering(byte carID, byte value)
         {
             if (port != null) 
             {
                 port.Open();
-                byte[] bits = { (byte)carID, (byte)value };
+                byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
             }
         }
 
-        public void updateThrottle(int carID, int value)
+        private void updateThrottle(byte carID, byte value)
         {
             if (port != null)
             {
                 carID += 2; // change to throttle DAC
                 port.Open();
-                byte[] bits = { (byte)carID, (byte)value };
+                byte[] bits = { carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
             }
         }
 
-        public bool isActive()
-        {
-            return active;
-        }
 
         private String getFirstPort()
         {
@@ -78,6 +97,11 @@ namespace CMVP
                 //System.Console.ReadKey();
                 return null;
             }
+        }
+
+        public bool isActive()
+        {
+            return active;
         }
 
     }
