@@ -31,14 +31,16 @@ namespace CMVP
             }
         }
 
-        private byte convertCarId(int id)
+        private byte convertCarID(int id)
         {
-            return 0;
+            //should convert it to proper binary values according to the transmitters voltage
+            return (byte) id;
         }
 
-        private byte convertValue(int id)
+        private byte convertValue(int value)
         {
-            return 0;
+            //should convert it to proper binary values according to the transmitters voltage
+            return (byte) value;
         }
 
         public void updateSteering(int carID, int value)
@@ -50,7 +52,7 @@ namespace CMVP
 
         public void updateThrottle(int carID, int value)
         {
-            byte id = convertCardID(carID);
+            byte id = convertCarID(carID);
             byte val = convertValue(value);
             updateThrottle(id, val);
         }

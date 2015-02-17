@@ -17,9 +17,6 @@ namespace CMVP
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
             Communication communication = new Communication();
-            communication.updateSteering(0, 255);
-            Thread.Sleep(1000);
-            communication.updateSteering(0, 0);  
         }
 
     }
