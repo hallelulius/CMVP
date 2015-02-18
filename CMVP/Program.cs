@@ -22,6 +22,7 @@ namespace CMVP
         private static bool simulating;
         public static void Main()
         {
+            cameraController = new CameraController();
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
         }
