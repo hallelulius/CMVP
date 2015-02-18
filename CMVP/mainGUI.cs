@@ -19,5 +19,11 @@ namespace CMVP
             InitializeComponent();
             updatePreview = new Timer();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
