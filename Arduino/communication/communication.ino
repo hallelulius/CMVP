@@ -92,6 +92,7 @@ void program(){
        changeDAC(steeringB,Serial.read());
     } else {
        // DAC not reconigzed 
+      Serial.read();
     }
   } 
 }
