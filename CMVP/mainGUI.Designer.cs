@@ -36,7 +36,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
+            this.trafficControlPanelLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
@@ -123,15 +123,15 @@
             this.panel3.Size = new System.Drawing.Size(200, 276);
             this.panel3.TabIndex = 4;
             // 
-            // label4
+            // trafficControlPanelLabel
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(634, 102);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(73, 17);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Simulation";
+            this.trafficControlPanelLabel.AutoSize = true;
+            this.trafficControlPanelLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.trafficControlPanelLabel.Location = new System.Drawing.Point(634, 102);
+            this.trafficControlPanelLabel.Name = "trafficControlPanelLabel";
+            this.trafficControlPanelLabel.Size = new System.Drawing.Size(97, 17);
+            this.trafficControlPanelLabel.TabIndex = 5;
+            this.trafficControlPanelLabel.Text = "Traffic Control";
             // 
             // panel4
             // 
@@ -146,7 +146,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 500);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.trafficControlPanelLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.trackPanelLabel);
@@ -174,7 +174,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label trafficControlPanelLabel;
         private System.Windows.Forms.Panel panel4;
     }
 }
