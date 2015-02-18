@@ -1,0 +1,16 @@
+Measured voltages from the KT-18 transmitter used with the dNaNo cars
+
+Throttle voltages
+Max     	0.74V
+Neutral 	1.44V
+Reverse 	2.03V
+
+Steering
+Middle 	1.47V
+Left 	2.82V
+Right 	0.09V
+
+DAC calculations
+output = vref*(x/255)
+x = (255 * output) / vref
+
