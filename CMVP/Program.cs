@@ -6,37 +6,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using AForge;
+
 namespace CMVP
 {
     class Program
     {
+        //Global variables
+        //object of different modules
+        public static Communication communication;  
+        public static CameraController cameraController;//controls all communication
+        public static ImageProcessing imageProcessing;
+
+        //Simulation variables
+        private static bool simulating = false;
+
         public static void Main()
         {
+            cameraController = new CameraController();
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
         }
-        
-        /**
-        public static void old()
+        public static bool isSimulating()
         {
-            System.Console.WriteLine("Hello World");
-            System.Console.Out.WriteLine("Hej Viktor");
-            System.Console.ReadLine();
-            cout("C++ style");
-            counter(10);
-            System.Console.ReadLine();
+            return simulating;
         }
-        public static void cout(String str){
-            System.Console.WriteLine(str);
-        }
-
-        public static void counter(int i)
-        {
-            for(int j =0 ; j<=i; j++){
-                System.Console.WriteLine(j);
-         
-           }
-        }
-        */
     }
 }
