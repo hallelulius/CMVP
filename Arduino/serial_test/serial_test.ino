@@ -1,6 +1,6 @@
 /*
  * Serial test program
- * Used to make sure serial communication between C# and Arduino 
+ * Used to make sure that serial communication between C# and Arduino 
  * is working properly
  * 
  * Comments: Three LEDs should light up according to the if-statement
@@ -21,8 +21,6 @@ void setup()
   pinMode(LEDpin3,OUTPUT);
  
   Serial.begin(115200);
-  delay(1000);
-  Serial.println("Setup complete");
 }
 
 void loop()

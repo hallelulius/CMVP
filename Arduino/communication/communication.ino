@@ -24,19 +24,19 @@ const byte steeringA = 0b00000100;    // DAC C gain 1
 const byte steeringB = 0b00000110;    // DAC D gain 1
 
 //alternative addressing not used
-const byte DAC_Array[] = {0b00000000,0b00000010,0b00000100,0b00000110};
+const byte DAC_array[] = {0b00000000,0b00000010,0b00000100,0b00000110};
 
 //default values for testing
 const byte dac_off = 0b00000000; //output = 0V
 const byte dac_on = 0b11111111;  //output = Vref
 
 //Variables used to debug and trim  Vref=3.3V
-const byte outMax_Throttle = 0b00111001;      //output = 0.74V
-const byte outNeutral_Throttle = 0b01101111;  //output = 1.44V
-const byte outReverse_Throttle = 0b10011101;  //output = 2.03V
-const byte outNeutral_Steering = 0b01110010;  //output = 1.47V
-const byte outLeft_Steering = 0b11011010;     //output = 2.82V
-const byte outRight_Steering = 0b00000111;    //output = 0.09V
+const byte max_throttle = 0b00111001;      //output = 0.74V
+const byte neutral_throttle = 0b01101111;  //output = 1.44V
+const byte reverse_rhrottle = 0b10011101;  //output = 2.03V
+const byte neutral_steering = 0b01110010;  //output = 1.47V
+const byte left_steering = 0b11011010;     //output = 2.82V
+const byte right_steering = 0b00000111;    //output = 0.09V
 
 byte incomingByte = 0;
 //Setup
@@ -120,31 +120,31 @@ void debug_fast_updates(){
 }
 
 void test_DAC(){
-  changeDAC(throttleA,outNeutral_Throttle);
+  changeDAC(throttleA,neutral_throttle);
   changeDAC(throttleB,0b00000000);
-  changeDAC(steeringA,outRight_Steering);
+  changeDAC(steeringA,right_steering);
   changeDAC(steeringB,0b00000000);
   while(1);
  }
 
 //steering test for one car
 void steeringTest(){
-    changeDAC(throttleA,outNeutral_Throttle);  
-   for (byte i= outRight_Steering; i<outLeft_Steering; i++){
+    changeDAC(throttleA,neutral_throttle);  
+   for (byte i= right_steering; i<left_steering; i++){
      changeDAC(steeringA, i);
    }
   
-  for (byte i= outLeft_Steering; i>outRight_Steering; i--){
+  for (byte i= left_steering; i>right_steering; i--){
      changeDAC(steeringA, i);
    } 
 }
 //throttle test for one car
 void throttleTest(){
-  changeDAC(throttleA,outNeutral_Throttle);  
-   for (byte i= outNeutral_Throttle; i>outMax_Throttle; i--){
+  changeDAC(throttleA,neutral_throttle);  
+   for (byte i= neutral_throttle; i>max_throttle; i--){
      changeDAC(throttleA, i);
    }
-   for (byte i= outMax_Throttle; i>outNeutral_Throttle; i++){
+   for (byte i= max_throttle; i>neutral_throttle; i++){
      changeDAC(throttleA, i);
    }
 }
