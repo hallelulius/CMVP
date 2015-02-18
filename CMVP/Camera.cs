@@ -21,9 +21,9 @@ using AForge.Math;
 
 namespace CMVP
 {
-    public partial class Camera : UserControl
+    public partial class Camera
     {
-        private static List<Camera> cams;
+        private static int idCount=0;
         private int id;
         private Bitmap img;
         private VideoCaptureDevice videoSource = null;
@@ -39,13 +39,17 @@ namespace CMVP
         {
             init(videoSource, new System.Drawing.Point(0, 0));
         }
-        private void init(VideoCaptureDevice videosource, System.Drawing.Point offset)
+        private void init(VideoCaptureDevice videoSource, System.Drawing.Point offset)
         {
             this.offset = offset;
-            this.id = cams.Count;
+            id = idCount++;
             this.videoSource = videoSource;
-            this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-            cams.Add(this);
+            if(videoSource== null)
+            {
+                Console.WriteLine("Fel");
+            }
+            else
+                this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
             img = new Bitmap(4000, 4000);
         }
         public System.Drawing.Point getOffset()
@@ -133,31 +137,5 @@ namespace CMVP
             throw new FormatException("ERROR: Resolution " + resolution.X + " x " + resolution.Y + "is not supported by all included cameras.");
 
         }
-        //preview of the camera on the setting tab
-        //Onödig funktion?
-        public void updatePreview()
-        {
-            Bitmap copy = Program.cameraController.grabOneFrame(this);
-            //Hur ska komunikationen med GUI vara?
-            //cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
-        }
-        //checkbox to include camera in simulation
-        /* Onödig? Bör implemetenteras i GuI?
-        private void includeCameraBox_CheckedChanged(object sender, EventArgs e)
-        {
-            isIncluded = includedCameraBox.Checked;
-
-            if ((isIncluded))
-            {
-                cameraStatusLabel.ForeColor = Color.Green;
-                cameraStatusLabl.Text = "Camera Included";
-            }
-            else
-            {
-                CameraStatusLabel.ForeColor.Red;
-                cameraStatusLabel.Text = "Camera Excluded";
-            }
-
-        }*/
     }
 }  

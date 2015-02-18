@@ -18,7 +18,7 @@ namespace CMVP
         private List<Camera> includedCameras = new List<Camera>(); //Cameras that is included is in simulation
         private List<IntPoint> resolutionList = new List<IntPoint>();
         private int seqetialCameraDelay = 300;//Used while starting ameras to prevent overload of computer
-        private Timer updatePreview; //timer to controll camera preview in setting tab
+       
         private IntPoint preferedCameraResolution; //Used in calibration
         private IntPoint resolution;
 
@@ -173,6 +173,10 @@ namespace CMVP
         public List<IntPoint> getResolutionList()
         {
             return resolutionList;
+        }
+        public int getNumberOfCameras()
+        {
+            return allCameras.Count;
         }
 
     }
