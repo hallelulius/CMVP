@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="mainGUI.cs">
