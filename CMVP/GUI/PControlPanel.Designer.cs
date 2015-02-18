@@ -52,7 +52,7 @@
             0,
             0});
             this.pNumeric.Name = "pNumeric";
-            this.pNumeric.Size = new System.Drawing.Size(76, 20);
+            this.pNumeric.Size = new System.Drawing.Size(95, 20);
             this.pNumeric.TabIndex = 1;
             // 
             // PControlPanel

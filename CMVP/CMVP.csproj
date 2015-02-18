@@ -114,6 +114,12 @@
     <Compile Include="Car.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\KeyboardControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.Designer.cs">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,6 +137,12 @@
     </Compile>
     <Compile Include="GUI\PIControlPanel.Designer.cs">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PIDControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PIDControlPanel.Designer.cs">
+      <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ImageProcessing.cs" />
@@ -232,6 +244,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GUI\KeyboardControlPanel.resx">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\mainGUI.resx">
       <DependentUpon>mainGUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -240,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIControlPanel.resx">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PIDControlPanel.resx">
+      <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
