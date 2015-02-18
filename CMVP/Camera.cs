@@ -23,7 +23,6 @@ namespace CMVP
 {
     public partial class Camera
     {
-        Timer
         private static int idCount=0;
         private int id;
         private Bitmap img;
