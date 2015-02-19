@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,13 +10,19 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
-    public partial class CameraControlWindow : Form
+    
+    public partial class mainGUI : Form
     {
         private static Timer updatePreview;
-        public CameraControlWindow()
+        public mainGUI()
         {
             InitializeComponent();
             updatePreview = new Timer();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
