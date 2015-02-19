@@ -3,13 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace CMVP
 {
-    class ImageProcessing
+    class ImageProcessing : VideoStream
     {
         List<int> objects;
+        private VideoStream videoStream;
+        private Bitmap img;
 
+        public ImageProcessing(VideoStream videoStream)
+        {
+            this.videoStream = videoStream;
+        }
+        public Bitmap getImage()
+        {
+            return img;
+        }
         public ImageProcessing()
         {
             System.Console.WriteLine("CreatImageProcessingClass");
@@ -39,5 +50,6 @@ namespace CMVP
             }
             return pointList;
         }
+        
     }
 }

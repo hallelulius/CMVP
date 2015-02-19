@@ -21,15 +21,26 @@ using AForge.Math;
 
 namespace CMVP
 {
-    public partial class Camera
+    public partial class Camera : VideoStream
     {
-        Timer
         private static int idCount=0;
         private int id;
         private Bitmap img;
+        private Bitmap imgCatch;
         private VideoCaptureDevice videoSource = null;
         private System.Drawing.Point offset;
-
+        private Boolean imgLock;
+        public Camera()
+        {
+            FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            if(videoDevices.Count==0)
+            {
+                throw new ApplicationException();
+            }
+            videoSource= new VideoCaptureDevice(videoDevices[0].MonikerString);
+            videoSource.SetCameraProperty(CameraControlProperty.Focus, 0, CameraControlFlags.Manual); //sets focus to 0 and turns off autofocus
+            init(videoSource,new System.Drawing.Point(0,0));
+        }
         public Camera(VideoCaptureDevice videoSource,System.Drawing.Point offset)
         {
             init(videoSource, offset);
@@ -38,10 +49,12 @@ namespace CMVP
         }
         public Camera(VideoCaptureDevice videoSource)
         {
+            //Initiat camera with an offset of [0,0]
             init(videoSource, new System.Drawing.Point(0, 0));
         }
         private void init(VideoCaptureDevice videoSource, System.Drawing.Point offset)
         {
+            this.imgLock = true;
             this.offset = offset;
             id = idCount++;
             this.videoSource = videoSource;
@@ -51,7 +64,8 @@ namespace CMVP
             }
             else
                 this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-            img = new Bitmap(4000, 4000);
+            img = new Bitmap(10, 10);
+            imgLock = false;
         }
         public System.Drawing.Point getOffset()
         {
@@ -74,8 +88,7 @@ namespace CMVP
             {
                 try
                 {
-                    Bitmap imgCatch = img;
-                    img = (Bitmap)e.Frame.Clone();
+                    img = (Bitmap)e.Frame.Clone() as Bitmap;
                     done = true;
                     //Här ska kod läggas till för att lägga bilden på lämpligt ställe.
                 }
@@ -84,6 +97,10 @@ namespace CMVP
                     Console.WriteLine("Error in try statemen in camera, could not upload new img");
                 }
             }
+        }
+        public Bitmap getImage()
+        {
+            return img;
         }
         public void startCamera()
         {
