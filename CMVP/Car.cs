@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+
 //using Math;
 
 namespace CMVP
 {
-    class Car
+    public class Car
     {
         //The first element in the lists is the last one logged, ie. the current one.
         private List<Point> position; //Position of the car as two integers.
@@ -18,6 +19,7 @@ namespace CMVP
         private List<bool> found; //Is true if the car is found by the image processing.
 
         private int id; //Identification number of the car.
+        private Controller controller; // This cars controller # William och Johan
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -143,6 +145,14 @@ namespace CMVP
                 steer = 1;
             else 
                 steer = s;
+        }
+        public Point getPosition() // Return the cars current position # Johan och William  
+        {
+            return position.First();
+        }
+        public Controller getController() // Return the cars controller
+        {
+            return controller;
         }
 
     }

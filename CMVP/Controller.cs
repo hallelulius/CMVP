@@ -50,6 +50,7 @@ namespace CMVP
             steerIntegratorSum += errorHeading;
             outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
         }
+
         public void setHeading(float heading)
         {
             this.heading = heading;
@@ -58,10 +59,5 @@ namespace CMVP
         {
             this.speed = speed;
         }
-      /*  public void setHeading(PointF heading)
-        {
-            math.atan()
-            this.heading = 
-        }*/
     }
 }
