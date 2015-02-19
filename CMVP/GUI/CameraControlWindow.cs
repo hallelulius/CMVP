@@ -13,7 +13,7 @@ namespace CMVP
     public partial class CameraControlWindow : Form
     {
         private static Timer updatePreview;
-        public mainGUI()
+        public CameraControlWindow()
         {
             InitializeComponent();
             updatePreview = new Timer();

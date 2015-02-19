@@ -120,12 +120,6 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
-    <Compile Include="GUI\PIControlPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\PIControlPanel.Designer.cs">
-      <DependentUpon>PIControlPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>
@@ -273,9 +267,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PControlPanel.resx">
       <DependentUpon>PControlPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PIControlPanel.resx">
-      <DependentUpon>PIControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
