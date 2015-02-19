@@ -1,6 +1,6 @@
-﻿namespace CMVP
+﻿namespace CMVP.GUI
 {
-    partial class mainGUI
+    partial class MainGUI
     {
         /// <summary>
         /// Required designer variable.
@@ -78,7 +78,7 @@
             this.startSimulationButton.TabIndex = 0;
             this.startSimulationButton.Text = "Start Simulation";
             this.startSimulationButton.UseVisualStyleBackColor = false;
-            this.startSimulationButton.Click += new System.EventHandler(this.button1_Click);
+    //        this.startSimulationButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // stopSimulationButton
             // 

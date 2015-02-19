@@ -121,7 +121,6 @@
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="VideoStream.cs" />
-    <Compile Include="mainGUI.cs"/>
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>
     </Compile>
