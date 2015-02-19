@@ -13,11 +13,26 @@ namespace CMVP
     
     public partial class mainGUI : Form
     {
-        private static Timer updatePreview;
+        private static Timer updatePreviewTimer;
+        //private static VideoStream videoStream;
+        // static CameraController videoStream;
+        private static Camera VideoStream;
         public mainGUI()
         {
             InitializeComponent();
-            updatePreview = new Timer();
+            VideoStream = new Camera();
+            VideoStream.startCamera();
+            updatePreviewTimer = new Timer();
+            updatePreviewTimer.Interval= 100;
+            updatePreviewTimer.Tick += new EventHandler(this.updatePreview);
+            updatePreviewTimer.Start();
+
+
+        }
+        public void updatePreview(object sender, EventArgs e)
+        {
+            
+
         }
 
         private void button1_Click(object sender, EventArgs e)

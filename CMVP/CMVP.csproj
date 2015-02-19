@@ -99,6 +99,7 @@
     <Compile Include="Car.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="VideoStream.cs" />
     <Compile Include="mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
