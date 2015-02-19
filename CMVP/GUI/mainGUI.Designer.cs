@@ -54,11 +54,15 @@
             this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
+            this.openCameraControlButton = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
             this.controllerBasePanel.SuspendLayout();
             this.trafficControlBasePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // startSimulationButton
@@ -93,6 +97,7 @@
             // simulationBasePanel
             // 
             this.simulationBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.simulationBasePanel.Controls.Add(this.openCameraControlButton);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsNumeric);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsLabel);
             this.simulationBasePanel.Location = new System.Drawing.Point(12, 111);
@@ -295,6 +300,8 @@
             // trafficControlBasePanel
             // 
             this.trafficControlBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trafficControlBasePanel.Controls.Add(this.numericUpDown1);
+            this.trafficControlBasePanel.Controls.Add(this.label1);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyTypePanel);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyLabel);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyDropDown);
@@ -305,9 +312,9 @@
             // 
             // controlStrategyTypePanel
             // 
-            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 46);
+            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 79);
             this.controlStrategyTypePanel.Name = "controlStrategyTypePanel";
-            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 229);
+            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 196);
             this.controlStrategyTypePanel.TabIndex = 7;
             // 
             // controlStrategyControlStrategyLabel
@@ -330,6 +337,43 @@
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
+            // 
+            // openCameraControlButton
+            // 
+            this.openCameraControlButton.Location = new System.Drawing.Point(38, 46);
+            this.openCameraControlButton.Name = "openCameraControlButton";
+            this.openCameraControlButton.Size = new System.Drawing.Size(122, 23);
+            this.openCameraControlButton.TabIndex = 7;
+            this.openCameraControlButton.Text = "Open camera control";
+            this.openCameraControlButton.UseVisualStyleBackColor = true;
+            this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DecimalPlaces = 1;
+            this.numericUpDown1.Location = new System.Drawing.Point(94, 43);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
+            this.numericUpDown1.TabIndex = 9;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 45);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Max speed:";
             // 
             // mainGUI
             // 
@@ -358,6 +402,7 @@
             this.controllerBasePanel.PerformLayout();
             this.trafficControlBasePanel.ResumeLayout(false);
             this.trafficControlBasePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,5 +436,8 @@
         private System.Windows.Forms.Panel controlStrategyTypePanel;
         private System.Windows.Forms.Label controlStrategyControlStrategyLabel;
         private System.Windows.Forms.ComboBox controlStrategyControlStrategyDropDown;
+        private System.Windows.Forms.Button openCameraControlButton;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label1;
     }
 }

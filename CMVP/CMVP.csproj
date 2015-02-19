@@ -114,6 +114,12 @@
     <Compile Include="Car.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\CameraControlWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\CameraControlWindow.Designer.cs">
+      <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\KeyboardControlPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -244,6 +250,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GUI\CameraControlWindow.resx">
+      <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\KeyboardControlPanel.resx">
       <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
     </EmbeddedResource>
