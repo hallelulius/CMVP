@@ -246,7 +246,6 @@
             this.controllerTypeDropDown.Name = "controllerTypeDropDown";
             this.controllerTypeDropDown.Size = new System.Drawing.Size(96, 21);
             this.controllerTypeDropDown.TabIndex = 4;
-            this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
             // 
             // radioButtonControllerThrottle
             // 
@@ -346,7 +345,6 @@
             this.openCameraControlButton.TabIndex = 7;
             this.openCameraControlButton.Text = "Open camera control";
             this.openCameraControlButton.UseVisualStyleBackColor = true;
-            this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
             // 
             // numericUpDown1
             // 
