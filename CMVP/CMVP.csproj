@@ -75,9 +75,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Car.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
