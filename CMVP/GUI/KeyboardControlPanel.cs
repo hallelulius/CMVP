@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,25 +10,21 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
-    
-    public partial class mainGUI : Form
+    public partial class KeyboardControlPanel : UserControl
     {
-        private static Timer updatePreview;
-        public mainGUI()
+        public KeyboardControlPanel()
         {
             InitializeComponent();
-            updatePreview = new Timer();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
-
     }
 }
