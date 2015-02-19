@@ -8,25 +8,31 @@ using System.Threading.Tasks;
 namespace CMVP
 {
 
-       /**
-        * This class sends the right steering and throttle parametres to the arduino 
-        **/
+    
+
+       /// <summary>
+       /// This class sends the right steering and throttle parametres to the arduino 
+       /// </summary>
 
     class Communication
     {
         private SerialPort port;
         private bool active = false;
 
-        /*
-         * Takes the first COM port it find and opens up a serial communcation with it.
-         * May need to be smarter if any problems occur because of many devices are used at the same time
-         */
+        /// <summary>
+        /// Takes the first COM port it find and opens up a serial communcation with it.
+        /// May need to be smarter if any problems occur because of many devices are used at the same time 
+        /// </summary>
         public Communication()
         {
             if (getFirstPort() != null)
             {
                 port = new SerialPort(getFirstPort(), 115200); //remeber to sync baudrate with arduino
                 active = true;
+            }
+            else
+            {
+                System.Console.WriteLine("Connect Arduino");
             }
         }
 
