@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
-    public partial class PIControlPanel : UserControl
+    public partial class PIDControlPanel : UserControl
     {
-        public PIControlPanel()
+        public PIDControlPanel()
         {
             InitializeComponent();
         }

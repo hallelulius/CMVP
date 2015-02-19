@@ -120,6 +120,12 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\PIControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PIControlPanel.Designer.cs">
+      <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>
@@ -144,12 +150,6 @@
     </Compile>
     <Compile Include="GUI\PControlPanel.Designer.cs">
       <DependentUpon>PControlPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\PIControlPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\PIControlPanel.Designer.cs">
-      <DependentUpon>PIControlPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\PIDControlPanel.cs">
       <SubType>UserControl</SubType>

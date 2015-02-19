@@ -32,8 +32,11 @@
             this.pLabel = new System.Windows.Forms.Label();
             this.iNumeric = new System.Windows.Forms.NumericUpDown();
             this.iLabel = new System.Windows.Forms.Label();
+            this.dNumeric = new System.Windows.Forms.NumericUpDown();
+            this.dLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.iNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // pNumeric
@@ -80,10 +83,34 @@
             this.iLabel.TabIndex = 4;
             this.iLabel.Text = "I (integral):";
             // 
+            // dNumeric
+            // 
+            this.dNumeric.DecimalPlaces = 3;
+            this.dNumeric.Location = new System.Drawing.Point(91, 44);
+            this.dNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.dNumeric.Name = "dNumeric";
+            this.dNumeric.Size = new System.Drawing.Size(97, 20);
+            this.dNumeric.TabIndex = 6;
+            // 
+            // dLabel
+            // 
+            this.dLabel.AutoSize = true;
+            this.dLabel.Location = new System.Drawing.Point(4, 46);
+            this.dLabel.Name = "dLabel";
+            this.dLabel.Size = new System.Drawing.Size(73, 13);
+            this.dLabel.TabIndex = 7;
+            this.dLabel.Text = "D (derivative):";
+            // 
             // PIDControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.dLabel);
+            this.Controls.Add(this.dNumeric);
             this.Controls.Add(this.iNumeric);
             this.Controls.Add(this.iLabel);
             this.Controls.Add(this.pNumeric);
@@ -92,6 +119,7 @@
             this.Size = new System.Drawing.Size(200, 114);
             ((System.ComponentModel.ISupportInitialize)(this.pNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,5 +131,7 @@
         private System.Windows.Forms.Label pLabel;
         private System.Windows.Forms.NumericUpDown iNumeric;
         private System.Windows.Forms.Label iLabel;
+        private System.Windows.Forms.NumericUpDown dNumeric;
+        private System.Windows.Forms.Label dLabel;
     }
 }
