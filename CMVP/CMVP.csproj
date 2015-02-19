@@ -11,6 +11,21 @@
     <AssemblyName>CMVP</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -71,18 +86,79 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+<<<<<<< HEAD
+    <Compile Include="VideoStream.cs" />
     <Compile Include="mainGUI.cs">
+=======
+    <Compile Include="GUI\CameraControlWindow.cs">
+>>>>>>> origin/master
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mainGUI.Designer.cs">
+    <Compile Include="GUI\CameraControlWindow.Designer.cs">
+      <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.Designer.cs">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\mainGUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\mainGUI.Designer.cs">
       <DependentUpon>mainGUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PControlPanel.Designer.cs">
+      <DependentUpon>PControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PIControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PIControlPanel.Designer.cs">
+      <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\PIDControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PIDControlPanel.Designer.cs">
+      <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ImageProcessing.cs" />
@@ -91,70 +167,96 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AForge">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.dll</HintPath>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Controls">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Controls.dll</HintPath>
+    <Reference Include="AForge.Controls, Version=2.2.5.0, Culture=neutral, PublicKeyToken=a8ac264d1dc6b9d9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.DebuggerVisualizers %282010%29">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.DebuggerVisualizers (2010).dll</HintPath>
+    <Reference Include="AForge.DebuggerVisualizers %282010%29, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0646c9a9e79f6b03, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.DebuggerVisualizers (2010).dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Fuzzy">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Fuzzy.dll</HintPath>
+    <Reference Include="AForge.Fuzzy, Version=2.2.4.0, Culture=neutral, PublicKeyToken=cb12670d0eae17c9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Fuzzy.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Genetic">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Genetic.dll</HintPath>
+    <Reference Include="AForge.Genetic, Version=2.2.4.0, Culture=neutral, PublicKeyToken=4336634eeb41b69b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Genetic.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Imaging">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.dll</HintPath>
+    <Reference Include="AForge.Imaging, Version=2.2.5.0, Culture=neutral, PublicKeyToken=ba8ddea9676ca48b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Imaging.Formats">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.Formats.dll</HintPath>
+    <Reference Include="AForge.Imaging.Formats, Version=2.2.4.0, Culture=neutral, PublicKeyToken=8065ed5a639199a0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.Formats.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Imaging.IPPrototyper">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.IPPrototyper.dll</HintPath>
+    <Reference Include="AForge.Imaging.IPPrototyper, Version=1.0.1.1, Culture=neutral, PublicKeyToken=c6e9a6d4c86d47e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Imaging.IPPrototyper.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.MachineLearning">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.MachineLearning.dll</HintPath>
+    <Reference Include="AForge.MachineLearning, Version=2.2.4.0, Culture=neutral, PublicKeyToken=b3f1bdd78212f4e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.MachineLearning.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Math">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Math.dll</HintPath>
+    <Reference Include="AForge.Math, Version=2.2.5.0, Culture=neutral, PublicKeyToken=abba2e25397ee8c9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Math.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Neuro">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Neuro.dll</HintPath>
+    <Reference Include="AForge.Neuro, Version=2.2.5.0, Culture=neutral, PublicKeyToken=2094f4ea39731d4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Neuro.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Robotics.Lego">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.Lego.dll</HintPath>
+    <Reference Include="AForge.Robotics.Lego, Version=2.2.5.0, Culture=neutral, PublicKeyToken=5f361631ec856b74, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.Lego.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Robotics.Surveyor">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.Surveyor.dll</HintPath>
+    <Reference Include="AForge.Robotics.Surveyor, Version=2.2.4.0, Culture=neutral, PublicKeyToken=7ed9f718a0f5b2f6, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.Surveyor.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Robotics.TeRK">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.TeRK.dll</HintPath>
+    <Reference Include="AForge.Robotics.TeRK, Version=2.2.5.0, Culture=neutral, PublicKeyToken=5c0f140128226168, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Robotics.TeRK.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.dll</HintPath>
+    <Reference Include="AForge.Video, Version=2.2.5.0, Culture=neutral, PublicKeyToken=cbfb6e07d173c401, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.DirectShow">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.DirectShow.dll</HintPath>
+    <Reference Include="AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.DirectShow.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.FFMPEG">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.FFMPEG.dll</HintPath>
+    <Reference Include="AForge.Video.FFMPEG, Version=2.2.5.0, Culture=neutral, PublicKeyToken=03563089b1be05dd, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.FFMPEG.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.Kinect">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.Kinect.dll</HintPath>
+    <Reference Include="AForge.Video.Kinect, Version=2.2.4.0, Culture=neutral, PublicKeyToken=96a9a097745e71d9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.Kinect.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.VFW">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.VFW.dll</HintPath>
+    <Reference Include="AForge.Video.VFW, Version=2.2.4.0, Culture=neutral, PublicKeyToken=a82f807c999637c8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.VFW.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Video.Ximea">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.Ximea.dll</HintPath>
+    <Reference Include="AForge.Video.Ximea, Version=2.2.4.0, Culture=neutral, PublicKeyToken=5cdcd64958730f99, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Video.Ximea.dll</HintPath>
     </Reference>
-    <Reference Include="AForge.Vision">
-      <HintPath>..\..\..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Vision.dll</HintPath>
+    <Reference Include="AForge.Vision, Version=2.2.5.0, Culture=neutral, PublicKeyToken=b612fa915eefaa06, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Vision.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -163,13 +265,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="mainGUI.resx">
+<<<<<<< HEAD
+=======
+    <EmbeddedResource Include="GUI\CameraControlWindow.resx">
+      <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\KeyboardControlPanel.resx">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\mainGUI.resx">
       <DependentUpon>mainGUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PControlPanel.resx">
+      <DependentUpon>PControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PIControlPanel.resx">
+      <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PIDControlPanel.resx">
+      <DependentUpon>PIDControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+>>>>>>> origin/master
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

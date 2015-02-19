@@ -21,14 +21,26 @@ using AForge.Math;
 
 namespace CMVP
 {
-    public partial class Camera : UserControl
+    public partial class Camera : VideoStream
     {
-        private static List<Camera> cams;
+        private static int idCount=0;
         private int id;
         private Bitmap img;
+        private Bitmap imgCatch;
         private VideoCaptureDevice videoSource = null;
         private System.Drawing.Point offset;
-
+        private Boolean imgLock;
+        public Camera()
+        {
+            FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+            if(videoDevices.Count==0)
+            {
+                throw new ApplicationException();
+            }
+            videoSource= new VideoCaptureDevice(videoDevices[0].MonikerString);
+            videoSource.SetCameraProperty(CameraControlProperty.Focus, 0, CameraControlFlags.Manual); //sets focus to 0 and turns off autofocus
+            init(videoSource,new System.Drawing.Point(0,0));
+        }
         public Camera(VideoCaptureDevice videoSource,System.Drawing.Point offset)
         {
             init(videoSource, offset);
@@ -37,16 +49,23 @@ namespace CMVP
         }
         public Camera(VideoCaptureDevice videoSource)
         {
+            //Initiat camera with an offset of [0,0]
             init(videoSource, new System.Drawing.Point(0, 0));
         }
-        private void init(VideoCaptureDevice videosource, System.Drawing.Point offset)
+        private void init(VideoCaptureDevice videoSource, System.Drawing.Point offset)
         {
+            this.imgLock = true;
             this.offset = offset;
-            this.id = cams.Count;
+            id = idCount++;
             this.videoSource = videoSource;
-            this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-            cams.Add(this);
-            img = new Bitmap(4000, 4000);
+            if(videoSource== null)
+            {
+                Console.WriteLine("Fel");
+            }
+            else
+                this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
+            img = new Bitmap(10, 10);
+            imgLock = false;
         }
         public System.Drawing.Point getOffset()
         {
@@ -69,8 +88,7 @@ namespace CMVP
             {
                 try
                 {
-                    Bitmap imgCatch = img;
-                    img = (Bitmap)e.Frame.Clone();
+                    img = (Bitmap)e.Frame.Clone() as Bitmap;
                     done = true;
                     //Här ska kod läggas till för att lägga bilden på lämpligt ställe.
                 }
@@ -79,6 +97,10 @@ namespace CMVP
                     Console.WriteLine("Error in try statemen in camera, could not upload new img");
                 }
             }
+        }
+        public Bitmap getImage()
+        {
+            return img;
         }
         public void startCamera()
         {
@@ -133,31 +155,5 @@ namespace CMVP
             throw new FormatException("ERROR: Resolution " + resolution.X + " x " + resolution.Y + "is not supported by all included cameras.");
 
         }
-        //preview of the camera on the setting tab
-        //Onödig funktion?
-        public void updatePreview()
-        {
-            Bitmap copy = Program.cameraController.grabOneFrame(this);
-            //Hur ska komunikationen med GUI vara?
-            //cameraImagePanel.BackgroundImage = new Bitmap(copy, new Size(cameraImagePanel.Width, cameraImagePanel.Height));
-        }
-        //checkbox to include camera in simulation
-        /* Onödig? Bör implemetenteras i GuI?
-        private void includeCameraBox_CheckedChanged(object sender, EventArgs e)
-        {
-            isIncluded = includedCameraBox.Checked;
-
-            if ((isIncluded))
-            {
-                cameraStatusLabel.ForeColor = Color.Green;
-                cameraStatusLabl.Text = "Camera Included";
-            }
-            else
-            {
-                CameraStatusLabel.ForeColor.Red;
-                cameraStatusLabel.Text = "Camera Excluded";
-            }
-
-        }*/
     }
 }  
