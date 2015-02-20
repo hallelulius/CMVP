@@ -119,12 +119,8 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
-<<<<<<< HEAD
     <Compile Include="VideoStream.cs" />
-    <Compile Include="mainGUI.cs">
-=======
     <Compile Include="GUI\CameraControlWindow.cs">
->>>>>>> origin/master
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\CameraControlWindow.Designer.cs">
@@ -265,8 +261,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-=======
+
     <EmbeddedResource Include="GUI\CameraControlWindow.resx">
       <DependentUpon>CameraControlWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -285,7 +280,6 @@
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </EmbeddedResource>
->>>>>>> origin/master
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
