@@ -22,13 +22,24 @@ namespace CMVP
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            System.Console.WriteLine("Start simulation");
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void stopSimulationButton_Click(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("Stop simulation");
+        }
+
+        private void openCameraControlButton_Click(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("Open Camera");
+            CameraControlWindow ccw = new CameraControlWindow();
+            ccw.Show();
+        }
+
+        private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
-
     }
 }

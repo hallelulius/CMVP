@@ -12,17 +12,14 @@ namespace CMVP
 {
     public partial class CameraControlWindow : Form
     {
-        private static Timer updatePreview;
         public CameraControlWindow()
         {
             InitializeComponent();
-            updatePreview = new Timer();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void CameraControlWindow_Load(object sender, EventArgs e)
         {
-
+           
         }
-
     }
 }

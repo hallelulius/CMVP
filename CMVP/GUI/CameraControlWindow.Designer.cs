@@ -96,6 +96,7 @@
             this.Controls.Add(this.rawVideoRadioButton);
             this.Name = "CameraControlWindow";
             this.Text = "CMVP - Camera Control";
+            this.Load += new System.EventHandler(this.CameraControlWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
