@@ -16,5 +16,10 @@ namespace CMVP
         {
             InitializeComponent();
         }
+
+        private void CameraControlWindow_Load(object sender, EventArgs e)
+        {
+           
+        }
     }
 }

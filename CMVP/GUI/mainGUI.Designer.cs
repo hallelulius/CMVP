@@ -31,6 +31,7 @@
             this.startSimulationButton = new System.Windows.Forms.Button();
             this.stopSimulationButton = new System.Windows.Forms.Button();
             this.simulationBasePanel = new System.Windows.Forms.Panel();
+            this.openCameraControlButton = new System.Windows.Forms.Button();
             this.numberOfCarsNumeric = new System.Windows.Forms.NumericUpDown();
             this.numberOfCarsLabel = new System.Windows.Forms.Label();
             this.simulationPanelLabel = new System.Windows.Forms.Label();
@@ -51,12 +52,11 @@
             this.controllerCarIDDropDown = new System.Windows.Forms.ComboBox();
             this.trafficControlPanelLabel = new System.Windows.Forms.Label();
             this.trafficControlBasePanel = new System.Windows.Forms.Panel();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
-            this.openCameraControlButton = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -93,6 +93,7 @@
             this.stopSimulationButton.TabIndex = 1;
             this.stopSimulationButton.Text = "Stop Simulation";
             this.stopSimulationButton.UseVisualStyleBackColor = false;
+            this.stopSimulationButton.Click += new System.EventHandler(this.stopSimulationButton_Click);
             // 
             // simulationBasePanel
             // 
@@ -104,6 +105,16 @@
             this.simulationBasePanel.Name = "simulationBasePanel";
             this.simulationBasePanel.Size = new System.Drawing.Size(200, 276);
             this.simulationBasePanel.TabIndex = 2;
+            // 
+            // openCameraControlButton
+            // 
+            this.openCameraControlButton.Location = new System.Drawing.Point(38, 46);
+            this.openCameraControlButton.Name = "openCameraControlButton";
+            this.openCameraControlButton.Size = new System.Drawing.Size(122, 23);
+            this.openCameraControlButton.TabIndex = 7;
+            this.openCameraControlButton.Text = "Open camera control";
+            this.openCameraControlButton.UseVisualStyleBackColor = true;
+            this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
             // 
             // numberOfCarsNumeric
             // 
@@ -310,6 +321,33 @@
             this.trafficControlBasePanel.Size = new System.Drawing.Size(200, 276);
             this.trafficControlBasePanel.TabIndex = 4;
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DecimalPlaces = 1;
+            this.numericUpDown1.Location = new System.Drawing.Point(94, 43);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
+            this.numericUpDown1.TabIndex = 9;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 45);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Max speed:";
+            // 
             // controlStrategyTypePanel
             // 
             this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 79);
@@ -337,43 +375,6 @@
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
-            // 
-            // openCameraControlButton
-            // 
-            this.openCameraControlButton.Location = new System.Drawing.Point(38, 46);
-            this.openCameraControlButton.Name = "openCameraControlButton";
-            this.openCameraControlButton.Size = new System.Drawing.Size(122, 23);
-            this.openCameraControlButton.TabIndex = 7;
-            this.openCameraControlButton.Text = "Open camera control";
-            this.openCameraControlButton.UseVisualStyleBackColor = true;
-            this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Location = new System.Drawing.Point(94, 43);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
-            this.numericUpDown1.TabIndex = 9;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 45);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Max speed:";
             // 
             // mainGUI
             // 
@@ -407,6 +408,7 @@
             this.PerformLayout();
 
         }
+
 
         #endregion
 
