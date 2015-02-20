@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace CMVP
 {
@@ -13,6 +14,26 @@ namespace CMVP
         private VideoStream videoStream;
         private Bitmap img;
 
+        public void start()
+        {
+
+        }
+        public void stop()
+        {
+
+        }
+        public void pushDestination(Panel panel)
+        {
+
+        }
+        public void removeDestination(Panel panel)
+        {
+
+        }
+        public Size getSize()
+        {
+            return new Size(0, 0);
+        }
         public ImageProcessing(VideoStream videoStream)
         {
             this.videoStream = videoStream;

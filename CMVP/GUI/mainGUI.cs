@@ -13,11 +13,9 @@ namespace CMVP
     
     public partial class mainGUI : Form
     {
-        private static Timer updatePreview;
         public mainGUI()
         {
             InitializeComponent();
-            updatePreview = new Timer();
         }
 
         private void button1_Click(object sender, EventArgs e)
