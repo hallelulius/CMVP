@@ -24,7 +24,7 @@ namespace CMVP
 
         public static void Main()
         {
-            cameraController = new CameraController();
+            //cameraController = new CameraController();
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
         }

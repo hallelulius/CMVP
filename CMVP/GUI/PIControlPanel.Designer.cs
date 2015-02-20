@@ -1,4 +1,4 @@
-﻿namespace CMVP
+﻿namespace CMVP.GUI
 {
     partial class PIControlPanel
     {
@@ -79,23 +79,19 @@
             this.iLabel.Size = new System.Drawing.Size(56, 13);
             this.iLabel.TabIndex = 4;
             this.iLabel.Text = "I (integral):";
-
             // 
-            // PIDControlPanel
+            // PIControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.dLabel);
-            this.Controls.Add(this.dNumeric);
             this.Controls.Add(this.iNumeric);
             this.Controls.Add(this.iLabel);
             this.Controls.Add(this.pNumeric);
             this.Controls.Add(this.pLabel);
-            this.Name = "PIDControlPanel";
+            this.Name = "PIControlPanel";
             this.Size = new System.Drawing.Size(200, 114);
             ((System.ComponentModel.ISupportInitialize)(this.pNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.iNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -107,7 +103,6 @@
         private System.Windows.Forms.Label pLabel;
         private System.Windows.Forms.NumericUpDown iNumeric;
         private System.Windows.Forms.Label iLabel;
-        private System.Windows.Forms.NumericUpDown dNumeric;
-        private System.Windows.Forms.Label dLabel;
+        
     }
 }
