@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.rawVideoRadioButton = new System.Windows.Forms.RadioButton();
+            this.drawVideoRadioButton = new System.Windows.Forms.RadioButton();
             this.processedVideoRadioButton = new System.Windows.Forms.RadioButton();
             this.drawDetectedFeaturesCheckBox = new System.Windows.Forms.CheckBox();
             this.drawTrackCheckBox = new System.Windows.Forms.CheckBox();
             this.videoStreamPanel = new System.Windows.Forms.Panel();
+            this.drawCarIDCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
-            // rawVideoRadioButton
+            // drawVideoRadioButton
             // 
-            this.rawVideoRadioButton.AutoSize = true;
-            this.rawVideoRadioButton.Location = new System.Drawing.Point(13, 13);
-            this.rawVideoRadioButton.Name = "rawVideoRadioButton";
-            this.rawVideoRadioButton.Size = new System.Drawing.Size(76, 17);
-            this.rawVideoRadioButton.TabIndex = 0;
-            this.rawVideoRadioButton.TabStop = true;
-            this.rawVideoRadioButton.Text = "Raw video";
-            this.rawVideoRadioButton.UseVisualStyleBackColor = true;
+            this.drawVideoRadioButton.AutoSize = true;
+            this.drawVideoRadioButton.Location = new System.Drawing.Point(13, 13);
+            this.drawVideoRadioButton.Name = "drawVideoRadioButton";
+            this.drawVideoRadioButton.Size = new System.Drawing.Size(76, 17);
+            this.drawVideoRadioButton.TabIndex = 0;
+            this.drawVideoRadioButton.TabStop = true;
+            this.drawVideoRadioButton.Text = "Raw video";
+            this.drawVideoRadioButton.UseVisualStyleBackColor = true;
             // 
             // processedVideoRadioButton
             // 
@@ -85,16 +86,27 @@
             this.videoStreamPanel.TabIndex = 4;
             this.videoStreamPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.videoStreamPanel_Paint);
             // 
+            // drawCarIDCheckBox
+            // 
+            this.drawCarIDCheckBox.AutoSize = true;
+            this.drawCarIDCheckBox.Location = new System.Drawing.Point(13, 106);
+            this.drawCarIDCheckBox.Name = "drawCarIDCheckBox";
+            this.drawCarIDCheckBox.Size = new System.Drawing.Size(83, 17);
+            this.drawCarIDCheckBox.TabIndex = 5;
+            this.drawCarIDCheckBox.Text = "Draw car ID";
+            this.drawCarIDCheckBox.UseVisualStyleBackColor = true;
+            // 
             // CameraControlWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(619, 389);
+            this.Controls.Add(this.drawCarIDCheckBox);
             this.Controls.Add(this.videoStreamPanel);
             this.Controls.Add(this.drawTrackCheckBox);
             this.Controls.Add(this.drawDetectedFeaturesCheckBox);
             this.Controls.Add(this.processedVideoRadioButton);
-            this.Controls.Add(this.rawVideoRadioButton);
+            this.Controls.Add(this.drawVideoRadioButton);
             this.Name = "CameraControlWindow";
             this.Text = "CMVP - Camera Control";
             this.Load += new System.EventHandler(this.CameraControlWindow_Load);
@@ -105,10 +117,11 @@
 
         #endregion
 
-        private System.Windows.Forms.RadioButton rawVideoRadioButton;
+        private System.Windows.Forms.RadioButton drawVideoRadioButton;
         private System.Windows.Forms.RadioButton processedVideoRadioButton;
         private System.Windows.Forms.CheckBox drawDetectedFeaturesCheckBox;
         private System.Windows.Forms.CheckBox drawTrackCheckBox;
         private System.Windows.Forms.Panel videoStreamPanel;
+        private System.Windows.Forms.CheckBox drawCarIDCheckBox;
     }
 }
