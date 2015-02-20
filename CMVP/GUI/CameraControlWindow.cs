@@ -21,5 +21,10 @@ namespace CMVP
         {
            
         }
+
+        private void videoStreamPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

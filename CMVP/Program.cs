@@ -12,11 +12,11 @@ namespace CMVP
 {
     class Program
     {
+        
+        
         //Global variables
-        //object of different modules
-        public static float sampleTime = 1/150;             // Iteration time, equal 1/(updating frequency)
-
         //Simulation variables
+        public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
 
         public static void Main()

@@ -83,6 +83,7 @@
             this.videoStreamPanel.Name = "videoStreamPanel";
             this.videoStreamPanel.Size = new System.Drawing.Size(444, 364);
             this.videoStreamPanel.TabIndex = 4;
+            this.videoStreamPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.videoStreamPanel_Paint);
             // 
             // CameraControlWindow
             // 

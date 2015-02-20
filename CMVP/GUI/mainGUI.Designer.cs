@@ -375,43 +375,6 @@
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
             // 
-            // openCameraControlButton
-            // 
-            this.openCameraControlButton.Location = new System.Drawing.Point(38, 46);
-            this.openCameraControlButton.Name = "openCameraControlButton";
-            this.openCameraControlButton.Size = new System.Drawing.Size(122, 23);
-            this.openCameraControlButton.TabIndex = 7;
-            this.openCameraControlButton.Text = "Open camera control";
-            this.openCameraControlButton.UseVisualStyleBackColor = true;
-            this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Location = new System.Drawing.Point(94, 43);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
-            this.numericUpDown1.TabIndex = 9;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 45);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Max speed:";
-            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
