@@ -30,7 +30,7 @@ const byte DAC_array[] = {0b00000000,0b00000010,0b00000100,0b00000110};
 const byte dac_off = 0b00000000; //output = 0V
 const byte dac_on = 0b11111111;  //output = Vref
 
-//Variables used to debug and trim  Vref=3.3V
+//Variables used to debug and trim  Vref=3.3V (from Arduino)
 const byte max_throttle = 0b00111001;      //output = 0.74V
 const byte neutral_throttle = 0b01101111;  //output = 1.44V
 const byte reverse_rhrottle = 0b10011101;  //output = 2.03V
@@ -52,6 +52,7 @@ void setup()
   SPI.setDataMode(SPI_MODE1);           // Settings from the datasheet, reads at negative edge, clock=0 is idle
   SPI.setClockDivider(SPI_CLOCK_DIV16); // Match clock speed with DAC
   SPI.setBitOrder(MSBFIRST);            // Most significant bit should be sent first
+  setToNeutral();                       // Sets all DACs to "neutral" voltage
 
   Serial.begin(115200);
   delay(1000);
@@ -61,10 +62,7 @@ void setup()
 //Main Loop
 void loop() 
 { 
-  steeringTest();
-  delay(100);
-  throttleTest();
-  delay(100);
+  program();
  }
 
 void changeDAC(byte DAC, byte value){
@@ -73,6 +71,13 @@ void changeDAC(byte DAC, byte value){
   digitalWrite(loadPin,LOW);
   delay(6);
   digitalWrite(loadPin,HIGH);
+}
+
+void setToNeutral(){
+  changeDAC(throttleA,neutral_throttle);
+  changeDAC(throttleB,neutral_throttle);
+  changeDAC(steeringA,neutral_steering);
+  changeDAC(steeringB,neutral_steering);
 }
 
   /**

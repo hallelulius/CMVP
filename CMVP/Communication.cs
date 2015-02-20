@@ -13,9 +13,25 @@ namespace CMVP
        /// <summary>
        /// This class sends the right steering and throttle parametres to the arduino 
        /// </summary>
+       /// 
+     class Communication
+     {
+        //addresses for the DACs
+        private const byte throttleA = 0;    // DAC A gain 1
+        private const byte throttleB = 2;    // DAC B gain 1
+        private const byte steeringA = 4;    // DAC C gain 1
+        private const byte steeringB = 6;    // DAC D gain 1
+        private const byte error = 255;
 
-    class Communication
-    {
+        //Variables used to debug and trim  Vref=3.3V
+        private const byte max_throttle = 57;      //output = 0.74V
+        private const byte neutral_throttle = 111;  //output = 1.44V
+        private const byte reverse_rhrottle = 157;  //output = 2.03V
+        private const byte neutral_steering = 114;  //output = 1.47V
+        private const byte left_steering = 218;     //output = 2.82V
+        private const byte right_steering = 7;    //output = 0.09V
+        private const byte voltage_cap = 219;  //voltage cap
+
         private SerialPort port;
         private bool active = false;
 
@@ -36,37 +52,73 @@ namespace CMVP
             }
         }
 
-        private byte convertCarID(int id)
+        private byte convertCarID(int id, char mode)
         {
-            //should convert it to proper binary values according to the transmitters voltage
-            //depends on input from controller class
-            return (byte) id;
+            byte DAC;
+            if (id == 1 && mode == 'T')
+            {
+                DAC = throttleA;
+            }
+            else if (id == 1 && mode == 'S')
+            {
+                DAC = steeringA;
+            }
+            else if (id == 2 && mode == 'T')
+            {
+                DAC = throttleB;
+            }
+            else if (id == 2 && mode == 'S')
+            {
+                DAC = steeringB;
+            }
+            else
+            {
+                System.Console.WriteLine("No valid id or mode");
+                DAC = error;
+            }
+            return DAC;
         }
 
-        private byte convertValue(int value)
+        private byte convertValue(int value, char mode)
         {
-            //should convert it to proper binary values according to the transmitters voltage
-            //depends on input from controller class
-            return (byte) value;
+            byte val;
+            if ((byte)value > voltage_cap)
+            {
+                val = error;
+            }
+            else
+            {
+                val = (byte)value;
+            }
+            return val;
         }
 
-        public void updateSteering(int carID, int value)
+        public void stopCar(int carID)
         {
-            byte id = convertCarID(carID);
-            byte val = convertValue(value);
-            updateSteering(id, val);
+            updateCar(carID, neutral_steering, 'S');
+            updateCar(carID, neutral_throttle, 'T');
         }
 
-        public void updateThrottle(int carID, int value)
+        public void updateCar(int carID, int value, char mode)
         {
-            byte id = convertCarID(carID);
-            byte val = convertValue(value);
-            updateThrottle(id, val);
+            byte val = convertValue(value,mode);
+            byte id = convertCarID(carID, mode);
+            
+            switch (mode){
+                case 'T':
+                    updateThrottle(id, val);
+                    break;
+                case 'S':
+                    updateSteering(id, val);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void updateSteering(byte carID, byte value)
         {
-            if (port != null) 
+            if (port != null || carID != error || value != error ) 
             {
                 port.Open();
                 byte[] bits = {carID, value };
@@ -77,9 +129,8 @@ namespace CMVP
 
         private void updateThrottle(byte carID, byte value)
         {
-            if (port != null)
+            if (port != null || carID != -1 || value != -1)
             {
-                carID += 2; // change to throttle DAC
                 port.Open();
                 byte[] bits = { carID, value };
                 port.Write(bits, 0, 2);
@@ -103,7 +154,6 @@ namespace CMVP
             {
                 System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC. \n");
                 System.Console.WriteLine(e.ToString());
-                //System.Console.ReadKey();
                 return null;
             }
         }
