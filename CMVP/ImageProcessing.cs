@@ -13,41 +13,54 @@ namespace CMVP
         List<int> objects;
         private VideoStream videoStream;
         private Bitmap img;
+        private List<Panel> panelsToUpdate;
+        private Timer imgProcesTimer;
 
+
+        public ImageProcessing(VideoStream videoStream)
+        {
+            System.Console.WriteLine("CreatImageProcessingClass");
+            this.imgProcesTimer = new Timer();
+            this.imgProcesTimer.Interval=20;
+            this.imgProcesTimer.Tick += new EventHandler(updatePanels);
+            objects = new List<int>();
+            this.panelsToUpdate = new List<Panel>();
+            this.videoStream = videoStream;
+        }
+        void updatePanels(object sender, EventArgs e)
+        {
+            img = videoStream.getImage();
+            foreach(Panel panel in panelsToUpdate)
+            {
+                panel.BackgroundImage = img;
+            }
+        }
         public void start()
         {
-
+            imgProcesTimer.Start();
         }
         public void stop()
         {
-
+            imgProcesTimer.Stop();
         }
         public void pushDestination(Panel panel)
         {
-
+            panelsToUpdate.Add(panel);
         }
         public void removeDestination(Panel panel)
         {
-
+            panelsToUpdate.Remove(panel);
         }
         public Size getSize()
         {
             return new Size(0, 0);
         }
-        public ImageProcessing(VideoStream videoStream)
-        {
-            this.videoStream = videoStream;
-        }
+
         public Bitmap getImage()
         {
             return img;
         }
-        public ImageProcessing()
-        {
-            System.Console.WriteLine("CreatImageProcessingClass");
-            objects = new List<int>();
 
-        }
         //function to get triangels in sets of 3 points from a list of points
         private List<System.Drawing.Point[]> getTriangels(System.Drawing.Point[] points)
         {

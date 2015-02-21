@@ -19,12 +19,16 @@ namespace CMVP
         public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
         public static VideoStream videoStream;
+        public static VideoStream imageProcess;
 
         public static void Main()
         {
             mainGUI mainFrame = new mainGUI(); 
             videoStream = new Camera();
+            imageProcess = new ImageProcessing(videoStream);
             videoStream.start();
+            imageProcess.start();
+            
             Application.Run(mainFrame);
 
         }
