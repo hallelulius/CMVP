@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CMVP.GUI
+namespace CMVP
 {
     public partial class PIControlPanel : UserControl
     {

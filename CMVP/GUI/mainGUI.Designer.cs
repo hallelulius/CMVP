@@ -257,6 +257,7 @@
             this.controllerTypeDropDown.Name = "controllerTypeDropDown";
             this.controllerTypeDropDown.Size = new System.Drawing.Size(96, 21);
             this.controllerTypeDropDown.TabIndex = 4;
+            this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
             // 
             // radioButtonControllerThrottle
             // 
