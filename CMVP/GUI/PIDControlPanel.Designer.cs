@@ -42,14 +42,14 @@
             // pNumeric
             // 
             this.pNumeric.DecimalPlaces = 3;
-            this.pNumeric.Location = new System.Drawing.Point(91, 2);
+            this.pNumeric.Location = new System.Drawing.Point(114, 2);
             this.pNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.pNumeric.Name = "pNumeric";
-            this.pNumeric.Size = new System.Drawing.Size(97, 20);
+            this.pNumeric.Size = new System.Drawing.Size(74, 20);
             this.pNumeric.TabIndex = 3;
             // 
             // pLabel
@@ -57,21 +57,21 @@
             this.pLabel.AutoSize = true;
             this.pLabel.Location = new System.Drawing.Point(4, 4);
             this.pLabel.Name = "pLabel";
-            this.pLabel.Size = new System.Drawing.Size(81, 13);
+            this.pLabel.Size = new System.Drawing.Size(104, 13);
             this.pLabel.TabIndex = 2;
-            this.pLabel.Text = "P (proportional):";
+            this.pLabel.Text = "P (proportional gain):";
             // 
             // iNumeric
             // 
             this.iNumeric.DecimalPlaces = 3;
-            this.iNumeric.Location = new System.Drawing.Point(91, 23);
+            this.iNumeric.Location = new System.Drawing.Point(114, 23);
             this.iNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.iNumeric.Name = "iNumeric";
-            this.iNumeric.Size = new System.Drawing.Size(97, 20);
+            this.iNumeric.Size = new System.Drawing.Size(74, 20);
             this.iNumeric.TabIndex = 5;
             // 
             // iLabel
@@ -79,32 +79,32 @@
             this.iLabel.AutoSize = true;
             this.iLabel.Location = new System.Drawing.Point(4, 25);
             this.iLabel.Name = "iLabel";
-            this.iLabel.Size = new System.Drawing.Size(56, 13);
+            this.iLabel.Size = new System.Drawing.Size(79, 13);
             this.iLabel.TabIndex = 4;
-            this.iLabel.Text = "I (integral):";
+            this.iLabel.Text = "I (integral gain):";
             // 
             // dNumeric
             // 
             this.dNumeric.DecimalPlaces = 3;
-            this.dNumeric.Location = new System.Drawing.Point(91, 40);
+            this.dNumeric.Location = new System.Drawing.Point(114, 44);
             this.dNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.dNumeric.Name = "dNumeric";
-            this.dNumeric.Size = new System.Drawing.Size(97, 20);
+            this.dNumeric.Size = new System.Drawing.Size(74, 20);
             this.dNumeric.TabIndex = 7;
             this.dNumeric.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // dLabel
             // 
             this.dLabel.AutoSize = true;
-            this.dLabel.Location = new System.Drawing.Point(3, 47);
+            this.dLabel.Location = new System.Drawing.Point(3, 46);
             this.dLabel.Name = "dLabel";
-            this.dLabel.Size = new System.Drawing.Size(65, 13);
+            this.dLabel.Size = new System.Drawing.Size(96, 13);
             this.dLabel.TabIndex = 6;
-            this.dLabel.Text = "D (derivate):";
+            this.dLabel.Text = "D (derivative gain):";
             // 
             // PIDControlPanel
             // 

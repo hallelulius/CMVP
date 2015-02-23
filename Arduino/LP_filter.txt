@@ -1,0 +1,6 @@
+2nd order LP-filter
+
+Capacitors 0.66 uF
+Restistors 3.3kOhm
+
+
