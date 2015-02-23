@@ -13,7 +13,6 @@ namespace CMVP
     class Program
     {
         
-        
         //Global variables
         //Simulation variables
         public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
