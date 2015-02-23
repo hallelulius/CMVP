@@ -21,12 +21,12 @@ namespace CMVP
         private const byte throttleB = 2;    // DAC B gain 1
         private const byte steeringA = 4;    // DAC C gain 1
         private const byte steeringB = 6;    // DAC D gain 1
-        private const byte error = 255;
+        private const byte error = 220;
 
         //Variables used to debug and trim  Vref=3.3V
         private const byte max_throttle = 57;      //output = 0.74V
         private const byte neutral_throttle = 111;  //output = 1.44V
-        private const byte reverse_rhrottle = 157;  //output = 2.03V
+        private const byte reverse_throttle = 157;  //output = 2.03V
         private const byte neutral_steering = 114;  //output = 1.47V
         private const byte left_steering = 218;     //output = 2.82V
         private const byte right_steering = 7;    //output = 0.09V
@@ -52,22 +52,22 @@ namespace CMVP
             }
         }
 
-        private byte convertCarID(int id, char mode)
+        private byte convertCarID(int id, String mode)
         {
             byte DAC;
-            if (id == 1 && mode == 'T')
+            if (id == 1 && mode.Equals("Throttle") )
             {
                 DAC = throttleA;
             }
-            else if (id == 1 && mode == 'S')
+            else if (id == 1 && mode.Equals("Steering"))
             {
                 DAC = steeringA;
             }
-            else if (id == 2 && mode == 'T')
+            else if (id == 2 && mode.Equals("Throttle"))
             {
                 DAC = throttleB;
             }
-            else if (id == 2 && mode == 'S')
+            else if (id == 2 && mode.Equals("Steering"))
             {
                 DAC = steeringB;
             }
@@ -79,9 +79,11 @@ namespace CMVP
             return DAC;
         }
 
-        private byte convertValue(int value, char mode)
+        private byte convertValue(int value, String mode)
         {
             byte val;
+            if (value > error || value < 0)
+                value = error;
             if ((byte)value > voltage_cap)
             {
                 val = error;
@@ -95,46 +97,57 @@ namespace CMVP
 
         public void stopCar(int carID)
         {
-            updateCar(carID, neutral_steering, 'S');
-            updateCar(carID, neutral_throttle, 'T');
+            updateCar(carID, neutral_steering, "Steering");
+            updateCar(carID, neutral_throttle, "Throttle");
         }
 
-        public void updateCar(int carID, int value, char mode)
+        public void updateCar(int carID, int value, String mode)
         {
             byte val = convertValue(value,mode);
             byte id = convertCarID(carID, mode);
             
             switch (mode){
-                case 'T':
+                case "Throttle":
                     updateThrottle(id, val);
                     break;
-                case 'S':
+                case "Steering":
                     updateSteering(id, val);
                     break;
                 default:
+                    System.Console.WriteLine("Didn't update " +carID +" "+ mode);
                     break;
             }
         }
 
         private void updateSteering(byte carID, byte value)
         {
-            if (port != null || carID != error || value != error ) 
+            if (port != null && carID < error && value < error ) 
             {
                 port.Open();
                 byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
+                System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
+            }
+            else
+            {
+                System.Console.WriteLine("Error in steering");
             }
         }
 
         private void updateThrottle(byte carID, byte value)
         {
-            if (port != null || carID != -1 || value != -1)
+            if (port != null && carID < error && value < error)
             {
                 port.Open();
                 byte[] bits = { carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
+                System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+            }
+            else
+            {
+                System.Console.WriteLine("Error in throttle");
             }
         }
 
@@ -158,6 +171,44 @@ namespace CMVP
             }
         }
 
+        public void reverse(int carID, String mode)
+        {
+
+        }
+
+        public void reverseSetting(int carID, String mode, bool b)
+        {
+            if (b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, max_throttle, mode);
+                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+                
+            }
+            else if (!b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, reverse_throttle, mode);
+                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+            else if (b && mode.Equals("Steering"))
+            {
+                updateCar(carID, left_steering, mode);
+                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+            else if (!b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, right_steering, mode);
+                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+
+        }
         public bool isActive()
         {
             return active;

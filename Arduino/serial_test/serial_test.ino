@@ -9,9 +9,9 @@
  */
  
 
-const int LEDpin1 = 2;
-const int LEDpin2 = 3;
-const int LEDpin3 = 4;
+const int LEDpin1 = 2;   //red
+const int LEDpin2 = 3;   //yellow
+const int LEDpin3 = 4;   //green
 byte incomingByte = 0;
 
 void setup()
@@ -32,7 +32,7 @@ void loop()
         digitalWrite(LEDpin1,LOW);
         digitalWrite(LEDpin2,HIGH);
         digitalWrite(LEDpin3,HIGH);
-    }else if (incomingByte == 255){
+    }else if (incomingByte == 44){
         digitalWrite(LEDpin2,LOW);
         digitalWrite(LEDpin1,HIGH);
         digitalWrite(LEDpin3,HIGH);

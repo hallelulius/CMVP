@@ -31,5 +31,17 @@ namespace CMVP.GUI
         {
 
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // PIControlPanel
+            // 
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Name = "PIControlPanel";
+            this.ResumeLayout(false);
+
+        }
     }
 }

@@ -42,5 +42,10 @@ namespace CMVP
             CameraControlWindow ccw = new CameraControlWindow();
             ccw.Show();
         }
+
+        private void controllerCancelButton_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
