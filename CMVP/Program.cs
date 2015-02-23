@@ -19,6 +19,7 @@ namespace CMVP
         public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
 
+        [STAThread]
         public static void Main()
         {
             mainGUI mainFrame = new mainGUI();
