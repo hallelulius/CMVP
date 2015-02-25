@@ -12,11 +12,13 @@ namespace CMVP
         protected float[,] track;
         protected Car car;
         protected float scaleSpeed = 1;
+        protected String strategyName;
 
-        public ControlStrategy(Car car, float[,] track) // Constructor 
+        public ControlStrategy(Car car, float[,] track, String strategyName) // Constructor 
         {
             this.car = car;
-            this.track = track; 
+            this.track = track;
+            this.strategyName = strategyName;
         }
 
         public abstract void updateReferencePoint(); // Calculate next point for a car in reference signal
@@ -47,6 +49,11 @@ namespace CMVP
         {
             return track;
         }
+        public string getStrategyName()
+        {
+            return strategyName;
+        }
 
     }
 }
+ 

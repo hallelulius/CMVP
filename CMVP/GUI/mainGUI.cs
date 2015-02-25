@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CMVP
 {
@@ -54,9 +55,12 @@ namespace CMVP
                 controllerTypePanel.Controls.Add(new KeyboardControlPanel());
         }
 
-        private void controllerCancelButton_Click(object sender, EventArgs e)
+        private void importTrackButton_Click(object sender, EventArgs e)
         {
-            
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                TrackImporter ti = new TrackImporter(openFileDialog.FileName);
+            }
         }
     }
 }

@@ -57,6 +57,8 @@
             this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
+            this.importTrackButton = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -155,6 +157,7 @@
             // trackBasePanel
             // 
             this.trackBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trackBasePanel.Controls.Add(this.importTrackButton);
             this.trackBasePanel.Controls.Add(this.trackTrackLabel);
             this.trackBasePanel.Controls.Add(this.tracksDropDown);
             this.trackBasePanel.Location = new System.Drawing.Point(218, 111);
@@ -165,7 +168,7 @@
             // trackTrackLabel
             // 
             this.trackTrackLabel.AutoSize = true;
-            this.trackTrackLabel.Location = new System.Drawing.Point(3, 17);
+            this.trackTrackLabel.Location = new System.Drawing.Point(3, 48);
             this.trackTrackLabel.Name = "trackTrackLabel";
             this.trackTrackLabel.Size = new System.Drawing.Size(38, 13);
             this.trackTrackLabel.TabIndex = 3;
@@ -178,7 +181,7 @@
             "Circle",
             "Rainbow Road",
             "Nürnberg Ring"});
-            this.tracksDropDown.Location = new System.Drawing.Point(47, 14);
+            this.tracksDropDown.Location = new System.Drawing.Point(47, 43);
             this.tracksDropDown.Name = "tracksDropDown";
             this.tracksDropDown.Size = new System.Drawing.Size(136, 21);
             this.tracksDropDown.TabIndex = 2;
@@ -377,6 +380,20 @@
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
             // 
+            // importTrackButton
+            // 
+            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
+            this.importTrackButton.Name = "importTrackButton";
+            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
+            this.importTrackButton.TabIndex = 4;
+            this.importTrackButton.Text = "Import from file";
+            this.importTrackButton.UseVisualStyleBackColor = true;
+            this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "track.txt";
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,5 +459,7 @@
         private System.Windows.Forms.Button openCameraControlButton;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button importTrackButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

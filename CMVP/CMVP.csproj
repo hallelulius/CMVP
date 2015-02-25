@@ -116,10 +116,32 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="ControlStrategies\StandStill.cs" />
+    <Compile Include="ControlStrategies\JustFollow.cs" />
     <Compile Include="ControlStrategy.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\PIControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PIControlPanel.Designer.cs">
+      <DependentUpon>PIControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrackImporter.cs" />
+    <Compile Include="VideoStream.cs" />
+    <Compile Include="GUI\CameraControlWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\CameraControlWindow.Designer.cs">
+      <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.Designer.cs">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\mainGUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,24 +154,11 @@
     <Compile Include="GUI\PControlPanel.Designer.cs">
       <DependentUpon>PControlPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\PIControlPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\PIControlPanel.Designer.cs">
-      <DependentUpon>PIControlPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\PIDControlPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUI\PIDControlPanel.Designer.cs">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VideoStream.cs" />
-    <Compile Include="GUI\CameraControlWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\CameraControlWindow.Designer.cs">
-      <DependentUpon>CameraControlWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ImageProcessing.cs" />
@@ -265,7 +274,7 @@
     <EmbeddedResource Include="GUI\PControlPanel.resx">
       <DependentUpon>PControlPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PIControlPanel.resx">
+	<EmbeddedResource Include="GUI\PIControlPanel.resx">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
