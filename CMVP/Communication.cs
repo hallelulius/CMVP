@@ -101,8 +101,9 @@ namespace CMVP
             updateCar(carID, neutral_throttle, "Throttle");
         }
 
-        public void updateCar(int carID, int value, String mode)
+        public void updateCar(int carID, float value1, String mode)
         {
+            int value = (int)value1;  //ÄNDRA DETTA!
             byte val = convertValue(value,mode);
             byte id = convertCarID(carID, mode);
             

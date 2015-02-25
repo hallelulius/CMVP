@@ -17,6 +17,8 @@ namespace CMVP
         
         
         //Global variables
+        public static Communication com = new Communication();
+        public static List<Car> cars = new List<Car>();
         //Simulation variables
         public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
@@ -24,6 +26,7 @@ namespace CMVP
         [STAThread]
         public static void Main()
         {
+
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
         }
