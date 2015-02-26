@@ -65,5 +65,22 @@ namespace CMVP
         {
             imgProcess.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
         }
+
+        private void checkBoxDrawCenters_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawCenterOnImg = checkBoxDrawCenters.Checked;
+        }
+
+        private void checkBoxDrawTriangles_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawTriangleOnImg = checkBoxDrawTriangles.Checked;
+        }
+
+        private void checkBoxDrawDirection_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
+
+        }
+
     }
 }
