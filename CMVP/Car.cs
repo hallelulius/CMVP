@@ -18,7 +18,7 @@ namespace CMVP
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
-        private int id; //Identification number of the car.
+        private int id; public int ID { get { return id; } }//Identification number of the car.
         private Controller controller; // This specific cars controller
         private ControlStrategy controlStrategy; // This specific cars control strategy
         
@@ -164,5 +164,9 @@ namespace CMVP
             return direction.First();
         }
 
+        public void setControlStrategy(ControlStrategy cs)
+        {
+            controlStrategy = cs;
+        }
     }
 }

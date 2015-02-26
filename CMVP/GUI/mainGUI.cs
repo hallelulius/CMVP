@@ -72,5 +72,51 @@ namespace CMVP
                 TrackImporter ti = new TrackImporter(openFileDialog.FileName);
             }
         }
+
+        private void trafficControlBasePanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+        private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
+        {
+            Console.WriteLine("Searching for cars...");
+            foreach (Car car in Program.cars)
+            {
+                if (!controllerCarIDDropDown.Items.Contains(car.ID))
+                    controllerCarIDDropDown.Items.Add(car.ID);
+            }
+        }
+
+        private void trafficCarIDDropDown_DropDown(object sender, EventArgs e)
+        {
+            Console.WriteLine("Searching for cars...");
+            foreach (Car car in Program.cars)
+            {
+                if (!controllerCarIDDropDown.Items.Contains(car.ID))
+                    controllerCarIDDropDown.Items.Add(car.ID);
+            }
+        }
+
+        private void trafficApplyButton_Click(object sender, EventArgs e)
+        {
+            if (controllerCarIDDropDown.Items.Count > 0)
+            {
+                int tempID = (int)trafficCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
+                    tempCar.setControlStrategy(new ControlStrategies.JustFollow());
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Stand still")
+                    tempCar.setControlStrategy(new ControlStrategies.StandStill());
+            }
+        }
+
+        private void trafficCancelButton_Click(object sender, EventArgs e)
+        {
+            trafficCarIDDropDown.SelectedIndex = -1;
+            controlStrategyControlStrategyDropDown.SelectedIndex = -1;
+        }
     }
 }

@@ -37,6 +37,7 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,19 +53,22 @@
             this.controllerCarIDDropDown = new System.Windows.Forms.ComboBox();
             this.trafficControlPanelLabel = new System.Windows.Forms.Label();
             this.trafficControlBasePanel = new System.Windows.Forms.Panel();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
+            this.trafficCarIDLabel = new System.Windows.Forms.Label();
+            this.trafficCancelButton = new System.Windows.Forms.Button();
+            this.trafficCarIDDropDown = new System.Windows.Forms.ComboBox();
+            this.trafficApplyButton = new System.Windows.Forms.Button();
+            this.trafficMaxSpeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.trafficMaxSpeedLabel = new System.Windows.Forms.Label();
             this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
             this.controllerBasePanel.SuspendLayout();
             this.trafficControlBasePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // startSimulationButton
@@ -164,6 +168,16 @@
             this.trackBasePanel.Name = "trackBasePanel";
             this.trackBasePanel.Size = new System.Drawing.Size(200, 276);
             this.trackBasePanel.TabIndex = 4;
+            // 
+            // importTrackButton
+            // 
+            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
+            this.importTrackButton.Name = "importTrackButton";
+            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
+            this.importTrackButton.TabIndex = 4;
+            this.importTrackButton.Text = "Import from file";
+            this.importTrackButton.UseVisualStyleBackColor = true;
+            this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
             // 
             // trackTrackLabel
             // 
@@ -300,6 +314,7 @@
             this.controllerCarIDDropDown.Name = "controllerCarIDDropDown";
             this.controllerCarIDDropDown.Size = new System.Drawing.Size(42, 21);
             this.controllerCarIDDropDown.TabIndex = 0;
+            this.controllerCarIDDropDown.DropDown += new System.EventHandler(this.controllerCarIDDropDown_DropDown);
             // 
             // trafficControlPanelLabel
             // 
@@ -314,8 +329,12 @@
             // trafficControlBasePanel
             // 
             this.trafficControlBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.trafficControlBasePanel.Controls.Add(this.numericUpDown1);
-            this.trafficControlBasePanel.Controls.Add(this.label1);
+            this.trafficControlBasePanel.Controls.Add(this.trafficCarIDLabel);
+            this.trafficControlBasePanel.Controls.Add(this.trafficCancelButton);
+            this.trafficControlBasePanel.Controls.Add(this.trafficCarIDDropDown);
+            this.trafficControlBasePanel.Controls.Add(this.trafficApplyButton);
+            this.trafficControlBasePanel.Controls.Add(this.trafficMaxSpeedNumeric);
+            this.trafficControlBasePanel.Controls.Add(this.trafficMaxSpeedLabel);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyTypePanel);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyLabel);
             this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyDropDown);
@@ -323,45 +342,84 @@
             this.trafficControlBasePanel.Name = "trafficControlBasePanel";
             this.trafficControlBasePanel.Size = new System.Drawing.Size(200, 276);
             this.trafficControlBasePanel.TabIndex = 4;
+            this.trafficControlBasePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.trafficControlBasePanel_Paint);
             // 
-            // numericUpDown1
+            // trafficCarIDLabel
             // 
-            this.numericUpDown1.DecimalPlaces = 1;
-            this.numericUpDown1.Location = new System.Drawing.Point(94, 43);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.trafficCarIDLabel.AutoSize = true;
+            this.trafficCarIDLabel.Location = new System.Drawing.Point(3, 16);
+            this.trafficCarIDLabel.Name = "trafficCarIDLabel";
+            this.trafficCarIDLabel.Size = new System.Drawing.Size(40, 13);
+            this.trafficCarIDLabel.TabIndex = 10;
+            this.trafficCarIDLabel.Text = "Car ID:";
+            // 
+            // trafficCancelButton
+            // 
+            this.trafficCancelButton.Location = new System.Drawing.Point(69, 248);
+            this.trafficCancelButton.Name = "trafficCancelButton";
+            this.trafficCancelButton.Size = new System.Drawing.Size(60, 23);
+            this.trafficCancelButton.TabIndex = 9;
+            this.trafficCancelButton.Text = "Cancel";
+            this.trafficCancelButton.UseVisualStyleBackColor = true;
+            this.trafficCancelButton.Click += new System.EventHandler(this.trafficCancelButton_Click);
+            // 
+            // trafficCarIDDropDown
+            // 
+            this.trafficCarIDDropDown.FormattingEnabled = true;
+            this.trafficCarIDDropDown.Location = new System.Drawing.Point(49, 13);
+            this.trafficCarIDDropDown.Name = "trafficCarIDDropDown";
+            this.trafficCarIDDropDown.Size = new System.Drawing.Size(42, 21);
+            this.trafficCarIDDropDown.TabIndex = 9;
+            this.trafficCarIDDropDown.DropDown += new System.EventHandler(this.trafficCarIDDropDown_DropDown);
+            // 
+            // trafficApplyButton
+            // 
+            this.trafficApplyButton.Location = new System.Drawing.Point(135, 248);
+            this.trafficApplyButton.Name = "trafficApplyButton";
+            this.trafficApplyButton.Size = new System.Drawing.Size(60, 23);
+            this.trafficApplyButton.TabIndex = 9;
+            this.trafficApplyButton.Text = "Apply";
+            this.trafficApplyButton.UseVisualStyleBackColor = true;
+            this.trafficApplyButton.Click += new System.EventHandler(this.trafficApplyButton_Click);
+            // 
+            // trafficMaxSpeedNumeric
+            // 
+            this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
+            this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
+            this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
-            this.numericUpDown1.TabIndex = 9;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.trafficMaxSpeedNumeric.Name = "trafficMaxSpeedNumeric";
+            this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(89, 20);
+            this.trafficMaxSpeedNumeric.TabIndex = 9;
+            this.trafficMaxSpeedNumeric.Value = new decimal(new int[] {
             200,
             0,
             0,
             0});
             // 
-            // label1
+            // trafficMaxSpeedLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 45);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Max speed:";
+            this.trafficMaxSpeedLabel.AutoSize = true;
+            this.trafficMaxSpeedLabel.Location = new System.Drawing.Point(3, 69);
+            this.trafficMaxSpeedLabel.Name = "trafficMaxSpeedLabel";
+            this.trafficMaxSpeedLabel.Size = new System.Drawing.Size(62, 13);
+            this.trafficMaxSpeedLabel.TabIndex = 8;
+            this.trafficMaxSpeedLabel.Text = "Max speed:";
             // 
             // controlStrategyTypePanel
             // 
-            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 79);
+            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 117);
             this.controlStrategyTypePanel.Name = "controlStrategyTypePanel";
-            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 196);
+            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 114);
             this.controlStrategyTypePanel.TabIndex = 7;
             // 
             // controlStrategyControlStrategyLabel
             // 
             this.controlStrategyControlStrategyLabel.AutoSize = true;
-            this.controlStrategyControlStrategyLabel.Location = new System.Drawing.Point(3, 17);
+            this.controlStrategyControlStrategyLabel.Location = new System.Drawing.Point(3, 43);
             this.controlStrategyControlStrategyLabel.Name = "controlStrategyControlStrategyLabel";
             this.controlStrategyControlStrategyLabel.Size = new System.Drawing.Size(85, 13);
             this.controlStrategyControlStrategyLabel.TabIndex = 5;
@@ -371,23 +429,12 @@
             // 
             this.controlStrategyControlStrategyDropDown.FormattingEnabled = true;
             this.controlStrategyControlStrategyDropDown.Items.AddRange(new object[] {
-            "Platooning",
-            "Overtaking",
-            "Collision Avoidance"});
-            this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 14);
+            "Stand still",
+            "Follow track"});
+            this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
-            // 
-            // importTrackButton
-            // 
-            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
-            this.importTrackButton.Name = "importTrackButton";
-            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
-            this.importTrackButton.TabIndex = 4;
-            this.importTrackButton.Text = "Import from file";
-            this.importTrackButton.UseVisualStyleBackColor = true;
-            this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
             // 
             // openFileDialog
             // 
@@ -420,7 +467,7 @@
             this.controllerBasePanel.PerformLayout();
             this.trafficControlBasePanel.ResumeLayout(false);
             this.trafficControlBasePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -456,9 +503,13 @@
         private System.Windows.Forms.Label controlStrategyControlStrategyLabel;
         private System.Windows.Forms.ComboBox controlStrategyControlStrategyDropDown;
         private System.Windows.Forms.Button openCameraControlButton;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown trafficMaxSpeedNumeric;
+        private System.Windows.Forms.Label trafficMaxSpeedLabel;
         private System.Windows.Forms.Button importTrackButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Label trafficCarIDLabel;
+        private System.Windows.Forms.Button trafficCancelButton;
+        private System.Windows.Forms.ComboBox trafficCarIDDropDown;
+        private System.Windows.Forms.Button trafficApplyButton;
     }
 }
