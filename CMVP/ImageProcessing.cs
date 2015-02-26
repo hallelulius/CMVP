@@ -116,7 +116,7 @@ namespace CMVP
 
             Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
             
-            triangles = filterTriangels(triangles, 19, 15, 1, 1,true);
+            triangles = filterTriangels(triangles, 19, 15, 2, 2,true);
 
             Console.WriteLine("Before centers: " + System.DateTime.Now.Millisecond);
 
@@ -263,21 +263,24 @@ namespace CMVP
 
                 if(d0 < d1 && d0 < d2)
                 {
+                    Console.WriteLine("d0 base");
                     top=triangle[2];
                     base1=triangle[0];
                     base2=triangle[1];
                 }
-                if(d1 < d0 && d1 < d2)
+                else if(d1 < d0 && d1 < d2)
                 {
+                    Console.WriteLine("d1 base");
                     top = triangle[1];
                     base1 = triangle[0];
                     base2 = triangle[2];
                 }
                 else
                 {
-                    top = triangle[2];
+                    Console.WriteLine("d2 base");
+                    top = triangle[0];
                     base1 = triangle[1];
-                    base2 = triangle[0];
+                    base2 = triangle[2];
                 }
                 System.Drawing.Point center = new System.Drawing.Point(top.X / 2 + (base1.X + base2.X) / 4, top.Y / 2 + (base1.Y + base2.Y) / 4);
                 System.Drawing.PointF direction = new System.Drawing.PointF(top.X-center.X,top.Y-center.Y);
@@ -371,7 +374,7 @@ namespace CMVP
                 else
                 {
                     triangleBase = d3;
-                    triangleHight = Math.Sqrt(-d1 * d1 - (d3 / 2) * (d3 / 2));
+                    triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
                 System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
                 System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
