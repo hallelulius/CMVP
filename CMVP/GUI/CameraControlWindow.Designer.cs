@@ -37,6 +37,7 @@
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -86,9 +87,9 @@
             // 
             // videoStreamPanel
             // 
-            this.videoStreamPanel.Location = new System.Drawing.Point(163, 13);
+            this.videoStreamPanel.Location = new System.Drawing.Point(214, 13);
             this.videoStreamPanel.Name = "videoStreamPanel";
-            this.videoStreamPanel.Size = new System.Drawing.Size(444, 364);
+            this.videoStreamPanel.Size = new System.Drawing.Size(458, 364);
             this.videoStreamPanel.TabIndex = 4;
             this.videoStreamPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.videoStreamPanel_Paint);
             // 
@@ -108,7 +109,7 @@
             this.groupBox1.Controls.Add(this.processedVideoRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(141, 68);
+            this.groupBox1.Size = new System.Drawing.Size(196, 68);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Source";
@@ -116,21 +117,33 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxDrawCirkels);
             this.groupBox2.Controls.Add(this.drawDetectedFeaturesCheckBox);
             this.groupBox2.Controls.Add(this.drawCarIDCheckBox);
             this.groupBox2.Controls.Add(this.drawTrackCheckBox);
             this.groupBox2.Location = new System.Drawing.Point(12, 86);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(141, 132);
+            this.groupBox2.Size = new System.Drawing.Size(196, 132);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
+            // 
+            // checkBoxDrawCirkels
+            // 
+            this.checkBoxDrawCirkels.AutoSize = true;
+            this.checkBoxDrawCirkels.Location = new System.Drawing.Point(6, 88);
+            this.checkBoxDrawCirkels.Name = "checkBoxDrawCirkels";
+            this.checkBoxDrawCirkels.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxDrawCirkels.TabIndex = 6;
+            this.checkBoxDrawCirkels.Text = "Draw detected cirkels";
+            this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
+            this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 
             // CameraControlWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(619, 389);
+            this.ClientSize = new System.Drawing.Size(684, 389);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.videoStreamPanel);
@@ -156,5 +169,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.ComponentModel.BackgroundWorker o;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBoxDrawCirkels;
     }
 }

@@ -21,6 +21,12 @@ namespace CMVP
 {
     class ImageProcessing : VideoStream
     {
+        static private Pen redPen=new Pen(Color.Red, 2);
+        static private Pen bluePen = new Pen(Color.LightSkyBlue,2);
+        static private Pen greenPen = new Pen(Color.Green, 2);
+        static private Pen yellowPen = new Pen(Color.Yellow, 2);
+
+
         List<Car> objects;
         private VideoStream videoStream;
         private Bitmap img;
@@ -28,23 +34,28 @@ namespace CMVP
         //Temporary variable until the physical filter is in use.
         private Bitmap filteredImg;
         private List<System.Drawing.Point> centers;
-        private List<Vector3> directions;
+        private List<System.Drawing.PointF> directions;
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
+        private int tempTime;
+        private Graphics g;
 
+        public Boolean drawCirkelsOnImg;
         
-
-
 
         public ImageProcessing(VideoStream videoStream)
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
-            this.imgProcesTimer.Interval=20;
+            this.imgProcesTimer.Interval=1;
             this.imgProcesTimer.Tick += new EventHandler(updatePanels);
             this.objects = new List<Car>();
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
+            this.tempTime=0;
+
+            this.drawCirkelsOnImg = true;
+
         }
         void updatePanels(object sender, EventArgs e)
         {
@@ -82,38 +93,64 @@ namespace CMVP
         
         private Bitmap processImage()
         {
+            Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
+
             YCbCrFiltering filter = new YCbCrFiltering();
             filter.Y = new Range(0.9f, 1);
             filteredImg = filter.Apply(img);
 
-            Graphics g = Graphics.FromImage(filteredImg);
-            Pen redPen = new Pen(Color.Red, 2);
-            List<Blob> cirkels = getCircularBlobs(20, 100);
+            this.g = Graphics.FromImage(filteredImg);
+            Console.WriteLine("BW filter: " + System.DateTime.Now.Millisecond);
+
+            Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
+            List<Blob> cirkels = getCircularBlobs(5, 10);
+
+            Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
-            triangles = filterTriangels(triangles, 1.47, 0.05, 0.974, 0.4);
-            if (triangles.Count > 0) 
-                Console.WriteLine(triangles.Count);
+
+
+            Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
+
+            triangles = filterDubblets(triangles);
+
+            Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
+            
+            triangles = filterTriangels(triangles, 19, 15, 1, 1,true);
+
+            Console.WriteLine("Before centers: " + System.DateTime.Now.Millisecond);
+
             centers = getCenterOfTriangels(triangles);
+
+            Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
+
             directions=getDirectionOfTriangels(triangles);
 
             for (int k = 0; k < triangles.Count; k++)
             {
+                Console.WriteLine(k);
                 System.Drawing.Point[] triangelPoints = triangles.ElementAt(k);
-                g.DrawLines(redPen, triangelPoints);
-                g.DrawLine(redPen, triangelPoints.Last(), triangelPoints.First());
-                g.DrawEllipse(redPen, new Rectangle(centers[k].X - 2, centers[k].Y - 2, 4, 4));
-                g.DrawLine(redPen,centers[k],new System.Drawing.Point((int)(centers[k].X+directions[k].X),(int)(centers[k].Y+directions[k].Y)));
+                g.DrawLines(greenPen, triangelPoints);
+                g.DrawLine(greenPen, triangelPoints.Last(), triangelPoints.First());
+                g.DrawEllipse(bluePen, new Rectangle(centers[k].X - 2, centers[k].Y - 2, 2, 2));
+                g.DrawLine(yellowPen,centers[k],new System.Drawing.Point((int)(centers[k].X+directions[k].X*40),(int)(centers[k].Y+directions[k].Y*40)));
                 //objects[k].setFound(true);
             }
             return filteredImg;
         }
-        private List<Blob> getCircularBlobs(int MinRadius, int maxRadius)
+        private void drawCirkels(List<Blob> cirkels)
+        {
+            foreach(Blob cirkel in cirkels)
+            {
+                g.DrawEllipse(redPen, cirkel.Rectangle);
+            }
+        }
+        private List<Blob> getCircularBlobs(int minRadius, int maxRadius)
         {
 
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.MinHeight = 20;
-            blobCounter.MaxHeight = 100;
+            blobCounter.MinHeight = minRadius;
+            blobCounter.MaxHeight = maxRadius;
             blobCounter.FilterBlobs = true;
             blobCounter.ProcessImage(filteredImg);
             Blob[] blobs = blobCounter.GetObjectsInformation();
@@ -132,6 +169,8 @@ namespace CMVP
                     cirkels.Add(b);
                 }
             }
+            if (drawCirkelsOnImg)
+                drawCirkels(cirkels);
             return cirkels;
         }
         private List<System.Drawing.Point> getPoints(List<Blob> blobs)
@@ -174,56 +213,77 @@ namespace CMVP
         private List<System.Drawing.Point> getCenterOfTriangels(List<System.Drawing.Point[]> triangels)
         {
             List<System.Drawing.Point> centers = new List<System.Drawing.Point>();
-            foreach(System.Drawing.Point[] triangel in triangels)
+            foreach (System.Drawing.Point[] triangle in triangels)
             {
-                //Makes it easier to read. Extrakting X and Y Values of the points to create two vectors.
-                int[] x= new int[3]{triangel[0].X,triangel[1].X,triangel[2].X};
-                int[] y= new int[3]{triangel[0].Y,triangel[1].Y,triangel[2].Y};
+                int[] x = new int[3] { triangle[0].X, triangle[1].X, triangle[2].X };
+                int[] y = new int[3] { triangle[0].Y, triangle[1].Y, triangle[2].Y };
 
-                centers.Add(new System.Drawing.Point((int)x.Average(),(int)y.Average()));
+                double d0 = Math.Sqrt((x[0] - x[1]) * (x[0] - x[1]) + (y[0] - y[1]) * (y[0] - y[1]));
+                double d1 = Math.Sqrt((x[0] - x[2]) * (x[0] - x[2]) + (y[0] - y[2]) * (y[0] - y[2]));
+                double d2 = Math.Sqrt((x[1] - x[2]) * (x[1] - x[2]) + (y[1] - y[2]) * (y[1] - y[2]));
+
+                System.Drawing.Point top, base1, base2;
+
+                if (d0 < d1 && d0 < d2)
+                {
+                    top = triangle[2];
+                    base1 = triangle[0];
+                    base2 = triangle[1];
+                }
+                if (d1 < d0 && d1 < d2)
+                {
+                    top = triangle[1];
+                    base1 = triangle[0];
+                    base2 = triangle[2];
+                }
+                else
+                {
+                    top = triangle[2];
+                    base1 = triangle[1];
+                    base2 = triangle[0];
+                }
+                System.Drawing.Point center = new System.Drawing.Point(top.X / 2 + (base1.X + base2.X) / 4, top.Y / 2 + (base1.Y + base2.Y) / 4);
+                centers.Add(center);
             }
             return centers;
         }
-        private List<Vector3> getDirectionOfTriangels(List<System.Drawing.Point[]>triangels)
+        private List<System.Drawing.PointF> getDirectionOfTriangels(List<System.Drawing.Point[]>triangels)
         {
-            List<Vector3> directions = new List<Vector3>();
+            List<System.Drawing.PointF> directions = new List<System.Drawing.PointF>();
             foreach(System.Drawing.Point[] triangle in triangels)
             {
                 int[] x = new int[3] { triangle[0].X, triangle[1].X, triangle[2].X };
                 int[] y = new int[3] { triangle[0].Y, triangle[1].Y, triangle[2].Y };
 
-                Vector3 v1 = new Vector3(x[0] - x[1], y[0] - y[1],0);
-                Vector3 v2 = new Vector3(x[0] - x[2], y[0] - y[2],0);
-                Vector3 v3 = new Vector3(x[2] - x[1], y[2] - y[1],0);
+                double d0 = Math.Sqrt((x[0] - x[1]) * (x[0] - x[1]) + (y[0] - y[1]) * (y[0] - y[1]));
+                double d1 = Math.Sqrt((x[0] - x[2]) * (x[0] - x[2]) + (y[0] - y[2]) * (y[0] - y[2]));
+                double d2 = Math.Sqrt((x[1] - x[2]) * (x[1] - x[2]) + (y[1] - y[2]) * (y[1] - y[2]));
 
-                Vector3 triangleLeg, triangleBase;
-                System.Drawing.Point baseCorner;
+                System.Drawing.Point top, base1, base2;
 
-
-                if(v1.Square<v2.Square && v1.Square < v3.Square)
+                if(d0 < d1 && d0 < d2)
                 {
-                    triangleBase = v1;
-                    triangleLeg = v2;
-                    baseCorner= new System.Drawing.Point(x[0],y[0]);
+                    top=triangle[2];
+                    base1=triangle[0];
+                    base2=triangle[1];
                 }
-                else if(v2.Square<v1.Square && v2.Square < v3.Square)
+                if(d1 < d0 && d1 < d2)
                 {
-                    triangleBase = v2;
-                    triangleLeg = v1;
-                    baseCorner= new System.Drawing.Point(x[0],y[0]);
+                    top = triangle[1];
+                    base1 = triangle[0];
+                    base2 = triangle[2];
                 }
                 else
                 {
-                    triangleBase = v3.Inverse();
-                    triangleLeg = v2;
-                    baseCorner= new System.Drawing.Point(x[0],y[0]);
+                    top = triangle[2];
+                    base1 = triangle[1];
+                    base2 = triangle[0];
                 }
-                System.Drawing.Point center = new System.Drawing.Point((int)x.Average(),(int)y.Average());
-                Vector3 triangelBase,triangelLeg;
-
-                System.Drawing.Point triangleSharpPoint = new System.Drawing.Point((int)(center.X + triangleLeg.X), (int)(center.Y + triangleLeg.Y));
-                Vector3 direction = new Vector3(center.X - triangleSharpPoint.X, center.Y- triangleSharpPoint.Y,0);
-                directions.Add(direction);
+                System.Drawing.Point center = new System.Drawing.Point(top.X / 2 + (base1.X + base2.X) / 4, top.Y / 2 + (base1.Y + base2.Y) / 4);
+                System.Drawing.PointF direction = new System.Drawing.PointF(top.X-center.X,top.Y-center.Y);
+                float directionDistance = (float) Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
+                System.Drawing.PointF NormedDirection = new System.Drawing.PointF(direction.X/directionDistance,direction.Y/directionDistance);
+                directions.Add(NormedDirection);
                 //directions.Add(Vector3.Divide(direction,direction.Norm));
             }
             return directions;
@@ -232,9 +292,6 @@ namespace CMVP
         List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangels, double propotion, double pError, double angle,double aError)
         {
             List<System.Drawing.Point[]> passedTriangels = new List<System.Drawing.Point[]>();
-            //Getting rid of dubblicates
-            List<System.Drawing.Point> centers = getCenterOfTriangels(triangels);
-            List<System.Drawing.Point> filteredDubblets; 
      
             for (int k = 0; k < triangels.Count; k++)
             {
@@ -281,6 +338,86 @@ namespace CMVP
             }
             return passedTriangels;
         }
-        
+        List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangles, double idealHight, double idealBase, double errorHight, double errorBase, Boolean b)
+        {
+            List<System.Drawing.Point[]> passedTriangels = new List<System.Drawing.Point[]>();
+
+            for (int k = 0; k < triangles.Count; k++)
+            {
+
+                double xDist = triangles.ElementAt(k)[0].X - triangles.ElementAt(k)[1].X;
+                double yDist = triangles.ElementAt(k)[0].Y - triangles.ElementAt(k)[1].Y;
+                double d1 = Math.Sqrt(xDist * xDist + yDist * yDist);
+                xDist = triangles.ElementAt(k)[1].X - triangles.ElementAt(k)[2].X;
+                yDist = triangles.ElementAt(k)[1].Y - triangles.ElementAt(k)[2].Y;
+                double d2 = Math.Sqrt(xDist * xDist + yDist * yDist);
+                xDist = triangles.ElementAt(k)[0].X - triangles.ElementAt(k)[2].X;
+                yDist = triangles.ElementAt(k)[0].Y - triangles.ElementAt(k)[2].Y;
+                double d3 = Math.Sqrt(xDist * xDist + yDist * yDist);
+
+
+                double triangleBase;
+                double triangleHight;
+                if (d1 < d2 && d1 < d3)
+                {
+                    triangleBase = d1;
+                    triangleHight = Math.Sqrt(d2 * d2 - (d1 / 2) * (d1 / 2));
+                }
+                else if (d2 < d1 && d2 < d3)
+                {
+                    triangleBase = d2;
+                    triangleHight = Math.Sqrt(d3 * d3 - (d2 / 2) * (d2 / 2));
+                }
+                else
+                {
+                    triangleBase = d3;
+                    triangleHight = Math.Sqrt(-d1 * d1 - (d3 / 2) * (d3 / 2));
+                }
+                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
+                {
+                    if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)
+                        passedTriangels.Add(triangles.ElementAt(k));
+                }
+
+            }
+            return passedTriangels;
+        }
+        private List<System.Drawing.Point[]> filterDubblets(List<System.Drawing.Point[]> triangles)
+        {
+            List<System.Drawing.Point[]> filteredTriangles = new List<System.Drawing.Point[]>();
+
+            foreach(System.Drawing.Point[] triangle in triangles)
+            {
+                Array.Sort(triangle,
+                    delegate(System.Drawing.Point p1, System.Drawing.Point p2)
+                    {
+                        if(p1.Y==p2.Y)
+                            return p1.X - p2.X;
+                        else
+                            return p1.Y-p2.Y;
+                    }
+                );
+            }
+            if(triangles.Count>0)
+                filteredTriangles.Add(triangles[0]);
+            foreach(System.Drawing.Point[] t1 in triangles)
+            {
+                Boolean add = true;
+                foreach(System.Drawing.Point[] t2 in filteredTriangles)
+                {
+                    if (t1[0].Equals(t2[0]) && t1[1].Equals(t2[1]) && t1[2].Equals(t2[2]))
+                        add = false;
+                        
+                }
+                if(add)
+                {
+                    filteredTriangles.Add(t1);
+                }
+            }
+
+            return filteredTriangles;
+        }
     }
 }

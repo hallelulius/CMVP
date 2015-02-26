@@ -10,9 +10,11 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
+    
     public partial class CameraControlWindow : Form
     {
         private Timer updatePreviewTimer;
+        private ImageProcessing imgProcess;
         public CameraControlWindow()
         {
             InitializeComponent();
@@ -20,6 +22,7 @@ namespace CMVP
             Program.videoStream.pushDestination(videoStreamPanel);
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
+            this.imgProcess = (ImageProcessing)Program.imageProcess;
         }
         private void updatePreview(object sender, EventArgs e)
         {
@@ -56,6 +59,11 @@ namespace CMVP
                 Program.videoStream.pushDestination(videoStreamPanel);
             }
 
+        }
+
+        private void checkBoxDrawCirkels_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
         }
     }
 }
