@@ -19,12 +19,13 @@ namespace CMVP
         private static bool simulating = false;
         public static VideoStream videoStream;
         public static VideoStream imageProcess;
+        public static List<Car> carList = new List<Car>();
 
         public static void Main()
         {
             mainGUI mainFrame = new mainGUI(); 
             videoStream = new Camera();
-            imageProcess = new ImageProcessing(videoStream);
+            imageProcess = new ImageProcessing(videoStream, carList);
             videoStream.start();
             imageProcess.start();
             

@@ -18,7 +18,7 @@ namespace CMVP
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
-        private int id; //Identification number of the car.
+        private int id; public int ID { get { return id; } } //Identification number of the car.
         private Controller controller; // This cars controller # William och Johan
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
@@ -33,12 +33,14 @@ namespace CMVP
         /// </summary>
         /// <param name="id"> Identification number of the car. </param>
         /// <param name="pos"> The starting position of the car. </param>
-        public Car(int id, Point pos)
+        public Car(int id, Point pos, PointF direction)
         {
             this.id = id;
-
+            this.direction = new List<PointF>();
+            this.position = new List<Point>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
+                this.direction.Add(direction);
                 this.position.Add(pos);
             }
         }

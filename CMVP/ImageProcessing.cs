@@ -46,13 +46,13 @@ namespace CMVP
         public Boolean drawCenterOnImg;
         
 
-        public ImageProcessing(VideoStream videoStream)
+        public ImageProcessing(VideoStream videoStream,List<Car> objects)
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
             this.imgProcesTimer.Interval=1;
             this.imgProcesTimer.Tick += new EventHandler(updatePanels);
-            this.objects = new List<Car>();
+            this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
             this.tempTime=0;
@@ -99,6 +99,7 @@ namespace CMVP
         
         private Bitmap processImage()
         {
+
             Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
 
             YCbCrFiltering filter = new YCbCrFiltering();
@@ -139,10 +140,21 @@ namespace CMVP
             {
                 Console.WriteLine(k);
                 List<Blob> unSortedIdTag = filterOutIdRectangles(rectangles, centers[k]);
+                int carId = getId(centers[k], directions[k]);
+                Console.WriteLine("id of car: " + carId);
+
                 foreach(Blob b in unSortedIdTag)
                 {
                     g.DrawRectangle(yellowPen, b.Rectangle);
                 }
+
+               if(objects.Find(o => o.ID == carId)==null)
+               {
+                   objects.Add(new Car(carId, centers[k], directions[k]));
+               }
+
+
+                //Draw Graphics
                 if (drawTriangleOnImg)
                 {
                     System.Drawing.Point[] triangelPoints = triangles.ElementAt(k);
@@ -157,7 +169,6 @@ namespace CMVP
                 {
                     g.DrawLine(yellowPen, centers[k], new System.Drawing.Point((int)(centers[k].X + directions[k].X * 40), (int)(centers[k].Y + directions[k].Y * 40)));
                 }
-                //objects[k].setFound(true);
             }
             return filteredImg;
         }
@@ -450,7 +461,7 @@ namespace CMVP
         {
             List<Blob> rectangles = getRectangularBlobs(1,5,1,5);
             List<Blob> idRectangles = filterOutIdRectangles(rectangles,p);
-            return 1;
+            return idRectangles.Count;
         }
         private List<Blob> getRectangularBlobs(int minWidth, int maxWidth, int minHight, int maxHight)
         {
