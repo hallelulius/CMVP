@@ -15,13 +15,11 @@ namespace CMVP
     
     public partial class mainGUI : Form
     {
-        private static System.Windows.Forms.Timer updatePreview;
         private Thread thread;
         private Brain brain;
         public mainGUI()
         {
             InitializeComponent();
-            updatePreview = new System.Windows.Forms.Timer();
         }
 
         private void button1_Click(object sender, EventArgs e)

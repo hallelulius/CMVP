@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.ComponentModel;
+
+
 
 
 using AForge;
@@ -30,6 +33,7 @@ namespace CMVP
         private VideoCaptureDevice videoSource = null;
         private System.Drawing.Point offset;
         private Boolean imgLock;
+        private List<Panel> panelsToUpdate;
         public Camera()
         {
             FilterInfoCollection videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -44,8 +48,6 @@ namespace CMVP
         public Camera(VideoCaptureDevice videoSource,System.Drawing.Point offset)
         {
             init(videoSource, offset);
-
-
         }
         public Camera(VideoCaptureDevice videoSource)
         {
@@ -58,13 +60,14 @@ namespace CMVP
             this.offset = offset;
             id = idCount++;
             this.videoSource = videoSource;
+            this.panelsToUpdate = new List<Panel>();
             if(videoSource== null)
             {
                 Console.WriteLine("Fel");
             }
             else
                 this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-            img = new Bitmap(10, 10);
+            img = new Bitmap(100, 100);
             imgLock = false;
         }
         public System.Drawing.Point getOffset()
@@ -89,11 +92,22 @@ namespace CMVP
                 try
                 {
                     img = (Bitmap)e.Frame.Clone() as Bitmap;
+                    foreach(Panel panel in panelsToUpdate)
+                    {
+                        if (panel == null)
+                        {
+                            panelsToUpdate.Remove(panel);
+                        }
+                        else
+                        {
+                            panel.BackgroundImage = img;
+                        }
+                    }
                     done = true;
-                    //Här ska kod läggas till för att lägga bilden på lämpligt ställe.
                 }
-                catch
-                {
+                catch(Exception ex)
+                {      
+                    Console.WriteLine(ex.ToString());
                     Console.WriteLine("Error in try statemen in camera, could not upload new img");
                 }
             }
@@ -102,12 +116,12 @@ namespace CMVP
         {
             return img;
         }
-        public void startCamera()
+        public void start()
         {
             if (!videoSource.IsRunning)
                 videoSource.Start();
         }
-        public void stopCamera()
+        public void stop()
         {
             if (videoSource.IsRunning)
                 videoSource.Stop();
@@ -124,15 +138,23 @@ namespace CMVP
                 videoSource = null;
             }
         }
-        //Prevent sudden close while device is runnng
-        private void Display_FormaClosed(object sender, FormClosedEventArgs e)
-        {
-            closeVideoSource();
-        }
         public VideoCaptureDevice getVideoSouce()
         {
             return videoSource;
         }
+        public void pushDestination(Panel panel)
+        {
+            panelsToUpdate.Add(panel);
+        }
+        public void removeDestination(Panel panel)
+        {
+            panelsToUpdate.Remove(panel);
+        }
+        public Size getSize()
+        {
+            return videoSource.VideoCapabilities[0].FrameSize;
+        }
+
         public VideoCapabilities[] getVideoCapabilities()
         {
             return videoSource.VideoCapabilities;
