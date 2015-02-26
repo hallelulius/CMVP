@@ -37,9 +37,6 @@
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBoxDrawDirection = new System.Windows.Forms.CheckBox();
-            this.checkBoxDrawTriangles = new System.Windows.Forms.CheckBox();
-            this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -120,52 +117,16 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBoxDrawDirection);
-            this.groupBox2.Controls.Add(this.checkBoxDrawTriangles);
-            this.groupBox2.Controls.Add(this.checkBoxDrawCenters);
             this.groupBox2.Controls.Add(this.checkBoxDrawCirkels);
             this.groupBox2.Controls.Add(this.drawDetectedFeaturesCheckBox);
             this.groupBox2.Controls.Add(this.drawCarIDCheckBox);
             this.groupBox2.Controls.Add(this.drawTrackCheckBox);
             this.groupBox2.Location = new System.Drawing.Point(12, 86);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(196, 291);
+            this.groupBox2.Size = new System.Drawing.Size(196, 132);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
-            // 
-            // checkBoxDrawDirection
-            // 
-            this.checkBoxDrawDirection.AutoSize = true;
-            this.checkBoxDrawDirection.Location = new System.Drawing.Point(6, 159);
-            this.checkBoxDrawDirection.Name = "checkBoxDrawDirection";
-            this.checkBoxDrawDirection.Size = new System.Drawing.Size(144, 17);
-            this.checkBoxDrawDirection.TabIndex = 9;
-            this.checkBoxDrawDirection.Text = "Draw detected direktions";
-            this.checkBoxDrawDirection.UseVisualStyleBackColor = true;
-            this.checkBoxDrawDirection.CheckedChanged += new System.EventHandler(this.checkBoxDrawDirection_CheckedChanged);
-            // 
-            // checkBoxDrawTriangles
-            // 
-            this.checkBoxDrawTriangles.AutoSize = true;
-            this.checkBoxDrawTriangles.Location = new System.Drawing.Point(6, 135);
-            this.checkBoxDrawTriangles.Name = "checkBoxDrawTriangles";
-            this.checkBoxDrawTriangles.Size = new System.Drawing.Size(138, 17);
-            this.checkBoxDrawTriangles.TabIndex = 8;
-            this.checkBoxDrawTriangles.Text = "Draw detected triangles";
-            this.checkBoxDrawTriangles.UseVisualStyleBackColor = true;
-            this.checkBoxDrawTriangles.CheckedChanged += new System.EventHandler(this.checkBoxDrawTriangles_CheckedChanged);
-            // 
-            // checkBoxDrawCenters
-            // 
-            this.checkBoxDrawCenters.AutoSize = true;
-            this.checkBoxDrawCenters.Location = new System.Drawing.Point(6, 111);
-            this.checkBoxDrawCenters.Name = "checkBoxDrawCenters";
-            this.checkBoxDrawCenters.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxDrawCenters.TabIndex = 7;
-            this.checkBoxDrawCenters.Text = "Draw detected  centers";
-            this.checkBoxDrawCenters.UseVisualStyleBackColor = true;
-            this.checkBoxDrawCenters.CheckedChanged += new System.EventHandler(this.checkBoxDrawCenters_CheckedChanged);
             // 
             // checkBoxDrawCirkels
             // 
@@ -209,8 +170,5 @@
         private System.ComponentModel.BackgroundWorker o;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBoxDrawCirkels;
-        private System.Windows.Forms.CheckBox checkBoxDrawDirection;
-        private System.Windows.Forms.CheckBox checkBoxDrawTriangles;
-        private System.Windows.Forms.CheckBox checkBoxDrawCenters;
     }
 }

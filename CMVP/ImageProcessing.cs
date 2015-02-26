@@ -41,9 +41,6 @@ namespace CMVP
         private Graphics g;
 
         public Boolean drawCirkelsOnImg;
-        public Boolean drawDirectionOnImg;
-        public Boolean drawTriangleOnImg;
-        public Boolean drawCenterOnImg;
         
 
         public ImageProcessing(VideoStream videoStream)
@@ -57,10 +54,7 @@ namespace CMVP
             this.videoStream = videoStream;
             this.tempTime=0;
 
-            this.drawCirkelsOnImg = false;
-            this.drawCenterOnImg = false;
-            this.drawTriangleOnImg = false;
-            this.drawDirectionOnImg = false;
+            this.drawCirkelsOnImg = true;
 
         }
         void updatePanels(object sender, EventArgs e)
@@ -110,7 +104,7 @@ namespace CMVP
 
             Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> cirkels = getCircularBlobs(5, 10);
-            List<Blob> rectangles = getRectangularBlobs(1, 5, 1, 5);
+
             Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
@@ -131,32 +125,15 @@ namespace CMVP
             Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
 
             directions=getDirectionOfTriangels(triangles);
-            foreach(Blob b in rectangles)
-            {
-                //g.DrawRectangle(greenPen, b.Rectangle);
-            }
+
             for (int k = 0; k < triangles.Count; k++)
             {
                 Console.WriteLine(k);
-                List<Blob> unSortedIdTag = filterOutIdRectangles(rectangles, centers[k]);
-                foreach(Blob b in unSortedIdTag)
-                {
-                    g.DrawRectangle(yellowPen, b.Rectangle);
-                }
-                if (drawTriangleOnImg)
-                {
-                    System.Drawing.Point[] triangelPoints = triangles.ElementAt(k);
-                    g.DrawLines(greenPen, triangelPoints);
-                    g.DrawLine(greenPen, triangelPoints.Last(), triangelPoints.First());
-                }
-                if (drawCenterOnImg)
-                {
-                    g.DrawEllipse(bluePen, new Rectangle(centers[k].X - 2, centers[k].Y - 2, 2, 2));
-                }
-                if (drawDirectionOnImg)
-                {
-                    g.DrawLine(yellowPen, centers[k], new System.Drawing.Point((int)(centers[k].X + directions[k].X * 40), (int)(centers[k].Y + directions[k].Y * 40)));
-                }
+                System.Drawing.Point[] triangelPoints = triangles.ElementAt(k);
+                g.DrawLines(greenPen, triangelPoints);
+                g.DrawLine(greenPen, triangelPoints.Last(), triangelPoints.First());
+                g.DrawEllipse(bluePen, new Rectangle(centers[k].X - 2, centers[k].Y - 2, 2, 2));
+                g.DrawLine(yellowPen,centers[k],new System.Drawing.Point((int)(centers[k].X+directions[k].X*40),(int)(centers[k].Y+directions[k].Y*40)));
                 //objects[k].setFound(true);
             }
             return filteredImg;
@@ -179,7 +156,6 @@ namespace CMVP
             Blob[] blobs = blobCounter.GetObjectsInformation();
 
             SimpleShapeChecker s = new SimpleShapeChecker();
-            s.MinAcceptableDistortion = 1;
             List<Blob> cirkels = new List<Blob>();
             BlobCountingObjectsProcessing bcop = new BlobCountingObjectsProcessing();
 
@@ -445,51 +421,6 @@ namespace CMVP
             }
 
             return filteredTriangles;
-        }
-        private int getId(System.Drawing.Point p,System.Drawing.PointF d)
-        {
-            List<Blob> rectangles = getRectangularBlobs(1,5,1,5);
-            List<Blob> idRectangles = filterOutIdRectangles(rectangles,p);
-            return 1;
-        }
-        private List<Blob> getRectangularBlobs(int minWidth, int maxWidth, int minHight, int maxHight)
-        {
-            BlobCounter blobCounter = new BlobCounter();
-            blobCounter.MaxHeight = maxHight;
-            blobCounter.MinHeight = minHight;
-            blobCounter.MaxWidth = maxWidth;
-            blobCounter.MinWidth = minWidth;
-            blobCounter.FilterBlobs = true;
-            blobCounter.ProcessImage(filteredImg);
-            Blob[] blobs = blobCounter.GetObjectsInformation();
-            SimpleShapeChecker shapeChecker = new SimpleShapeChecker();
-            shapeChecker.MinAcceptableDistortion = (float)2.0;
-            List<Blob> rectangles = new List<Blob>();
-            foreach(Blob b in blobs)
-            {
-                List<IntPoint> edgePoints = blobCounter.GetBlobsEdgePoints(b);
-
-                if(edgePoints.Count>1 && shapeChecker.IsQuadrilateral(edgePoints))
-                {
-                    rectangles.Add(b);
-                }
-            }
-            return rectangles;
-
-        }
-        private List<Blob> filterOutIdRectangles(List<Blob> rectangles, System.Drawing.Point p)
-        {
-            List<Blob> idTag = new List<Blob>();
-            int error = 2;
-            AForge.Point Ap=new AForge.Point(p.X,p.Y);
-            foreach(Blob b in rectangles)
-            {
-                if(b.CenterOfGravity.SquaredDistanceTo(Ap)<100)
-                {
-                    idTag.Add(b);
-                }
-            }
-            return idTag;
         }
     }
 }
