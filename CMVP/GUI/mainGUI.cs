@@ -6,13 +6,17 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CMVP
 {
     
     public partial class mainGUI : Form
     {
+        private Thread thread;
+        private Brain brain;
         public mainGUI()
         {
             InitializeComponent();
@@ -21,11 +25,18 @@ namespace CMVP
         private void button1_Click(object sender, EventArgs e)
         {
             System.Console.WriteLine("Start simulation");
+
+            brain = new Brain();
+            thread = new Thread(new ThreadStart(brain.run));
+            thread.Start();
+
         }
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             System.Console.WriteLine("Stop simulation");
+            thread.Abort();
+            
         }
 
         private void openCameraControlButton_Click(object sender, EventArgs e)
@@ -50,6 +61,14 @@ namespace CMVP
 
             if (controllerTypeDropDown.SelectedItem.ToString() == "Manual Keyboard")
                 controllerTypePanel.Controls.Add(new KeyboardControlPanel());
+        }
+
+        private void importTrackButton_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                TrackImporter ti = new TrackImporter(openFileDialog.FileName);
+            }
         }
     }
 }

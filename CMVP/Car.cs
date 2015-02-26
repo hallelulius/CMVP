@@ -18,6 +18,8 @@ namespace CMVP
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
+        
+        private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
         private Controller controller; // This cars controller # William och Johan
         
@@ -48,7 +50,7 @@ namespace CMVP
         /// <summary>
         /// Update the state of the car. Only call this once for every car in each program loop.
         /// </summary>
-        private void updateState()
+        public void updateState()
         {
             //Calculate horizontal and vertical movement using the last two elements in the position list.
             double dx = position.ElementAt(DATA_HISTORY_LENGTH - 1).X - position.ElementAt(DATA_HISTORY_LENGTH).X;
@@ -97,9 +99,6 @@ namespace CMVP
             //Add the new orientation to the list and remove the oldest one.
             direction.Add(dir);
             direction.RemoveAt(0);
-
-            //Update the cars state.
-            updateState();
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace CMVP
             return found.ElementAt(DATA_HISTORY_LENGTH);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Used to set the "found" value.
         /// </summary>
         /// <param name="found"> Set this to true when car is found. Else, set it to false. </param>
@@ -147,7 +146,14 @@ namespace CMVP
                 steer = 1;
             else 
                 steer = s;
+        }*/
+
+        public void send()
+        {
+            Program.com.updateCar(id, controller.getThrottle(), "Throttle");
+            Program.com.updateCar(id, controller.getSteer(), "Steering");
         }
+
         public Point getPosition() // Return the cars current position # Johan och William  
         {
             return position.First();
@@ -155,6 +161,10 @@ namespace CMVP
         public Controller getController() // Return the cars controller
         {
             return controller;
+        }
+        public PointF getDirection()
+        {
+            return direction.First();
         }
 
     }

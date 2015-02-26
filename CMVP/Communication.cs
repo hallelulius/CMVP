@@ -13,9 +13,25 @@ namespace CMVP
        /// <summary>
        /// This class sends the right steering and throttle parametres to the arduino 
        /// </summary>
+       /// 
+     class Communication
+     {
+        //addresses for the DACs
+        private const byte throttleA = 0;    // DAC A gain 1
+        private const byte throttleB = 2;    // DAC B gain 1
+        private const byte steeringA = 4;    // DAC C gain 1
+        private const byte steeringB = 6;    // DAC D gain 1
+        private const byte error = 220;
 
-    class Communication
-    {
+        //Variables used to debug and trim  Vref=3.3V
+        private const byte max_throttle = 57;      //output = 0.74V
+        private const byte neutral_throttle = 111;  //output = 1.44V
+        private const byte reverse_throttle = 157;  //output = 2.03V
+        private const byte neutral_steering = 114;  //output = 1.47V
+        private const byte left_steering = 218;     //output = 2.82V
+        private const byte right_steering = 7;    //output = 0.09V
+        private const byte voltage_cap = 219;  //voltage cap
+
         private SerialPort port;
         private bool active = false;
 
@@ -36,54 +52,103 @@ namespace CMVP
             }
         }
 
-        private byte convertCarID(int id)
+        private byte convertCarID(int id, String mode)
         {
-            //should convert it to proper binary values according to the transmitters voltage
-            //depends on input from controller class
-            return (byte) id;
+            byte DAC;
+            if (id == 1 && mode.Equals("Throttle") )
+            {
+                DAC = throttleA;
+            }
+            else if (id == 1 && mode.Equals("Steering"))
+            {
+                DAC = steeringA;
+            }
+            else if (id == 2 && mode.Equals("Throttle"))
+            {
+                DAC = throttleB;
+            }
+            else if (id == 2 && mode.Equals("Steering"))
+            {
+                DAC = steeringB;
+            }
+            else
+            {
+                System.Console.WriteLine("No valid id or mode");
+                DAC = error;
+            }
+            return DAC;
         }
 
-        private byte convertValue(int value)
+        private byte convertValue(int value, String mode)
         {
-            //should convert it to proper binary values according to the transmitters voltage
-            //depends on input from controller class
-            return (byte) value;
+            byte val;
+            if (value > error || value < 0)
+                value = error;
+            if ((byte)value > voltage_cap)
+            {
+                val = error;
+            }
+            else
+            {
+                val = (byte)value;
+            }
+            return val;
         }
 
-        public void updateSteering(int carID, int value)
+        public void stopCar(int carID)
         {
-            byte id = convertCarID(carID);
-            byte val = convertValue(value);
-            updateSteering(id, val);
+            updateCar(carID, neutral_steering, "Steering");
+            updateCar(carID, neutral_throttle, "Throttle");
         }
 
-        public void updateThrottle(int carID, int value)
+        public void updateCar(int carID, float value1, String mode)
         {
-            byte id = convertCarID(carID);
-            byte val = convertValue(value);
-            updateThrottle(id, val);
+            int value = (int)value1;  //ÄNDRA DETTA!
+            byte val = convertValue(value,mode);
+            byte id = convertCarID(carID, mode);
+            
+            switch (mode){
+                case "Throttle":
+                    updateThrottle(id, val);
+                    break;
+                case "Steering":
+                    updateSteering(id, val);
+                    break;
+                default:
+                    System.Console.WriteLine("Didn't update " +carID +" "+ mode);
+                    break;
+            }
         }
 
         private void updateSteering(byte carID, byte value)
         {
-            if (port != null) 
+            if (port != null && carID < error && value < error ) 
             {
                 port.Open();
                 byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
+                System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
+            }
+            else
+            {
+                System.Console.WriteLine("Error in steering");
             }
         }
 
         private void updateThrottle(byte carID, byte value)
         {
-            if (port != null)
+            if (port != null && carID < error && value < error)
             {
-                carID += 2; // change to throttle DAC
                 port.Open();
                 byte[] bits = { carID, value };
                 port.Write(bits, 0, 2);
                 port.Close();
+                System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+            }
+            else
+            {
+                System.Console.WriteLine("Error in throttle");
             }
         }
 
@@ -103,11 +168,48 @@ namespace CMVP
             {
                 System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC. \n");
                 System.Console.WriteLine(e.ToString());
-                //System.Console.ReadKey();
                 return null;
             }
         }
 
+        public void reverse(int carID, String mode)
+        {
+
+        }
+
+        public void reverseSetting(int carID, String mode, bool b)
+        {
+            if (b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, max_throttle, mode);
+                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+                
+            }
+            else if (!b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, reverse_throttle, mode);
+                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+            else if (b && mode.Equals("Steering"))
+            {
+                updateCar(carID, left_steering, mode);
+                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+            else if (!b && mode.Equals("Throttle"))
+            {
+                updateCar(carID, right_steering, mode);
+                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press any key");
+                Console.ReadKey();
+            }
+
+        }
         public bool isActive()
         {
             return active;
