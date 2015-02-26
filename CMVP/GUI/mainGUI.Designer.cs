@@ -63,6 +63,8 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.trackCarIDLabel = new System.Windows.Forms.Label();
+            this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -161,6 +163,8 @@
             // trackBasePanel
             // 
             this.trackBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trackBasePanel.Controls.Add(this.trackCarIDLabel);
+            this.trackBasePanel.Controls.Add(this.trackCarIDDropDown);
             this.trackBasePanel.Controls.Add(this.importTrackButton);
             this.trackBasePanel.Controls.Add(this.trackTrackLabel);
             this.trackBasePanel.Controls.Add(this.tracksDropDown);
@@ -171,7 +175,7 @@
             // 
             // importTrackButton
             // 
-            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
+            this.importTrackButton.Location = new System.Drawing.Point(107, 72);
             this.importTrackButton.Name = "importTrackButton";
             this.importTrackButton.Size = new System.Drawing.Size(88, 23);
             this.importTrackButton.TabIndex = 4;
@@ -191,13 +195,9 @@
             // tracksDropDown
             // 
             this.tracksDropDown.FormattingEnabled = true;
-            this.tracksDropDown.Items.AddRange(new object[] {
-            "Circle",
-            "Rainbow Road",
-            "Nürnberg Ring"});
-            this.tracksDropDown.Location = new System.Drawing.Point(47, 43);
+            this.tracksDropDown.Location = new System.Drawing.Point(47, 45);
             this.tracksDropDown.Name = "tracksDropDown";
-            this.tracksDropDown.Size = new System.Drawing.Size(136, 21);
+            this.tracksDropDown.Size = new System.Drawing.Size(148, 21);
             this.tracksDropDown.TabIndex = 2;
             // 
             // label3
@@ -272,7 +272,7 @@
             "Manual Keyboard"});
             this.controllerTypeDropDown.Location = new System.Drawing.Point(87, 79);
             this.controllerTypeDropDown.Name = "controllerTypeDropDown";
-            this.controllerTypeDropDown.Size = new System.Drawing.Size(96, 21);
+            this.controllerTypeDropDown.Size = new System.Drawing.Size(108, 21);
             this.controllerTypeDropDown.TabIndex = 4;
             this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
             // 
@@ -392,7 +392,7 @@
             0,
             0});
             this.trafficMaxSpeedNumeric.Name = "trafficMaxSpeedNumeric";
-            this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(89, 20);
+            this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(101, 20);
             this.trafficMaxSpeedNumeric.TabIndex = 9;
             this.trafficMaxSpeedNumeric.Value = new decimal(new int[] {
             200,
@@ -433,12 +433,30 @@
             "Follow track"});
             this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
-            this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
+            this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
             // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "track.txt";
+            // 
+            // trackCarIDLabel
+            // 
+            this.trackCarIDLabel.AutoSize = true;
+            this.trackCarIDLabel.Location = new System.Drawing.Point(3, 17);
+            this.trackCarIDLabel.Name = "trackCarIDLabel";
+            this.trackCarIDLabel.Size = new System.Drawing.Size(40, 13);
+            this.trackCarIDLabel.TabIndex = 6;
+            this.trackCarIDLabel.Text = "Car ID:";
+            // 
+            // trackCarIDDropDown
+            // 
+            this.trackCarIDDropDown.FormattingEnabled = true;
+            this.trackCarIDDropDown.Location = new System.Drawing.Point(49, 14);
+            this.trackCarIDDropDown.Name = "trackCarIDDropDown";
+            this.trackCarIDDropDown.Size = new System.Drawing.Size(42, 21);
+            this.trackCarIDDropDown.TabIndex = 5;
+            this.trackCarIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
             // 
             // mainGUI
             // 
@@ -511,5 +529,7 @@
         private System.Windows.Forms.Button trafficCancelButton;
         private System.Windows.Forms.ComboBox trafficCarIDDropDown;
         private System.Windows.Forms.Button trafficApplyButton;
+        private System.Windows.Forms.Label trackCarIDLabel;
+        private System.Windows.Forms.ComboBox trackCarIDDropDown;
     }
 }

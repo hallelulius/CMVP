@@ -46,7 +46,7 @@ namespace CMVP
         public Boolean drawCenterOnImg;
         
 
-        public ImageProcessing(VideoStream videoStream,List<Car> objects)
+        public ImageProcessing(VideoStream videoStream, ref List<Car> objects) // Added ref keyword to pass as reference //Viktor I
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();

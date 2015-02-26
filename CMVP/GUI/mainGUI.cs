@@ -67,7 +67,8 @@ namespace CMVP
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                TrackImporter ti = new TrackImporter(openFileDialog.FileName);
+                Track ti = new Track(openFileDialog.FileName);
+                tracksDropDown.Items.Add(ti.name);
             }
         }
 
@@ -79,7 +80,6 @@ namespace CMVP
 
         private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
         {
-            Console.WriteLine("Searching for cars...");
             foreach (Car car in Program.cars)
             {
                 if (!controllerCarIDDropDown.Items.Contains(car.ID))
@@ -89,17 +89,16 @@ namespace CMVP
 
         private void trafficCarIDDropDown_DropDown(object sender, EventArgs e)
         {
-            Console.WriteLine("Searching for cars...");
             foreach (Car car in Program.cars)
             {
-                if (!controllerCarIDDropDown.Items.Contains(car.ID))
-                    controllerCarIDDropDown.Items.Add(car.ID);
+                if (!trafficCarIDDropDown.Items.Contains(car.ID))
+                    trafficCarIDDropDown.Items.Add(car.ID);
             }
         }
 
         private void trafficApplyButton_Click(object sender, EventArgs e)
         {
-            if (controllerCarIDDropDown.Items.Count > 0)
+            if (controllerCarIDDropDown.SelectedIndex != -1)
             {
                 int tempID = (int)trafficCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
@@ -115,6 +114,15 @@ namespace CMVP
         {
             trafficCarIDDropDown.SelectedIndex = -1;
             controlStrategyControlStrategyDropDown.SelectedIndex = -1;
+        }
+
+        private void trackCarIDDropDown_DropDown(object sender, EventArgs e)
+        {
+            foreach (Car car in Program.cars)
+            {
+                if (!trackCarIDDropDown.Items.Contains(car.ID))
+                    trackCarIDDropDown.Items.Add(car.ID);
+            }
         }
     }
 }
