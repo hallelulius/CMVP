@@ -131,7 +131,6 @@ namespace CMVP
 
         }
 
-
         private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
         { 
             foreach (Car car in Program.cars)
@@ -212,6 +211,12 @@ namespace CMVP
         {
             trackCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
             tracksDropDown.SelectedIndex = -1;
+        }
+
+        private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
+        {
+            PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
+            paw.Show();
         }
     }
 }

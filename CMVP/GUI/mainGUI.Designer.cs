@@ -65,6 +65,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.trackCancelButton = new System.Windows.Forms.Button();
             this.trackApplyButton = new System.Windows.Forms.Button();
+            this.openPerformanceAnalyzerButton = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -106,6 +107,7 @@
             // simulationBasePanel
             // 
             this.simulationBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.simulationBasePanel.Controls.Add(this.openPerformanceAnalyzerButton);
             this.simulationBasePanel.Controls.Add(this.openCameraControlButton);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsNumeric);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsLabel);
@@ -434,6 +436,7 @@
             // openFileDialog
             // 
             this.openFileDialog.FileName = "track.txt";
+            this.openFileDialog.Filter = "Text files (*.txt)|*.txt;";
             // 
             // trackCancelButton
             // 
@@ -453,6 +456,16 @@
             this.trackApplyButton.TabIndex = 9;
             this.trackApplyButton.Text = "Apply";
             this.trackApplyButton.UseVisualStyleBackColor = true;
+            // 
+            // openPerformanceAnalyzerButton
+            // 
+            this.openPerformanceAnalyzerButton.Location = new System.Drawing.Point(21, 75);
+            this.openPerformanceAnalyzerButton.Name = "openPerformanceAnalyzerButton";
+            this.openPerformanceAnalyzerButton.Size = new System.Drawing.Size(157, 23);
+            this.openPerformanceAnalyzerButton.TabIndex = 8;
+            this.openPerformanceAnalyzerButton.Text = "Open performance analyzer";
+            this.openPerformanceAnalyzerButton.UseVisualStyleBackColor = true;
+            this.openPerformanceAnalyzerButton.Click += new System.EventHandler(this.openPerformanceAnalyzerButton_Click);
             // 
             // mainGUI
             // 
@@ -527,5 +540,6 @@
         private System.Windows.Forms.ComboBox trackCarIDDropDown;
         private System.Windows.Forms.Button trackCancelButton;
         private System.Windows.Forms.Button trackApplyButton;
+        private System.Windows.Forms.Button openPerformanceAnalyzerButton;
     }
 }
