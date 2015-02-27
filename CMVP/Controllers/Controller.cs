@@ -9,6 +9,8 @@ namespace CMVP
         private float refHeading;       //ref heading angle to x-axis
         private float speed;
         private float refSpeed;
+        private float outThrottle;
+        private float outSteer;
         // Controller parameters 
         private float Ki_steer;
         private float Ki_throttle;
@@ -38,17 +40,24 @@ namespace CMVP
 
         public void updateController()      //PI-controller 
         {
-            float outThrottle = 0;
+            outThrottle = 0;
             float errorSpeed = refSpeed - speed;
             outThrottle += Kp_throttle * errorSpeed * Program.sampleTime;
             throttleIntegratorSum += errorSpeed;
             outThrottle += Ki_throttle * throttleIntegratorSum * Program.sampleTime;
 
-            float outSteer = 0;
+            outSteer = 0;
             float errorHeading = refHeading - heading;
             outSteer += Kp_steer * errorHeading * Program.sampleTime;
             steerIntegratorSum += errorHeading;
             outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
+
+            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle < -1) outThrottle = -1;
+            if (outSteer > 1) outSteer = 1;
+            if (outSteer < -1) outSteer = -1;
+            
+
         }
 
         public void setHeading(float heading)
@@ -58,6 +67,14 @@ namespace CMVP
         public void setSpeed(float speed)
         {
             this.speed = speed;
+        }
+        public float getThrottle()
+        {
+            return outThrottle;
+        }
+        public float getSteer()
+        {
+            return outSteer;
         }
     }
 }

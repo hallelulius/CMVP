@@ -158,7 +158,7 @@ namespace CMVP
         {
             return position.First();
         }
-        public Controller getController() // Return the cars controller
+        public PIcontroller getController() // Return the cars controller
         {
             return controller;
         }
