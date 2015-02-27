@@ -9,9 +9,8 @@ namespace CMVP.ControlStrategies
 {
     class JustFollow : ControlStrategy
     {
-        public JustFollow() : base(null,null,null)
+        public JustFollow(Car car, float[,] track) : base(car,track,"JustFollow")
         {
-
         }
 
         public override void updateReferencePoint() // Find the next point in hte reference signal 
@@ -49,6 +48,7 @@ namespace CMVP.ControlStrategies
         {
             return new PointF(point1.X - point2.X, point1.Y - point2.Y);
         }
+
         private float Norm (PointF point) // Normalize a point in two dimentions
         {
             return (float) Math.Sqrt(point.X * point.X + point.Y * point.Y);

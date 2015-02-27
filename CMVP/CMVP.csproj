@@ -116,10 +116,11 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Controller.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
     <Compile Include="ControlStrategy.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Controllers\PI-controller.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="GUI\PIControlPanel.cs">
@@ -277,7 +278,7 @@
     <EmbeddedResource Include="GUI\PControlPanel.resx">
       <DependentUpon>PControlPanel.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="GUI\PIControlPanel.resx">
+    <EmbeddedResource Include="GUI\PIControlPanel.resx">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
@@ -308,9 +309,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ControlStrategies\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
