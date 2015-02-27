@@ -171,5 +171,10 @@ namespace CMVP
         {
             controlStrategy = cs;
         }
+
+        public void setController(Controller c)
+        {
+            controller = c;
+        }
     }
 }

@@ -50,17 +50,14 @@ namespace CMVP
         {
             controllerTypePanel.Controls.Clear();
 
-            if (controllerTypeDropDown.SelectedItem.ToString() == "P")
-                controllerTypePanel.Controls.Add(new PControlPanel());
+            if (controllerTypeDropDown.SelectedIndex != -1)
+            {
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                    controllerTypePanel.Controls.Add(new PIDControlPanel());
 
-            if (controllerTypeDropDown.SelectedItem.ToString() == "PI")
-                controllerTypePanel.Controls.Add(new PIControlPanel());
-
-            if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
-                controllerTypePanel.Controls.Add(new PIDControlPanel());
-
-            if (controllerTypeDropDown.SelectedItem.ToString() == "Manual Keyboard")
-                controllerTypePanel.Controls.Add(new KeyboardControlPanel());
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual Keyboard")
+                    controllerTypePanel.Controls.Add(new KeyboardControlPanel());
+            }
         }
 
         private void importTrackButton_Click(object sender, EventArgs e)
@@ -79,7 +76,7 @@ namespace CMVP
 
 
         private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
-        {
+        { 
             foreach (Car car in Program.cars)
             {
                 if (!controllerCarIDDropDown.Items.Contains(car.ID))
@@ -98,7 +95,7 @@ namespace CMVP
 
         private void trafficApplyButton_Click(object sender, EventArgs e)
         {
-            if (controllerCarIDDropDown.SelectedIndex != -1)
+            if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
             {
                 int tempID = (int)trafficCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
@@ -112,7 +109,7 @@ namespace CMVP
 
         private void trafficCancelButton_Click(object sender, EventArgs e)
         {
-            trafficCarIDDropDown.SelectedIndex = -1;
+            trafficCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
             controlStrategyControlStrategyDropDown.SelectedIndex = -1;
         }
 
@@ -123,6 +120,35 @@ namespace CMVP
                 if (!trackCarIDDropDown.Items.Contains(car.ID))
                     trackCarIDDropDown.Items.Add(car.ID);
             }
+        }
+
+        private void controllerApplyButton_Click(object sender, EventArgs e)
+        {
+            if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)controllerCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                foreach (Control control in controllerTypePanel.Controls) // Should only be one control in controllerTypePanel at any time
+                {
+                    if (control.ToString() == "PIDControlPanel")
+                    {
+                        tempCar.setController(new Controller()); // Modify this when different controllers are added
+                    }
+
+                    if (control.ToString() == "KeyboardControlPanel")
+                    {
+                        tempCar.setController(new Controller()); // Modify this when different controllers are added
+                    }
+                }
+            }
+        }
+
+        private void controllerCancelButton_Click(object sender, EventArgs e)
+        {
+            controllerCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
+            controllerTypeDropDown.SelectedIndex = -1;
+            controllerTypePanel.Controls.Clear();
         }
     }
 }

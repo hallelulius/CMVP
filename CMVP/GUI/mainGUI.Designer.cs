@@ -37,6 +37,8 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
+            this.trackCarIDLabel = new System.Windows.Forms.Label();
+            this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
             this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
@@ -47,8 +49,6 @@
             this.controllerTypePanel = new System.Windows.Forms.Panel();
             this.controllerTypeLabel = new System.Windows.Forms.Label();
             this.controllerTypeDropDown = new System.Windows.Forms.ComboBox();
-            this.radioButtonControllerThrottle = new System.Windows.Forms.RadioButton();
-            this.radioButtonControllerSteering = new System.Windows.Forms.RadioButton();
             this.controllerCarIDLabel = new System.Windows.Forms.Label();
             this.controllerCarIDDropDown = new System.Windows.Forms.ComboBox();
             this.trafficControlPanelLabel = new System.Windows.Forms.Label();
@@ -63,8 +63,8 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.trackCarIDLabel = new System.Windows.Forms.Label();
-            this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
+            this.trackCancelButton = new System.Windows.Forms.Button();
+            this.trackApplyButton = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -163,6 +163,8 @@
             // trackBasePanel
             // 
             this.trackBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trackBasePanel.Controls.Add(this.trackCancelButton);
+            this.trackBasePanel.Controls.Add(this.trackApplyButton);
             this.trackBasePanel.Controls.Add(this.trackCarIDLabel);
             this.trackBasePanel.Controls.Add(this.trackCarIDDropDown);
             this.trackBasePanel.Controls.Add(this.importTrackButton);
@@ -172,6 +174,24 @@
             this.trackBasePanel.Name = "trackBasePanel";
             this.trackBasePanel.Size = new System.Drawing.Size(200, 276);
             this.trackBasePanel.TabIndex = 4;
+            // 
+            // trackCarIDLabel
+            // 
+            this.trackCarIDLabel.AutoSize = true;
+            this.trackCarIDLabel.Location = new System.Drawing.Point(3, 17);
+            this.trackCarIDLabel.Name = "trackCarIDLabel";
+            this.trackCarIDLabel.Size = new System.Drawing.Size(40, 13);
+            this.trackCarIDLabel.TabIndex = 6;
+            this.trackCarIDLabel.Text = "Car ID:";
+            // 
+            // trackCarIDDropDown
+            // 
+            this.trackCarIDDropDown.FormattingEnabled = true;
+            this.trackCarIDDropDown.Location = new System.Drawing.Point(49, 14);
+            this.trackCarIDDropDown.Name = "trackCarIDDropDown";
+            this.trackCarIDDropDown.Size = new System.Drawing.Size(42, 21);
+            this.trackCarIDDropDown.TabIndex = 5;
+            this.trackCarIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
             // 
             // importTrackButton
             // 
@@ -218,8 +238,6 @@
             this.controllerBasePanel.Controls.Add(this.controllerTypePanel);
             this.controllerBasePanel.Controls.Add(this.controllerTypeLabel);
             this.controllerBasePanel.Controls.Add(this.controllerTypeDropDown);
-            this.controllerBasePanel.Controls.Add(this.radioButtonControllerThrottle);
-            this.controllerBasePanel.Controls.Add(this.radioButtonControllerSteering);
             this.controllerBasePanel.Controls.Add(this.controllerCarIDLabel);
             this.controllerBasePanel.Controls.Add(this.controllerCarIDDropDown);
             this.controllerBasePanel.Location = new System.Drawing.Point(424, 111);
@@ -235,6 +253,7 @@
             this.controllerCancelButton.TabIndex = 8;
             this.controllerCancelButton.Text = "Cancel";
             this.controllerCancelButton.UseVisualStyleBackColor = true;
+            this.controllerCancelButton.Click += new System.EventHandler(this.controllerCancelButton_Click);
             // 
             // controllerApplyButton
             // 
@@ -244,18 +263,19 @@
             this.controllerApplyButton.TabIndex = 7;
             this.controllerApplyButton.Text = "Apply";
             this.controllerApplyButton.UseVisualStyleBackColor = true;
+            this.controllerApplyButton.Click += new System.EventHandler(this.controllerApplyButton_Click);
             // 
             // controllerTypePanel
             // 
-            this.controllerTypePanel.Location = new System.Drawing.Point(-1, 117);
+            this.controllerTypePanel.Location = new System.Drawing.Point(-1, 72);
             this.controllerTypePanel.Name = "controllerTypePanel";
-            this.controllerTypePanel.Size = new System.Drawing.Size(200, 114);
+            this.controllerTypePanel.Size = new System.Drawing.Size(200, 159);
             this.controllerTypePanel.TabIndex = 6;
             // 
             // controllerTypeLabel
             // 
             this.controllerTypeLabel.AutoSize = true;
-            this.controllerTypeLabel.Location = new System.Drawing.Point(4, 82);
+            this.controllerTypeLabel.Location = new System.Drawing.Point(3, 48);
             this.controllerTypeLabel.Name = "controllerTypeLabel";
             this.controllerTypeLabel.Size = new System.Drawing.Size(77, 13);
             this.controllerTypeLabel.TabIndex = 5;
@@ -265,38 +285,13 @@
             // 
             this.controllerTypeDropDown.FormattingEnabled = true;
             this.controllerTypeDropDown.Items.AddRange(new object[] {
-            "P",
-            "PI",
             "PID",
-            "MPC",
             "Manual Keyboard"});
-            this.controllerTypeDropDown.Location = new System.Drawing.Point(87, 79);
+            this.controllerTypeDropDown.Location = new System.Drawing.Point(86, 45);
             this.controllerTypeDropDown.Name = "controllerTypeDropDown";
             this.controllerTypeDropDown.Size = new System.Drawing.Size(108, 21);
             this.controllerTypeDropDown.TabIndex = 4;
             this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
-            // 
-            // radioButtonControllerThrottle
-            // 
-            this.radioButtonControllerThrottle.AutoSize = true;
-            this.radioButtonControllerThrottle.Location = new System.Drawing.Point(77, 46);
-            this.radioButtonControllerThrottle.Name = "radioButtonControllerThrottle";
-            this.radioButtonControllerThrottle.Size = new System.Drawing.Size(61, 17);
-            this.radioButtonControllerThrottle.TabIndex = 3;
-            this.radioButtonControllerThrottle.TabStop = true;
-            this.radioButtonControllerThrottle.Text = "Throttle";
-            this.radioButtonControllerThrottle.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonControllerSteering
-            // 
-            this.radioButtonControllerSteering.AutoSize = true;
-            this.radioButtonControllerSteering.Location = new System.Drawing.Point(7, 46);
-            this.radioButtonControllerSteering.Name = "radioButtonControllerSteering";
-            this.radioButtonControllerSteering.Size = new System.Drawing.Size(64, 17);
-            this.radioButtonControllerSteering.TabIndex = 2;
-            this.radioButtonControllerSteering.TabStop = true;
-            this.radioButtonControllerSteering.Text = "Steering";
-            this.radioButtonControllerSteering.UseVisualStyleBackColor = true;
             // 
             // controllerCarIDLabel
             // 
@@ -440,23 +435,23 @@
             // 
             this.openFileDialog.FileName = "track.txt";
             // 
-            // trackCarIDLabel
+            // trackCancelButton
             // 
-            this.trackCarIDLabel.AutoSize = true;
-            this.trackCarIDLabel.Location = new System.Drawing.Point(3, 17);
-            this.trackCarIDLabel.Name = "trackCarIDLabel";
-            this.trackCarIDLabel.Size = new System.Drawing.Size(40, 13);
-            this.trackCarIDLabel.TabIndex = 6;
-            this.trackCarIDLabel.Text = "Car ID:";
+            this.trackCancelButton.Location = new System.Drawing.Point(69, 248);
+            this.trackCancelButton.Name = "trackCancelButton";
+            this.trackCancelButton.Size = new System.Drawing.Size(60, 23);
+            this.trackCancelButton.TabIndex = 10;
+            this.trackCancelButton.Text = "Cancel";
+            this.trackCancelButton.UseVisualStyleBackColor = true;
             // 
-            // trackCarIDDropDown
+            // trackApplyButton
             // 
-            this.trackCarIDDropDown.FormattingEnabled = true;
-            this.trackCarIDDropDown.Location = new System.Drawing.Point(49, 14);
-            this.trackCarIDDropDown.Name = "trackCarIDDropDown";
-            this.trackCarIDDropDown.Size = new System.Drawing.Size(42, 21);
-            this.trackCarIDDropDown.TabIndex = 5;
-            this.trackCarIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
+            this.trackApplyButton.Location = new System.Drawing.Point(135, 248);
+            this.trackApplyButton.Name = "trackApplyButton";
+            this.trackApplyButton.Size = new System.Drawing.Size(60, 23);
+            this.trackApplyButton.TabIndex = 9;
+            this.trackApplyButton.Text = "Apply";
+            this.trackApplyButton.UseVisualStyleBackColor = true;
             // 
             // mainGUI
             // 
@@ -509,8 +504,6 @@
         private System.Windows.Forms.Panel controllerTypePanel;
         private System.Windows.Forms.Label controllerTypeLabel;
         private System.Windows.Forms.ComboBox controllerTypeDropDown;
-        private System.Windows.Forms.RadioButton radioButtonControllerThrottle;
-        private System.Windows.Forms.RadioButton radioButtonControllerSteering;
         private System.Windows.Forms.Label controllerCarIDLabel;
         private System.Windows.Forms.ComboBox controllerCarIDDropDown;
         private System.Windows.Forms.NumericUpDown numberOfCarsNumeric;
@@ -531,5 +524,7 @@
         private System.Windows.Forms.Button trafficApplyButton;
         private System.Windows.Forms.Label trackCarIDLabel;
         private System.Windows.Forms.ComboBox trackCarIDDropDown;
+        private System.Windows.Forms.Button trackCancelButton;
+        private System.Windows.Forms.Button trackApplyButton;
     }
 }
