@@ -114,6 +114,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Brain.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
     <Compile Include="Controller.cs" />
@@ -268,9 +269,6 @@
   <ItemGroup>
     <EmbeddedResource Include="GUI\CameraControlWindow.resx">
       <DependentUpon>CameraControlWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\KeyboardControlPanel.resx">
-      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\mainGUI.resx">
       <DependentUpon>mainGUI.cs</DependentUpon>

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace CMVP
 {
-    public partial class Controller
+    public partial class PIcontroller
     {
         private float heading;          //heading in angle to x-axis 
         private float refHeading;       //ref heading angle to x-axis
@@ -20,7 +20,7 @@ namespace CMVP
         private float throttleIntegratorSum;
         private float steerIntegratorSum;
 
-        public Controller()
+        public PIcontroller()
         {
             // I-controller constants:
             Ki_steer = 0.1689F;

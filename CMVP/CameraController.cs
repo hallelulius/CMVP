@@ -66,13 +66,12 @@ namespace CMVP
             {
                 foreach(Camera cam in allCameras)
                 {
-                    cam.startCamera();
+                    cam.start();
                     //Delay used becaus lab.computer can't start multiple cameras simultaneously
                     System.Threading.Thread.Sleep(this.seqetialCameraDelay);
                 }
             }
-        }
-        
+        }  
         public void startAllIncludedCameras()
         {
             stopAllCameras();
@@ -87,7 +86,7 @@ namespace CMVP
             {
                 if(cam !=null)
                 {
-                    cam.stopCamera();
+                    cam.stop();
                 }
             }
         }
@@ -182,6 +181,26 @@ namespace CMVP
         {
             Bitmap temp=this.allCameras[0].getImage();
             return temp;
+        }
+        public void start()
+        {
+            
+        }
+        public void stop()
+        {
+
+        }
+        public void pushDestination(Panel panel)
+        {
+
+        }
+        public void removeDestination(Panel panel)
+        {
+
+        }
+        public Size getSize()
+        {
+            return new Size(0, 0);
         }
 
     }
