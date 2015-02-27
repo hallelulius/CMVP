@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace CMVP
 {
@@ -17,9 +18,33 @@ namespace CMVP
     {
         private Thread thread;
         private Brain brain;
+        private List<Track> tracks = new List<Track>();
+
         public mainGUI()
         {
             InitializeComponent();
+            loadTracks();
+        }
+
+        private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
+        {
+            string currentFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            
+            try
+            {
+                string[] paths = Directory.GetFiles(currentFolder + @"\Tracks\", "*.txt");
+
+                foreach (string path in paths)
+                {
+                    Track track = new Track(path);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Couldn't locate the 'Tracks' folder. The program will not load tracks automatically. To fix this add the folder to the applications directory (" + currentFolder + ").");
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -64,8 +89,40 @@ namespace CMVP
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Track ti = new Track(openFileDialog.FileName);
-                tracksDropDown.Items.Add(ti.name);
+                DialogResult result = MessageBox.Show(
+                    "Do you want to add the track to your 'Tracks' folder? If you press 'Yes', it will load automatically the next time you start the application.",
+                    "Importing track",
+                    MessageBoxButtons.YesNoCancel);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Open the file:
+                    string file = openFileDialog.FileName;
+
+                    // Create a track from the file:
+                    Track track = new Track(file);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+
+                    // Copy the file into the 'Tracks' folder:
+                    string currentFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    try
+                    {
+                        File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                    }
+                    catch (DirectoryNotFoundException exception)
+                    {
+                        Directory.CreateDirectory(currentFolder + @"\Tracks\");
+                        File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                    }
+
+                }
+                if (result == DialogResult.No)
+                {
+                    Track track = new Track(openFileDialog.FileName);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+                }
             }
         }
 
@@ -149,6 +206,12 @@ namespace CMVP
             controllerCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
             controllerTypeDropDown.SelectedIndex = -1;
             controllerTypePanel.Controls.Clear();
+        }
+
+        private void trackCancelButton_Click(object sender, EventArgs e)
+        {
+            trackCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
+            tracksDropDown.SelectedIndex = -1;
         }
     }
 }

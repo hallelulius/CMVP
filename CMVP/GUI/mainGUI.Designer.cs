@@ -443,6 +443,7 @@
             this.trackCancelButton.TabIndex = 10;
             this.trackCancelButton.Text = "Cancel";
             this.trackCancelButton.UseVisualStyleBackColor = true;
+            this.trackCancelButton.Click += new System.EventHandler(this.trackCancelButton_Click);
             // 
             // trackApplyButton
             // 
