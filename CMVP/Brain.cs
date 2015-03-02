@@ -30,6 +30,13 @@ namespace CMVP
                 }
                 foreach (Car car in cars)
                 {
+                    if (car.getControlStrategy() != null)
+                    {
+                        car.getControlStrategy().updateReferencePoint();
+                    }
+                }
+                foreach (Car car in cars)
+                {
                     car.getController().updateController();
                 }
                 foreach (Car car in cars)
