@@ -69,7 +69,7 @@ void changeDAC(byte DAC, byte value){
   SPI.transfer(DAC);
   SPI.transfer(value);
   digitalWrite(loadPin,LOW);
-  delay(6);
+  delay(4);
   digitalWrite(loadPin,HIGH);
 }
 
