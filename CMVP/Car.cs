@@ -21,7 +21,7 @@ namespace CMVP
         
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
-        private Controller controller; // This cars controller # William och Johan
+        private Controller controller = new KeyboardController(); // This cars controller 
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -35,15 +35,19 @@ namespace CMVP
         /// </summary>
         /// <param name="id"> Identification number of the car. </param>
         /// <param name="pos"> The starting position of the car. </param>
-        public Car(int id, Point pos, PointF direction)
+        public Car(int id, Point pos, PointF dir)
         {
             this.id = id;
             this.direction = new List<PointF>();
             this.position = new List<Point>();
+            this.speed = new List<double>();
+            this.acceleration = new List<double>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
-                this.direction.Add(direction);
+                this.direction.Add(dir);
                 this.position.Add(pos);
+                this.speed.Add(0);
+                this.acceleration.Add(0);
             }
         }
 
@@ -53,14 +57,14 @@ namespace CMVP
         public void updateState()
         {
             //Calculate horizontal and vertical movement using the last two elements in the position list.
-            double dx = position.ElementAt(DATA_HISTORY_LENGTH - 1).X - position.ElementAt(DATA_HISTORY_LENGTH).X;
-            double dy = position.ElementAt(DATA_HISTORY_LENGTH - 1).Y - position.ElementAt(DATA_HISTORY_LENGTH).Y;
+            double dx = position.ElementAt(DATA_HISTORY_LENGTH - 2).X - position.ElementAt(DATA_HISTORY_LENGTH - 1).X;
+            double dy = position.ElementAt(DATA_HISTORY_LENGTH - 2).Y - position.ElementAt(DATA_HISTORY_LENGTH - 1).Y;
             speed.Add(Math.Sqrt((dx * dx) + (dy * dy)));
             //Remove oldest element.
             speed.RemoveAt(0);
 
             //Calculate acceleration
-            acceleration.Add(speed.ElementAt(DATA_HISTORY_LENGTH - 1) - speed.ElementAt(DATA_HISTORY_LENGTH));
+            acceleration.Add(speed.ElementAt(DATA_HISTORY_LENGTH - 2) - speed.ElementAt(DATA_HISTORY_LENGTH - 1));
             //Remove oldest element.
             acceleration.RemoveAt(0);
         }
@@ -154,7 +158,7 @@ namespace CMVP
             Program.com.updateCar(id, controller.getSteer(), "Steering");
         }
 
-        public Point getPosition() // Return the cars current position # Johan och William  
+        public Point getPosition() // Return the cars current position 
         {
             return position.First();
         }
@@ -165,6 +169,10 @@ namespace CMVP
         public PointF getDirection()
         {
             return direction.First();
+        }
+        public ControlStrategy getControlStrategy()
+        {
+            return controlStrategy;
         }
 
     }
