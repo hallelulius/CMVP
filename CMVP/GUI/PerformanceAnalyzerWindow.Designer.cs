@@ -108,6 +108,7 @@
             this.Controls.Add(this.performanceChart);
             this.Name = "PerformanceAnalyzerWindow";
             this.Text = "Performance analyzer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PerformanceAnalyzerWindow_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

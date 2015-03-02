@@ -13,17 +13,24 @@ namespace CMVP
 {
     public partial class PerformanceAnalyzerWindow : Form
     {
+        public delegate void sendDataDelegate(string text, double x, double y);
+        public sendDataDelegate myDelegate;
         private float uppdateTime = 1; // Time between uppdates.
 
         public PerformanceAnalyzerWindow()
         {
             InitializeComponent();
+            myDelegate = new sendDataDelegate(addData);
         }
 
-        public void addData(string reciever, DataPoint dataPoint)
+        public void addData(string reciever, double x, double y)
         {
-            Series s = performanceChart.Series.FindByName(reciever);
-            s.Points.Add(dataPoint);
+            Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
+            if (s != null)
+            {
+                s.Points.AddXY(x, y);
+                Console.WriteLine("Adding data point: " + y);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -53,6 +60,30 @@ namespace CMVP
                 SeriesControl sc = new SeriesControl(name, performanceChart);
                 sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
                 seriesPanel.Controls.Add(sc);
+
+                if(name == "Car 0 velocity")
+                {
+                    Series s = performanceChart.Series.FindByName(name);
+                    s.Points.AddXY(0, 0.05);
+                    s.Points.AddXY(0, 0.04);
+                    s.Points.AddXY(0, 0.07);
+                    s.Points.AddXY(0, 0.08);
+                    s.Points.AddXY(0, 0.03);
+                    s.Points.AddXY(0, 0.03);
+                    s.Points.AddXY(0, 0.01);
+                }
+
+                if(name == "Car 1 velocity")
+                {
+                    Series s = performanceChart.Series.FindByName(name);
+                    s.Points.AddXY(0, 0.05);
+                    s.Points.AddXY(0, 0.16);
+                    s.Points.AddXY(0, 0.03);
+                    s.Points.AddXY(0, 0.05);
+                    s.Points.AddXY(0, 0.08);
+                    s.Points.AddXY(0, 0.09);
+                    s.Points.AddXY(0, 0.11);
+                }
                 /*
                 switch (addSeriesDropDown.SelectedItem.ToString())
                 {
@@ -124,6 +155,11 @@ namespace CMVP
             }
 
             //addSeriesDropDown.SelectedIndex = -1;
+        }
+
+        private void PerformanceAnalyzerWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
         }
     }
 }

@@ -189,12 +189,12 @@ namespace CMVP
                 {
                     if (control.ToString() == "PIDControlPanel")
                     {
-                        tempCar.setController(new Controller()); // Modify this when different controllers are added
+                        tempCar.setController(new PIController()); // Modify this when different controllers are added
                     }
 
                     if (control.ToString() == "KeyboardControlPanel")
                     {
-                        tempCar.setController(new Controller()); // Modify this when different controllers are added
+                        tempCar.setController(new KeyboardController()); // Modify this when different controllers are added
                     }
                 }
             }
@@ -216,6 +216,7 @@ namespace CMVP
         private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
         {
             PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
+            brain.analyzer = paw;
             paw.Show();
         }
     }
