@@ -30,59 +30,97 @@
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 0D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 5D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 10D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 3D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 3D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint7 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint8 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.performanceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button1 = new System.Windows.Forms.Button();
+            this.addSeriesDropDown = new System.Windows.Forms.ComboBox();
+            this.addSeriesLabel = new System.Windows.Forms.Label();
+            this.seriesPanel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).BeginInit();
             this.SuspendLayout();
             // 
-            // chart1
+            // performanceChart
             // 
             chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            this.performanceChart.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(173, 13);
-            this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
-            series1.Points.Add(dataPoint3);
-            series1.Points.Add(dataPoint4);
-            series1.Points.Add(dataPoint5);
-            series1.Points.Add(dataPoint6);
-            series1.Points.Add(dataPoint7);
-            series1.Points.Add(dataPoint8);
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(584, 496);
-            this.chart1.TabIndex = 0;
-            this.chart1.Text = "chart1";
+            this.performanceChart.Legends.Add(legend1);
+            this.performanceChart.Location = new System.Drawing.Point(295, 12);
+            this.performanceChart.Name = "performanceChart";
+            this.performanceChart.Size = new System.Drawing.Size(643, 535);
+            this.performanceChart.TabIndex = 0;
+            this.performanceChart.Text = "chart1";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(193, 483);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // addSeriesDropDown
+            // 
+            this.addSeriesDropDown.FormattingEnabled = true;
+            this.addSeriesDropDown.Items.AddRange(new object[] {
+            "Car 0 velocity",
+            "Car 0 velocity reference signal",
+            "Car 0 control signal",
+            "Car 1 velocity",
+            "Car 1 velocity reference signal",
+            "Car 1 control signal",
+            "Car 2 velocity",
+            "Car 2 velocity reference signal",
+            "Car 2 control signal",
+            "Brain execution time"});
+            this.addSeriesDropDown.Location = new System.Drawing.Point(78, 10);
+            this.addSeriesDropDown.Name = "addSeriesDropDown";
+            this.addSeriesDropDown.Size = new System.Drawing.Size(190, 21);
+            this.addSeriesDropDown.TabIndex = 2;
+            this.addSeriesDropDown.SelectedIndexChanged += new System.EventHandler(this.addSeriesDropDown_SelectedIndexChanged);
+            // 
+            // addSeriesLabel
+            // 
+            this.addSeriesLabel.AutoSize = true;
+            this.addSeriesLabel.Location = new System.Drawing.Point(13, 13);
+            this.addSeriesLabel.Name = "addSeriesLabel";
+            this.addSeriesLabel.Size = new System.Drawing.Size(59, 13);
+            this.addSeriesLabel.TabIndex = 3;
+            this.addSeriesLabel.Text = "Add series:";
+            // 
+            // seriesPanel
+            // 
+            this.seriesPanel.Location = new System.Drawing.Point(13, 41);
+            this.seriesPanel.Name = "seriesPanel";
+            this.seriesPanel.Size = new System.Drawing.Size(267, 436);
+            this.seriesPanel.TabIndex = 4;
             // 
             // PerformanceAnalyzerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(769, 521);
-            this.Controls.Add(this.chart1);
+            this.ClientSize = new System.Drawing.Size(950, 559);
+            this.Controls.Add(this.seriesPanel);
+            this.Controls.Add(this.addSeriesLabel);
+            this.Controls.Add(this.addSeriesDropDown);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.performanceChart);
             this.Name = "PerformanceAnalyzerWindow";
             this.Text = "Performance analyzer";
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart performanceChart;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox addSeriesDropDown;
+        private System.Windows.Forms.Label addSeriesLabel;
+        private System.Windows.Forms.Panel seriesPanel;
 
 
     }

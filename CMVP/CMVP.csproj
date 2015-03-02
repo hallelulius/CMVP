@@ -135,6 +135,12 @@
     <Compile Include="GUI\PIControlPanel.Designer.cs">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\SeriesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\SeriesControl.Designer.cs">
+      <DependentUpon>SeriesControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Track.cs" />
     <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
@@ -290,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SeriesControl.resx">
+      <DependentUpon>SeriesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
