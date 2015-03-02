@@ -32,7 +32,7 @@ namespace CMVP
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
             {
-                outThrottle = -1; 
+                outThrottle = 0; 
             }
         }
 
