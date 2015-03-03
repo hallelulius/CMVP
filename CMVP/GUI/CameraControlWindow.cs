@@ -19,7 +19,7 @@ namespace CMVP
         {
             InitializeComponent();
             videoStreamPanel.BackColor=Color.SpringGreen;
-            Program.videoStream.pushDestination(videoStreamPanel);
+            Program.videoStream.pushDestination(videoStreamPanel    );
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
             this.imgProcess = (ImageProcessing)Program.imageProcess;

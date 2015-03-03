@@ -127,7 +127,7 @@
             this.groupBox2.Controls.Add(this.drawDetectedFeaturesCheckBox);
             this.groupBox2.Controls.Add(this.drawCarIDCheckBox);
             this.groupBox2.Controls.Add(this.drawTrackCheckBox);
-            this.groupBox2.Location = new System.Drawing.Point(12, 86);
+            this.groupBox2.Location = new System.Drawing.Point(12, 87);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(196, 291);
             this.groupBox2.TabIndex = 0;

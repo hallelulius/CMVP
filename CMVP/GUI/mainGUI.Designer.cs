@@ -37,6 +37,7 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -57,8 +58,8 @@
             this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.ptgrey = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -100,6 +101,7 @@
             // simulationBasePanel
             // 
             this.simulationBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.simulationBasePanel.Controls.Add(this.ptgrey);
             this.simulationBasePanel.Controls.Add(this.openCameraControlButton);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsNumeric);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsLabel);
@@ -164,6 +166,16 @@
             this.trackBasePanel.Name = "trackBasePanel";
             this.trackBasePanel.Size = new System.Drawing.Size(200, 276);
             this.trackBasePanel.TabIndex = 4;
+            // 
+            // importTrackButton
+            // 
+            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
+            this.importTrackButton.Name = "importTrackButton";
+            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
+            this.importTrackButton.TabIndex = 4;
+            this.importTrackButton.Text = "Import from file";
+            this.importTrackButton.UseVisualStyleBackColor = true;
+            this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
             // 
             // trackTrackLabel
             // 
@@ -379,19 +391,19 @@
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(89, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
             // 
-            // importTrackButton
-            // 
-            this.importTrackButton.Location = new System.Drawing.Point(6, 14);
-            this.importTrackButton.Name = "importTrackButton";
-            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
-            this.importTrackButton.TabIndex = 4;
-            this.importTrackButton.Text = "Import from file";
-            this.importTrackButton.UseVisualStyleBackColor = true;
-            this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
-            // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "track.txt";
+            // 
+            // ptgrey
+            // 
+            this.ptgrey.Location = new System.Drawing.Point(38, 82);
+            this.ptgrey.Name = "ptgrey";
+            this.ptgrey.Size = new System.Drawing.Size(122, 23);
+            this.ptgrey.TabIndex = 8;
+            this.ptgrey.Text = "Open PTGrey";
+            this.ptgrey.UseVisualStyleBackColor = true;
+            this.ptgrey.Click += new System.EventHandler(this.ptgrey_Click);
             // 
             // mainGUI
             // 
@@ -460,5 +472,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button importTrackButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Button ptgrey;
     }
 }

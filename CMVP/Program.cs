@@ -23,6 +23,7 @@ namespace CMVP
         private static bool simulating = false;
         public static VideoStream videoStream;
         public static VideoStream imageProcess;
+        public static PTGreyCamera ptg;
         public static List<Car> carList = new List<Car>();
 
         [STAThread]
@@ -31,9 +32,11 @@ namespace CMVP
 
             mainGUI mainFrame = new mainGUI();
             videoStream = new Camera();
-            imageProcess = new ImageProcessing(videoStream, carList);
-            videoStream.start();
-            imageProcess.start();
+            
+            //imageProcess = new ImageProcessing(videoStream, carList);
+            //videoStream.start();
+            //imageProcess.start();
+            ptg = new PTGreyCamera();
             
             Application.Run(mainFrame);
 
