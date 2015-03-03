@@ -74,12 +74,12 @@ namespace CMVP
         {
             //Add the new position to the list and remove the oldest one.
             position.Add(pos);
-            position.RemoveAt(0);
+            position.Remove(position.First());
 
             //Calculate orientation and add to the list and remove the oldest one.
             PointF tempPoint = new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
             direction.Add(tempPoint);
-            direction.RemoveAt(0);
+            direction.Remove(direction.First());
 
             //Update the cars state.
             updateState();
@@ -94,11 +94,13 @@ namespace CMVP
         {
             //Add the new position to the list and remove the oldest one.
             position.Add(pos);
-            position.RemoveAt(0);
+            position.Remove(position.First());
 
             //Add the new orientation to the list and remove the oldest one.
             direction.Add(dir);
-            direction.RemoveAt(0);
+            direction.Remove(direction.First());
+
+            //updateState();
         }
 
         /// <summary>
