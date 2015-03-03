@@ -117,10 +117,12 @@
     <Compile Include="Brain.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
     <Compile Include="ControlStrategy.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Controllers\PIController.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
     <Compile Include="GUI\PIControlPanel.cs">
