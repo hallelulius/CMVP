@@ -31,7 +31,7 @@ namespace CMVP
         {
 
             mainGUI mainFrame = new mainGUI();
-            videoStream = new Camera();
+            //videoStream = new Camera();
             
             //imageProcess = new ImageProcessing(videoStream, carList);
             //videoStream.start();
