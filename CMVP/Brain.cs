@@ -34,7 +34,7 @@ namespace CMVP
                 {
                     car.send();
                 }
-                Thread.Sleep(3);
+                Thread.Sleep(50);
             }
         }
     }

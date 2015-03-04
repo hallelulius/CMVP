@@ -45,11 +45,34 @@ namespace CMVP
             {
                 port = new SerialPort(getFirstPort(), 115200); //remeber to sync baudrate with arduino
                 active = true;
+                try
+                {
+                    port.Close();
+                }
+                catch (Exception e)
+                {
+
+                }
+                System.Threading.Thread.Sleep(1000);
+                try
+                {
+                    port.Open();
+                }
+                catch (Exception e)
+                {
+
+                }
             }
             else
             {
                 System.Console.WriteLine("Connect Arduino");
             }
+        }
+
+        ~Communication()
+        {
+            port.Close();
+            Console.WriteLine("Closing Communication");
         }
 
         private byte convertCarID(int id, String mode)
@@ -103,6 +126,7 @@ namespace CMVP
 
         public void updateCar(int carID, float value1, String mode)
         {
+            Console.WriteLine("Updateing Car...");
             int value = (int)value1;  //ÄNDRA DETTA!
             byte val = convertValue(value,mode);
             byte id = convertCarID(carID, mode);
@@ -124,10 +148,10 @@ namespace CMVP
         {
             if (port != null && carID < error && value < error ) 
             {
-                port.Open();
+                //port.Open();
                 byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
-                port.Close();
+                //port.Close();
                 System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
             }
             else
@@ -140,11 +164,22 @@ namespace CMVP
         {
             if (port != null && carID < error && value < error)
             {
-                port.Open();
-                byte[] bits = { carID, value };
-                port.Write(bits, 0, 2);
-                port.Close();
-                System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+                //Console.WriteLine("1");
+                //try
+                //{
+                    //port.Open();
+                    //Console.WriteLine("2");
+                    byte[] bits = { carID, value };
+                    //Console.WriteLine("3");
+                    port.Write(bits, 0, 2);
+                    //Console.WriteLine("4");
+                    //port.Close();
+                    System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+                //}
+                //catch (UnauthorizedAccessException e)
+                //{
+
+                //}
             }
             else
             {

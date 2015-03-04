@@ -154,7 +154,10 @@ namespace CMVP
 
         public void send()
         {
+            Console.WriteLine("Throttel: " + controller.getThrottle());
             Program.com.updateCar(id, controller.getThrottle(), "Throttle");
+            //Program.com.updateCar(id, controller.getSteer(), "Steering");
+            //Program.com.updateCar(id, 0, "Throttle");
             Program.com.updateCar(id, controller.getSteer(), "Steering");
         }
 
