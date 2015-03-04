@@ -87,7 +87,7 @@
             this.startSimulationButton.TabIndex = 0;
             this.startSimulationButton.Text = "Start Simulation";
             this.startSimulationButton.UseVisualStyleBackColor = false;
-            this.startSimulationButton.Click += new System.EventHandler(this.button1_Click);
+            this.startSimulationButton.Click += new System.EventHandler(this.startSimulationButton_Click);
             // 
             // stopSimulationButton
             // 

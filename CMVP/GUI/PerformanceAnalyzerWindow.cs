@@ -16,11 +16,15 @@ namespace CMVP
         public delegate void sendDataDelegate(string text, double x, double y);
         public sendDataDelegate myDelegate;
         private float uppdateTime = 1; // Time between uppdates.
+        private const int maxValuesStored = 10;
 
         public PerformanceAnalyzerWindow()
         {
             InitializeComponent();
             myDelegate = new sendDataDelegate(addData);
+
+            performanceChart.ChartAreas[0].AxisY.StripLines.Add(new StripLine()); 
+            performanceChart.ChartAreas[0].AxisY.StripLines[0].Interval = 2;
         }
 
         public void addData(string reciever, double x, double y)
@@ -28,15 +32,12 @@ namespace CMVP
             Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
             if (s != null)
             {
+                if (s.Points.Count >= maxValuesStored)
+                    s.Points.Remove(s.Points.First());
                 s.Points.AddXY(x, y);
-                Console.WriteLine("Adding data point: " + y);
+                performanceChart.ChartAreas[0].RecalculateAxesScale();
+                //Console.WriteLine("Adding data point: " + y);
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Car tempCar = Program.cars.Find(car => car.ID == 2);
-            performanceChart.Series.Add("Car 1 position");
         }
 
         private void addSeriesDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -55,103 +56,12 @@ namespace CMVP
                 //SeriesControl sc;
                 string name = addSeriesDropDown.SelectedItem.ToString();
 
-                performanceChart.Series.Add(name);
-                performanceChart.Series.FindByName(name).ChartType = SeriesChartType.FastLine;
+                Series series = new Series(name);
+                performanceChart.Series.Add(series);
+                series.ChartType = SeriesChartType.FastLine;
                 SeriesControl sc = new SeriesControl(name, performanceChart);
                 sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
                 seriesPanel.Controls.Add(sc);
-
-                if(name == "Car 0 velocity")
-                {
-                    Series s = performanceChart.Series.FindByName(name);
-                    s.Points.AddXY(0, 0.05);
-                    s.Points.AddXY(0, 0.04);
-                    s.Points.AddXY(0, 0.07);
-                    s.Points.AddXY(0, 0.08);
-                    s.Points.AddXY(0, 0.03);
-                    s.Points.AddXY(0, 0.03);
-                    s.Points.AddXY(0, 0.01);
-                }
-
-                if(name == "Car 1 velocity")
-                {
-                    Series s = performanceChart.Series.FindByName(name);
-                    s.Points.AddXY(0, 0.05);
-                    s.Points.AddXY(0, 0.16);
-                    s.Points.AddXY(0, 0.03);
-                    s.Points.AddXY(0, 0.05);
-                    s.Points.AddXY(0, 0.08);
-                    s.Points.AddXY(0, 0.09);
-                    s.Points.AddXY(0, 0.11);
-                }
-                /*
-                switch (addSeriesDropDown.SelectedItem.ToString())
-                {
-
-                    case "Car 0 velocity":
-                        performanceChart.Series.Add("Car 0 velocity");
-                        performanceChart.Series.FindByName("Car 0 velocity").ChartType = SeriesChartType.FastLine;
-                        sc = new SeriesControl("Car 0 velocity", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 0 velocity reference signal":
-                        performanceChart.Series.Add("Car 0 velocity reference signal");
-                        sc = new SeriesControl("Car 0 velocity reference signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 0 control signal":
-                        performanceChart.Series.Add("Car 0 control signal");
-                        sc = new SeriesControl("Car 0 control signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 1 velocity":
-                        performanceChart.Series.Add("Car 1 velocity");
-                        sc = new SeriesControl("Car 1 velocity", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 1 velocity reference signal":
-                        performanceChart.Series.Add("Car 1 velocity reference signal");
-                        sc = new SeriesControl("Car 1 velocity reference signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 1 control signal":
-                        performanceChart.Series.Add("Car 1 control signal");
-                        sc = new SeriesControl("Car 1 control signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 2 velocity":
-                        performanceChart.Series.Add("Car 2 velocity");
-                        sc = new SeriesControl("Car 2 velocity", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 2 velocity reference signal":
-                        performanceChart.Series.Add("Car 2 velocity reference signal");
-                        sc = new SeriesControl("Car 2 velocity reference signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-
-                    case "Car 2 control signal":
-                        performanceChart.Series.Add("Car 2 control signal");
-                        sc = new SeriesControl("Car 2 control signal", performanceChart);
-                        sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                        seriesPanel.Controls.Add(sc);
-                        break;
-                }*/
             }
 
             //addSeriesDropDown.SelectedIndex = -1;

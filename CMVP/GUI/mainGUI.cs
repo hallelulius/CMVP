@@ -16,14 +16,16 @@ namespace CMVP
     
     public partial class mainGUI : Form
     {
+        //private Thread thread;
+        private Brain brain = new Brain();
         private Thread thread;
-        private Brain brain;
         private List<Track> tracks = new List<Track>();
 
         public mainGUI()
         {
             InitializeComponent();
             loadTracks();
+            thread = new Thread(new ThreadStart(brain.run));
         }
 
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
@@ -47,21 +49,39 @@ namespace CMVP
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void startSimulationButton_Click(object sender, EventArgs e)
         {
-            System.Console.WriteLine("Start simulation");
+            //System.Console.WriteLine("Start simulation");
 
-            brain = new Brain();
-            thread = new Thread(new ThreadStart(brain.run));
-            thread.Start();
+            //brain = new Brain();
+            //thread = new Thread(new ThreadStart(brain.run));
+            //thread.Start();
+            
+            //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
+            switch (thread.ThreadState)
+            {
+                case System.Threading.ThreadState.Unstarted:
+                    thread.Start();
+                    Console.WriteLine("Starting simulation...");
+                    break;
 
+                case System.Threading.ThreadState.Suspended:
+                    thread.Resume();
+                    Console.WriteLine("Resuming simulation...");
+                    break;
+
+                default:
+                    Console.WriteLine("Simulation already running...");
+                    break;
+            }
         }
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
-            System.Console.WriteLine("Stop simulation");
-            thread.Abort();
-            
+            //System.Console.WriteLine("Stop simulation");
+            //thread.Abort();
+            thread.Suspend();
+            Console.WriteLine("Stoping simulation");
         }
 
         private void openCameraControlButton_Click(object sender, EventArgs e)

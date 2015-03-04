@@ -16,20 +16,31 @@ namespace CMVP
         
         private List<Car> cars;
         public PerformanceAnalyzerWindow analyzer;
-        private double test = 0;
+        private string[] analyzedValues =  
+        {
+            "Car 0 velocity",
+            "Car 0 velocity reference signal",
+            "Car 0 control signal",
+            "Car 1 velocity",
+            "Car 1 velocity reference signal",
+            "Car 1 control signal",
+            "Car 2 velocity",
+            "Car 2 velocity reference signal",
+            "Car 2 control signal",
+            "Brain execution time"
+        };
 
         public void run()
         {
             cars = Program.cars;
-            Stopwatch totalTime = new Stopwatch();
-            Stopwatch localTime = new Stopwatch();
+            Stopwatch time = new Stopwatch();
             long dt = 0;
-            long lastTime;
+            long startTime;
 
-            localTime.Start();
+            time.Start();
             while (true)
             {
-                lastTime = localTime.ElapsedMilliseconds;
+                startTime = time.ElapsedMilliseconds;
              
                 foreach(Car car in cars)
                 {
@@ -50,29 +61,38 @@ namespace CMVP
                 {
                     car.send();
                 }
-                //Thread.Sleep(10);
-                dt = localTime.ElapsedMilliseconds - lastTime;
-                //localTime.Stop();
-                if (analyzer != null)
+                
+                dt = time.ElapsedMilliseconds - startTime;
+
+                // Give car values to analyzer:
+                foreach (Car car in cars)
                 {
-                    sendDataThreadSafe("Brain execution time", 0.0, Convert.ToDouble(dt) / 1000.0); // totalTime.ElapsedMilliseconds / 1000
-                    Console.WriteLine(Convert.ToDouble(dt) / 1000.0);
-                    //MessageBox.Show("Sent (" + test + ", " + ((double)localTime.ElapsedMilliseconds / 1000) + ") to the performance analyzer.");
+                    string s = "Car " + car.ID + " ";
+                    sendDataThreadSafe(s + "velocity", Convert.ToDouble(time.ElapsedMilliseconds) / 1000, cars.Find(x => x.ID == car.ID).getSpeed());
                 }
+
+                //Give other values to analyzer:
+                sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0); 
+                
                 Thread.Sleep(1000);
             }
         }
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {
-            if (analyzer.InvokeRequired)
+            if(analyzer != null)
             {
-                //sendDataCallback d = new sendDataCallback(sendDataThreadSafe);
-                analyzer.Invoke(analyzer.myDelegate, new object[] { reciever, x, y });
-            }
-            else
-            {
-                analyzer.addData("Brain execution time", x, y);
+                if (!analyzer.IsDisposed)
+                {
+                    if (analyzer.InvokeRequired)
+                    {
+                        analyzer.Invoke(analyzer.myDelegate, new object[] { reciever, x, y });
+                    }
+                    else
+                    {
+                        analyzer.addData(reciever, x, y);
+                    }
+                }
             }
         }
     }

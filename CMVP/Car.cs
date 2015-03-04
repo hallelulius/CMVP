@@ -46,7 +46,7 @@ namespace CMVP
             {
                 this.direction.Add(dir);
                 this.position.Add(pos);
-                this.speed.Add(0);
+                this.speed.Add(1.0);
                 this.acceleration.Add(0);
             }
         }
@@ -183,6 +183,11 @@ namespace CMVP
         public void setController(Controller c)
         {
             controller = c;
+        }
+
+        public double getSpeed()
+        {
+            return speed.First();
         }
     }
 }
