@@ -69,12 +69,17 @@ namespace CMVP
 
         private void PerformanceAnalyzerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            this.Dispose();
         }
 
         private void dataPointsNumeric_ValueChanged(object sender, EventArgs e)
         {
             maxValuesStored = (int)dataPointsNumeric.Value;
+        }
+
+        private void performanceChart_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

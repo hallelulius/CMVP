@@ -49,11 +49,12 @@ namespace CMVP
                 
                 dt = time.ElapsedMilliseconds - startTime;
 
-                // Give car values to analyzer:
+                // Give values to analyzer
                 if (analyzer != null) // Check if the analyzer is created. OBS: If it is created and destroyed it is not garantued to be null, thus the next if-statement.
                 {
                     if (!analyzer.IsDisposed)
                     {
+                        // Give car values to analyzer:
                         foreach (Car car in cars)
                         {
                             string s = "Car " + car.ID + " ";
@@ -67,7 +68,7 @@ namespace CMVP
                     }
                 }
 
-                //Thread.Sleep(1000);
+                Thread.Sleep(3);
             }
         }
 
@@ -79,7 +80,14 @@ namespace CMVP
                 {
                     if (analyzer.InvokeRequired)
                     {
-                        analyzer.Invoke(analyzer.myDelegate, new object[] { reciever, x, y });
+                        try
+                        {
+                            analyzer.Invoke(analyzer.myDelegate, new object[] { reciever, x, y });
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
                     }
                     else
                     {

@@ -42,6 +42,7 @@ namespace CMVP
             this.position = new List<Point>();
             this.speed = new List<double>();
             this.acceleration = new List<double>();
+            this.controlStrategy = new ControlStrategies.StandStill(this);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);

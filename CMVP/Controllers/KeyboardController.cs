@@ -10,7 +10,7 @@ namespace CMVP
     {
         public KeyboardController () : base()
         {
-
+            controllerName = "Manual keyboard";
         }
         public override void updateController()
         {

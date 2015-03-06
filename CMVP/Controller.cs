@@ -15,6 +15,7 @@ namespace CMVP
         protected float refSpeed;
         protected float outThrottle;
         protected float outSteer;
+        protected String controllerName;
 
         public abstract void updateController();
 
@@ -33,6 +34,10 @@ namespace CMVP
         public float getSteer()
         {
             return outSteer;
+        }
+        public string getName()
+        {
+            return controllerName;
         }
     }
 }

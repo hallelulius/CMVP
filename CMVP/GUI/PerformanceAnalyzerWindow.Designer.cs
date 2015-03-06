@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.performanceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.addSeriesDropDown = new System.Windows.Forms.ComboBox();
             this.addSeriesLabel = new System.Windows.Forms.Label();
@@ -42,15 +42,16 @@
             // 
             // performanceChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.performanceChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.performanceChart.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.performanceChart.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.performanceChart.Legends.Add(legend3);
             this.performanceChart.Location = new System.Drawing.Point(295, 12);
             this.performanceChart.Name = "performanceChart";
             this.performanceChart.Size = new System.Drawing.Size(643, 535);
             this.performanceChart.TabIndex = 0;
             this.performanceChart.Text = "chart1";
+            this.performanceChart.Click += new System.EventHandler(this.performanceChart_Click);
             // 
             // addSeriesDropDown
             // 

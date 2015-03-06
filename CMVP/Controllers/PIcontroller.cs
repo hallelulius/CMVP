@@ -30,6 +30,8 @@ namespace CMVP
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
+            // Set controler name:
+            controllerName = "PID";
         }
 
         public override void updateController()      //PI-controller 

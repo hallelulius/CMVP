@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMVP
 {
-    class Track
+    public class Track
     {
         private string _name;//Name of the track.
         private string _s;   //The string extracted from the file.
@@ -38,6 +38,7 @@ namespace CMVP
                 _m[0, i] = Convert.ToInt32(getNextWord());
                 _m[1, i] = Convert.ToInt32(getNextWord());
                 _m[2, i] = Convert.ToInt32(getNextWord());
+                //Console.WriteLine(_m[0, i] + "\t" + _m[1, i] + "\t" + _m[2, i]);
             }
             
         }

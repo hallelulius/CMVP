@@ -80,8 +80,15 @@ namespace CMVP
         {
             //System.Console.WriteLine("Stop simulation");
             //thread.Abort();
-            thread.Suspend();
             Console.WriteLine("Stoping simulation");
+            try
+            {
+                thread.Suspend();
+            }
+            catch (Exception exception)
+            {
+
+            }
         }
 
         private void openCameraControlButton_Click(object sender, EventArgs e)
@@ -179,7 +186,7 @@ namespace CMVP
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
                     tempCar.setControlStrategy(new ControlStrategies.JustFollow());
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-                    tempCar.setControlStrategy(new ControlStrategies.StandStill());
+                    tempCar.setControlStrategy(new ControlStrategies.StandStill(tempCar));
             }
         }
 
@@ -205,17 +212,14 @@ namespace CMVP
                 int tempID = (int)controllerCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
 
-                foreach (Control control in controllerTypePanel.Controls) // Should only be one control in controllerTypePanel at any time
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
                 {
-                    if (control.ToString() == "PIDControlPanel")
-                    {
-                        tempCar.setController(new PIController()); // Modify this when different controllers are added
-                    }
+                    tempCar.setController(new PIController());
+                }
 
-                    if (control.ToString() == "KeyboardControlPanel")
-                    {
-                        tempCar.setController(new KeyboardController()); // Modify this when different controllers are added
-                    }
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
+                {
+                    tempCar.setController(new KeyboardController());
                 }
             }
         }
@@ -238,6 +242,40 @@ namespace CMVP
             PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
             brain.analyzer = paw;
             paw.Show();
+        }
+
+        private void trackApplyButton_Click(object sender, EventArgs e)
+        {
+            if (trackCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)trackCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                if(tracksDropDown.SelectedIndex != -1)
+                    tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
+            }
+        }
+
+        private void trafficCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)trafficCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                controlStrategyControlStrategyDropDown.SelectedItem = tempCar.getControlStrategy().getStrategyName();
+            }
+        }
+
+        private void controllerCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)controllerCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
+            }
         }
     }
 }
