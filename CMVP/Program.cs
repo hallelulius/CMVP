@@ -32,11 +32,12 @@ namespace CMVP
 
             mainGUI mainFrame = new mainGUI();
             //videoStream = new Camera();
+            videoStream = new PTGreyCamera();
             
-            //imageProcess = new ImageProcessing(videoStream, carList);
-            //videoStream.start();
-            //imageProcess.start();
-            ptg = new PTGreyCamera();
+            imageProcess = new ImageProcessing(videoStream, carList);
+            videoStream.start();
+            imageProcess.start();
+           
             
             Application.Run(mainFrame);
 

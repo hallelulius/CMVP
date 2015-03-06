@@ -100,36 +100,36 @@ namespace CMVP
         private Bitmap processImage()
         {
 
-            Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
+           // Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
 
             YCbCrFiltering filter = new YCbCrFiltering();
             filter.Y = new Range(0.9f, 1);
             filteredImg = filter.Apply(img);
 
             this.g = Graphics.FromImage(filteredImg);
-            Console.WriteLine("BW filter: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("BW filter: " + System.DateTime.Now.Millisecond);
 
-            Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> cirkels = getCircularBlobs(5, 10);
             List<Blob> rectangles = getRectangularBlobs(1, 5, 1, 5);
-            Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
+           // Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
 
 
-            Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
+           // Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
 
             triangles = filterDubblets(triangles);
 
-            Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
             
             triangles = filterTriangels(triangles, 19, 15, 2, 2,true);
 
-            Console.WriteLine("Before centers: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before centers: " + System.DateTime.Now.Millisecond);
 
             centers = getCenterOfTriangels(triangles);
 
-            Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
+           // Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
 
             directions=getDirectionOfTriangels(triangles);
             foreach(Blob b in rectangles)
@@ -298,21 +298,21 @@ namespace CMVP
 
                 if(d0 < d1 && d0 < d2)
                 {
-                    Console.WriteLine("d0 base");
+                    //Console.WriteLine("d0 base");
                     top=triangle[2];
                     base1=triangle[0];
                     base2=triangle[1];
                 }
                 else if(d1 < d0 && d1 < d2)
                 {
-                    Console.WriteLine("d1 base");
+                    //Console.WriteLine("d1 base");
                     top = triangle[1];
                     base1 = triangle[0];
                     base2 = triangle[2];
                 }
                 else
                 {
-                    Console.WriteLine("d2 base");
+                    //Console.WriteLine("d2 base");
                     top = triangle[0];
                     base1 = triangle[1];
                     base2 = triangle[2];
@@ -411,8 +411,8 @@ namespace CMVP
                     triangleBase = d3;
                     triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
-                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
-                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                //System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                //System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
                 if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
                 {
                     if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)
