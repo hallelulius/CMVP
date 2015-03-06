@@ -31,7 +31,6 @@ build/
 *.pdb
 *.pgc
 *.pgd
-*.suo
 *.rsp
 *.sbr
 *.tlb
