@@ -147,12 +147,15 @@ namespace CMVP
                 {
                     g.DrawRectangle(yellowPen, b.Rectangle);
                 }
-
-               if(objects.Find(o => o.ID == carId)==null)
+                Car tempCar = objects.Find(o => o.ID == carId);
+               if(tempCar==null)
                {
                    objects.Add(new Car(carId, centers[k], directions[k]));
                }
-
+               else
+               {
+                   tempCar.setPositionAndOrientation(centers[k], directions[k]);
+               }
 
                 //Draw Graphics
                 if (drawTriangleOnImg)
