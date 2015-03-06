@@ -168,6 +168,7 @@ namespace CMVP
         public void start()
         {
             m_grabImages = true;
+            StartGrabLoop();
         }
          public void stop()
         {
