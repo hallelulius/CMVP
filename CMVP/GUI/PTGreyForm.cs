@@ -33,6 +33,7 @@ namespace CMVP.GUI
             {
                 Program.ptg.start();
                 pictureBox1.Image = Program.ptg.getImage();
+                pictureBox1.Invalidate();
             }
             else
             {
