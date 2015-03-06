@@ -13,6 +13,7 @@ using System.Diagnostics;
 using FlyCapture2Managed;
 using FlyCapture2Managed.Gui;
 
+
 namespace CMVP
 {
 
@@ -26,7 +27,8 @@ namespace CMVP
         private bool m_grabImages;
         private AutoResetEvent m_grabThreadExited;
         private BackgroundWorker m_grabThread;
-        private Bitmap bitmap;
+        private Bitmap image;
+        private List<Panel> panelsToUpdate;
 
         public PTGreyCamera()
         {
@@ -34,12 +36,13 @@ namespace CMVP
             m_processedImage = new ManagedImage();
             m_camCtlDlg = new CameraControlDialog();
             m_grabThreadExited = new AutoResetEvent(false);
+            panelsToUpdate = new List<Panel>();
             setup();
         }
 
         public Bitmap getImage()
         {
-            return bitmap;
+            return image;
         }
 
         private void StartGrabLoop()
@@ -53,15 +56,21 @@ namespace CMVP
 
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
- 	        bitmap = m_processedImage.bitmap;
+            Console.WriteLine("updateUI");
+ 	        image = m_processedImage.bitmap;
+            foreach (Panel p in panelsToUpdate)
+            {
+                p.BackgroundImage = image;
+            }
         }
 
         private void GrabLoop(object sender, DoWorkEventArgs e)
         {
+            Console.WriteLine("GrabLoop");
             BackgroundWorker worker = sender as BackgroundWorker;
-
             while (m_grabImages)
             {
+
                 try
                 {
                     m_camera.RetrieveBuffer(m_rawImage);
@@ -175,14 +184,15 @@ namespace CMVP
         }
         public void pushDestination(Panel panel)
         {
-
+            panelsToUpdate.Add(panel);
         }
         public void removeDestination(Panel panel)
         {
+            panelsToUpdate.Remove(panel);
         }
         public Size getSize()
         {
-            return new Size();
+            return image.Size;
         }
     }
 }
