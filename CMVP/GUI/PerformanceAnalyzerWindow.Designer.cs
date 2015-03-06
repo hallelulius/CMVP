@@ -34,7 +34,10 @@
             this.addSeriesDropDown = new System.Windows.Forms.ComboBox();
             this.addSeriesLabel = new System.Windows.Forms.Label();
             this.seriesPanel = new System.Windows.Forms.Panel();
+            this.maxDataPointsLabel = new System.Windows.Forms.Label();
+            this.dataPointsNumeric = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataPointsNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // performanceChart
@@ -80,16 +83,45 @@
             // 
             // seriesPanel
             // 
-            this.seriesPanel.Location = new System.Drawing.Point(13, 41);
+            this.seriesPanel.Location = new System.Drawing.Point(13, 74);
             this.seriesPanel.Name = "seriesPanel";
-            this.seriesPanel.Size = new System.Drawing.Size(267, 436);
+            this.seriesPanel.Size = new System.Drawing.Size(267, 403);
             this.seriesPanel.TabIndex = 4;
+            // 
+            // maxDataPointsLabel
+            // 
+            this.maxDataPointsLabel.AutoSize = true;
+            this.maxDataPointsLabel.Location = new System.Drawing.Point(13, 43);
+            this.maxDataPointsLabel.Name = "maxDataPointsLabel";
+            this.maxDataPointsLabel.Size = new System.Drawing.Size(85, 13);
+            this.maxDataPointsLabel.TabIndex = 5;
+            this.maxDataPointsLabel.Text = "Max data points:";
+            // 
+            // dataPointsNumeric
+            // 
+            this.dataPointsNumeric.Location = new System.Drawing.Point(104, 41);
+            this.dataPointsNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.dataPointsNumeric.Name = "dataPointsNumeric";
+            this.dataPointsNumeric.Size = new System.Drawing.Size(164, 20);
+            this.dataPointsNumeric.TabIndex = 6;
+            this.dataPointsNumeric.Value = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.dataPointsNumeric.ValueChanged += new System.EventHandler(this.dataPointsNumeric_ValueChanged);
             // 
             // PerformanceAnalyzerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(950, 559);
+            this.Controls.Add(this.dataPointsNumeric);
+            this.Controls.Add(this.maxDataPointsLabel);
             this.Controls.Add(this.seriesPanel);
             this.Controls.Add(this.addSeriesLabel);
             this.Controls.Add(this.addSeriesDropDown);
@@ -98,6 +130,7 @@
             this.Text = "Performance analyzer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PerformanceAnalyzerWindow_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataPointsNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,6 +142,8 @@
         private System.Windows.Forms.ComboBox addSeriesDropDown;
         private System.Windows.Forms.Label addSeriesLabel;
         private System.Windows.Forms.Panel seriesPanel;
+        private System.Windows.Forms.Label maxDataPointsLabel;
+        private System.Windows.Forms.NumericUpDown dataPointsNumeric;
 
 
     }

@@ -9,26 +9,11 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
-    //delegate void sendDataCallback(string text, double x, double y);
-
     class Brain
     {
         
         private List<Car> cars;
         public PerformanceAnalyzerWindow analyzer;
-        private string[] analyzedValues =  
-        {
-            "Car 0 velocity",
-            "Car 0 velocity reference signal",
-            "Car 0 control signal",
-            "Car 1 velocity",
-            "Car 1 velocity reference signal",
-            "Car 1 control signal",
-            "Car 2 velocity",
-            "Car 2 velocity reference signal",
-            "Car 2 control signal",
-            "Brain execution time"
-        };
 
         public void run()
         {
@@ -65,16 +50,24 @@ namespace CMVP
                 dt = time.ElapsedMilliseconds - startTime;
 
                 // Give car values to analyzer:
-                foreach (Car car in cars)
+                if (analyzer != null) // Check if the analyzer is created. OBS: If it is created and destroyed it is not garantued to be null, thus the next if-statement.
                 {
-                    string s = "Car " + car.ID + " ";
-                    sendDataThreadSafe(s + "velocity", Convert.ToDouble(time.ElapsedMilliseconds) / 1000, cars.Find(x => x.ID == car.ID).getSpeed());
+                    if (!analyzer.IsDisposed)
+                    {
+                        foreach (Car car in cars)
+                        {
+                            string s = "Car " + car.ID + " ";
+                            sendDataThreadSafe(s + "velocity", Convert.ToDouble(time.ElapsedMilliseconds) / 1000, cars.Find(x => x.ID == car.ID).getSpeed());
+                            // Add more sendDataThreadSafe calls here.
+                        }
+
+                        // Give other values to analyzer:
+                        sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
+                        // Add more sendDataThreadSafe calls here.
+                    }
                 }
 
-                //Give other values to analyzer:
-                sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0); 
-                
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
             }
         }
 

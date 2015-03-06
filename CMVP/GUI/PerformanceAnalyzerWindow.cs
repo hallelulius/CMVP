@@ -16,7 +16,7 @@ namespace CMVP
         public delegate void sendDataDelegate(string text, double x, double y);
         public sendDataDelegate myDelegate;
         private float uppdateTime = 1; // Time between uppdates.
-        private const int maxValuesStored = 10;
+        private int maxValuesStored = 300;
 
         public PerformanceAnalyzerWindow()
         {
@@ -32,7 +32,7 @@ namespace CMVP
             Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
             if (s != null)
             {
-                if (s.Points.Count >= maxValuesStored)
+                while (s.Points.Count >= maxValuesStored)
                     s.Points.Remove(s.Points.First());
                 s.Points.AddXY(x, y);
                 performanceChart.ChartAreas[0].RecalculateAxesScale();
@@ -70,6 +70,11 @@ namespace CMVP
         private void PerformanceAnalyzerWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
 
+        }
+
+        private void dataPointsNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            maxValuesStored = (int)dataPointsNumeric.Value;
         }
     }
 }
