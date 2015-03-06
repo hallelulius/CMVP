@@ -26,11 +26,11 @@ namespace CMVP
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
-                outSteer -= 3;
+                outSteer = 200;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Right))
             {
-                outSteer += 3;
+                outSteer = 10;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
             {
@@ -67,7 +67,12 @@ namespace CMVP
             /// <summary>
             /// The down arrow key.
             /// </summary>
-            Space
+            Space=0x20,
+
+            /// <summary>
+            /// The r key.
+            /// </summary>
+            R=0x52
         }
 
         /// <summary>
