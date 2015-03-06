@@ -35,6 +35,10 @@ namespace CMVP
         {
             return outSteer;
         }
+        public void setThrottle(float outThrottle)
+        {
+            this.outThrottle = outThrottle;
+        }
         public string getName()
         {
             return controllerName;

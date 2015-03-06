@@ -12,7 +12,7 @@ namespace CMVP
     class Brain
     {
         
-        private List<Car> cars;
+        private List<Car> cars;   
         public PerformanceAnalyzerWindow analyzer;
 
         public void run()

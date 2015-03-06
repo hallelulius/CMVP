@@ -16,23 +16,26 @@ namespace CMVP
         {
             if (NativeKeyboard.IsKeyDown(KeyCode.Up))
             {
-                outThrottle += 1/150;
+                outThrottle += 3;
+                Console.WriteLine("Key up pressed.");
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Down))
             {
-                outThrottle -= 1 / 150;
+                outThrottle -= 3;
+                Console.WriteLine("Key down pressed.");
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
-                outSteer -= 1 / 150;
+                outSteer = 200;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Right))
             {
-                outSteer += 1 / 150;
+                outSteer = 10;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
             {
-                outThrottle = 0; 
+                outThrottle = 0;
+                Console.WriteLine("Emergency Stop ");
             }
         }
 
@@ -64,7 +67,12 @@ namespace CMVP
             /// <summary>
             /// The down arrow key.
             /// </summary>
-            Space
+            Space=0x20,
+
+            /// <summary>
+            /// The r key.
+            /// </summary>
+            R=0x52
         }
 
         /// <summary>

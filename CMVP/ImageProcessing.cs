@@ -46,7 +46,7 @@ namespace CMVP
         public Boolean drawCenterOnImg;
         
 
-        public ImageProcessing(VideoStream videoStream, ref List<Car> objects) // Added ref keyword to pass as reference //Viktor I
+        public ImageProcessing(VideoStream videoStream, List<Car> objects) // Added ref keyword to pass as reference //Viktor I
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
@@ -138,7 +138,7 @@ namespace CMVP
             }
             for (int k = 0; k < triangles.Count; k++)
             {
-                //    Console.WriteLine(k);
+                //Console.WriteLine(k);
                 List<Blob> unSortedIdTag = filterOutIdRectangles(rectangles, centers[k]);
                 int carId = getId(centers[k], directions[k]);
                 //Console.WriteLine("id of car: " + carId);
@@ -147,12 +147,15 @@ namespace CMVP
                 {
                     g.DrawRectangle(yellowPen, b.Rectangle);
                 }
-
-               if(objects.Find(o => o.ID == carId)==null)
+                Car tempCar = objects.Find(o => o.ID == carId);
+               if(tempCar==null)
                {
                    objects.Add(new Car(carId, centers[k], directions[k]));
                }
-
+               else
+               {
+                   tempCar.setPositionAndOrientation(centers[k], directions[k]);
+               }
 
                 //Draw Graphics
                 if (drawTriangleOnImg)
@@ -298,21 +301,21 @@ namespace CMVP
 
                 if(d0 < d1 && d0 < d2)
                 {
-                    Console.WriteLine("d0 base");
+                    //Console.WriteLine("d0 base");
                     top=triangle[2];
                     base1=triangle[0];
                     base2=triangle[1];
                 }
                 else if(d1 < d0 && d1 < d2)
                 {
-                    Console.WriteLine("d1 base");
+                    //Console.WriteLine("d1 base");
                     top = triangle[1];
                     base1 = triangle[0];
                     base2 = triangle[2];
                 }
                 else
                 {
-                    Console.WriteLine("d2 base");
+                    //Console.WriteLine("d2 base");
                     top = triangle[0];
                     base1 = triangle[1];
                     base2 = triangle[2];
