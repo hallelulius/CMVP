@@ -56,7 +56,6 @@ namespace CMVP
 
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
-            Console.WriteLine("updateUI");
  	        image = m_processedImage.bitmap;
             foreach (Panel p in panelsToUpdate)
             {
@@ -70,7 +69,6 @@ namespace CMVP
             BackgroundWorker worker = sender as BackgroundWorker;
             while (m_grabImages)
             {
-
                 try
                 {
                     m_camera.RetrieveBuffer(m_rawImage);

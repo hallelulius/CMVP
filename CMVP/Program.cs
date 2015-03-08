@@ -36,6 +36,7 @@ namespace CMVP
             
             imageProcess = new ImageProcessing(videoStream, carList);
             videoStream.start();
+            System.Threading.Thread.Sleep(1000);
             imageProcess.start();
            
             

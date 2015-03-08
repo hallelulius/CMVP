@@ -32,7 +32,7 @@ namespace CMVP
         private Bitmap img;
         private Bitmap processedImage;
         //Temporary variable until the physical filter is in use.
-        private Bitmap filteredImg;
+       // private Bitmap filteredImg;
         private List<System.Drawing.Point> centers;
         private List<System.Drawing.PointF> directions;
         private List<Panel> panelsToUpdate;
@@ -67,7 +67,7 @@ namespace CMVP
         {
             img = videoStream.getImage();
             processedImage = processImage();
-            foreach(Panel panel in panelsToUpdate)
+            foreach (Panel panel in panelsToUpdate)
             {
                 panel.BackgroundImage = processedImage;
             }
@@ -102,15 +102,15 @@ namespace CMVP
 
            // Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
 
-            YCbCrFiltering filter = new YCbCrFiltering();
-            filter.Y = new Range(0.9f, 1);
-            filteredImg = filter.Apply(img);
+            //YCbCrFiltering filter = new YCbCrFiltering();
+            //filter.Y = new Range(0.9f, 1);
+            //filteredImg = filter.Apply(img);
 
-            this.g = Graphics.FromImage(filteredImg);
+            this.g = Graphics.FromImage(img);
             //Console.WriteLine("BW filter: " + System.DateTime.Now.Millisecond);
 
             //Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
-            List<Blob> cirkels = getCircularBlobs(5, 10);
+            List<Blob> cirkels = getCircularBlobs(1, 14);
             List<Blob> rectangles = getRectangularBlobs(1, 5, 1, 5);
            // Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
@@ -123,7 +123,7 @@ namespace CMVP
 
             //Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
             
-            triangles = filterTriangels(triangles, 19, 15, 2, 2,true);
+            triangles = filterTriangels(triangles, 44, 13, 7, 3,true);
 
             //Console.WriteLine("Before centers: " + System.DateTime.Now.Millisecond);
 
@@ -169,8 +169,11 @@ namespace CMVP
                 {
                     g.DrawLine(yellowPen, centers[k], new System.Drawing.Point((int)(centers[k].X + directions[k].X * 40), (int)(centers[k].Y + directions[k].Y * 40)));
                 }
+            
             }
-            return filteredImg;
+            if(drawCirkelsOnImg)
+                drawCirkels(cirkels);
+            return img;
         }
         private void drawCirkels(List<Blob> cirkels)
         {
@@ -183,14 +186,15 @@ namespace CMVP
         {
 
             BlobCounter blobCounter = new BlobCounter();
+            blobCounter.BackgroundThreshold = new RGB(200,200,200).Color;
             blobCounter.MinHeight = minRadius;
             blobCounter.MaxHeight = maxRadius;
             blobCounter.FilterBlobs = true;
-            blobCounter.ProcessImage(filteredImg);
+            blobCounter.ProcessImage(img);
             Blob[] blobs = blobCounter.GetObjectsInformation();
 
             SimpleShapeChecker s = new SimpleShapeChecker();
-            s.MinAcceptableDistortion = 1;
+            s.MinAcceptableDistortion =6;
             List<Blob> cirkels = new List<Blob>();
             BlobCountingObjectsProcessing bcop = new BlobCountingObjectsProcessing();
 
@@ -204,8 +208,6 @@ namespace CMVP
                     cirkels.Add(b);
                 }
             }
-            if (drawCirkelsOnImg)
-                drawCirkels(cirkels);
             return cirkels;
         }
         private List<System.Drawing.Point> getPoints(List<Blob> blobs)
@@ -327,55 +329,6 @@ namespace CMVP
             return directions;
         }
         //Filter out triangels with a the right proportions.
-        List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangels, double propotion, double pError, double angle,double aError)
-        {
-            List<System.Drawing.Point[]> passedTriangels = new List<System.Drawing.Point[]>();
-     
-            for (int k = 0; k < triangels.Count; k++)
-            {
-
-                double xDist = triangels.ElementAt(k)[0].X - triangels.ElementAt(k)[1].X;
-                double yDist = triangels.ElementAt(k)[0].Y - triangels.ElementAt(k)[1].Y;
-                double d1 = Math.Sqrt(xDist * xDist + yDist * yDist);
-                xDist = triangels.ElementAt(k)[1].X - triangels.ElementAt(k)[2].X;
-                yDist = triangels.ElementAt(k)[1].Y - triangels.ElementAt(k)[2].Y;
-                double d2 = Math.Sqrt(xDist * xDist + yDist * yDist);
-                xDist = triangels.ElementAt(k)[0].X - triangels.ElementAt(k)[2].X;
-                yDist = triangels.ElementAt(k)[0].Y - triangels.ElementAt(k)[2].Y;
-                double d3 = Math.Sqrt(xDist * xDist + yDist * yDist);
-
-
-                double triangelBase;
-                double triangelHight;
-                if (d1 < d2 && d1 < d3)
-                {
-                    triangelBase = d1;
-                    triangelHight = Math.Sqrt(d2 * d2 - (d1 / 2) * (d1 / 2));
-                }
-                else if (d2 < d1 && d2 < d3)
-                {
-                    triangelBase = d2;
-                    triangelHight = Math.Sqrt(d3 * d3 - (d2 / 2) * (d2 / 2));
-                }
-                else
-                {
-                    triangelBase = d3;
-                    triangelHight = Math.Sqrt(-d1 * d1 - (d3 / 2) * (d3 / 2));
-                }
-
-                double triangelPropotion = triangelHight / triangelBase;
-                
-
-                //System.Console.Out.WriteLine(triangelPropotion);
-                if (triangelPropotion > (propotion - pError) && triangelPropotion < propotion + pError)
-                {
-                    double triangleAngle = System.Math.Atan(triangelHight / triangelBase/2);
-                    if (triangleAngle > (angle - aError) && triangleAngle < angle + aError)
-                    passedTriangels.Add(triangels.ElementAt(k));
-                }
-            }
-            return passedTriangels;
-        }
         List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangles, double idealHight, double idealBase, double errorHight, double errorBase, Boolean b)
         {
             List<System.Drawing.Point[]> passedTriangels = new List<System.Drawing.Point[]>();
@@ -411,8 +364,8 @@ namespace CMVP
                     triangleBase = d3;
                     triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
-                //System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
-                //System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
                 if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
                 {
                     if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)
@@ -471,10 +424,10 @@ namespace CMVP
             blobCounter.MaxWidth = maxWidth;
             blobCounter.MinWidth = minWidth;
             blobCounter.FilterBlobs = true;
-            blobCounter.ProcessImage(filteredImg);
+            blobCounter.ProcessImage(img);
             Blob[] blobs = blobCounter.GetObjectsInformation();
             SimpleShapeChecker shapeChecker = new SimpleShapeChecker();
-            shapeChecker.MinAcceptableDistortion = (float)2.0;
+            shapeChecker.MinAcceptableDistortion = 2.0f;
             List<Blob> rectangles = new List<Blob>();
             foreach(Blob b in blobs)
             {
