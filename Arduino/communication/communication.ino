@@ -56,7 +56,7 @@ void setup()
   setToNeutral();                       // Sets all DACs to "neutral" voltage
 
   Serial.begin(115200);
-  delay(5000);
+  delay(1000);
   Serial.println("Setup complete");
 }
 

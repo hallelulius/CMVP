@@ -9,12 +9,12 @@ namespace CMVP
 {
     public abstract class ControlStrategy
     {
-        protected float[,] track;
+        protected Track track;
         protected Car car;
         protected float scaleSpeed = 1;
         protected String strategyName;
 
-        public ControlStrategy(Car car, float[,] track, String strategyName) // Constructor 
+        public ControlStrategy(Car car, Track track, String strategyName) // Constructor 
         {
             this.car = car;
             this.track = track;
@@ -30,7 +30,7 @@ namespace CMVP
             car.getController().setSpeed(speed);
         }
 
-        public void setTrack(float[,] track)
+        public void setTrack(Track track)
         {
             this.track = track; 
         }
@@ -45,7 +45,7 @@ namespace CMVP
             return scaleSpeed;
         }
 
-        public float [,] getTrack() 
+        public Track getTrack() 
         {
             return track;
         }

@@ -46,7 +46,7 @@ namespace CMVP
         public Boolean drawCenterOnImg;
         
 
-        public ImageProcessing(VideoStream videoStream,List<Car> objects)
+        public ImageProcessing(VideoStream videoStream, List<Car> objects) // Added ref keyword to pass as reference //Viktor I
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
@@ -100,7 +100,7 @@ namespace CMVP
         private Bitmap processImage()
         {
 
-           // Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
 
             YCbCrFiltering filter = new YCbCrFiltering();
             filter.Y = new Range(0.9f, 1);
@@ -112,12 +112,12 @@ namespace CMVP
             //Console.WriteLine("Before Blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> cirkels = getCircularBlobs(5, 10);
             List<Blob> rectangles = getRectangularBlobs(1, 5, 1, 5);
-           // Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
 
 
-           // Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
 
             triangles = filterDubblets(triangles);
 
@@ -129,7 +129,7 @@ namespace CMVP
 
             centers = getCenterOfTriangels(triangles);
 
-           // Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before Direction: " + System.DateTime.Now.Millisecond);
 
             directions=getDirectionOfTriangels(triangles);
             foreach(Blob b in rectangles)
@@ -138,21 +138,24 @@ namespace CMVP
             }
             for (int k = 0; k < triangles.Count; k++)
             {
-                Console.WriteLine(k);
+                //Console.WriteLine(k);
                 List<Blob> unSortedIdTag = filterOutIdRectangles(rectangles, centers[k]);
                 int carId = getId(centers[k], directions[k]);
-                Console.WriteLine("id of car: " + carId);
+                //Console.WriteLine("id of car: " + carId);
 
                 foreach(Blob b in unSortedIdTag)
                 {
                     g.DrawRectangle(yellowPen, b.Rectangle);
                 }
-
-               if(objects.Find(o => o.ID == carId)==null)
+                Car tempCar = objects.Find(o => o.ID == carId);
+               if(tempCar==null)
                {
                    objects.Add(new Car(carId, centers[k], directions[k]));
                }
-
+               else
+               {
+                   tempCar.setPositionAndOrientation(centers[k], directions[k]);
+               }
 
                 //Draw Graphics
                 if (drawTriangleOnImg)

@@ -9,34 +9,86 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace CMVP
 {
     
     public partial class mainGUI : Form
     {
+        //private Thread thread;
+        private Brain brain = new Brain();
         private Thread thread;
-        private Brain brain;
+        private List<Track> tracks = new List<Track>();
+
         public mainGUI()
         {
             InitializeComponent();
+            loadTracks();
+            thread = new Thread(new ThreadStart(brain.run));
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
-            System.Console.WriteLine("Start simulation");
+            string currentFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            
+            try
+            {
+                string[] paths = Directory.GetFiles(currentFolder + @"\Tracks\", "*.txt");
 
-            brain = new Brain();
-            thread = new Thread(new ThreadStart(brain.run));
-            thread.Start();
+                foreach (string path in paths)
+                {
+                    Track track = new Track(path);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Couldn't locate the 'Tracks' folder. The program will not load tracks automatically. To fix this add the folder to the applications directory (" + currentFolder + ").");
+            }
+        }
 
+        private void startSimulationButton_Click(object sender, EventArgs e)
+        {
+            //System.Console.WriteLine("Start simulation");
+
+            //brain = new Brain();
+            //thread = new Thread(new ThreadStart(brain.run));
+            //thread.Start();
+            
+            //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
+            switch (thread.ThreadState)
+            {
+                case System.Threading.ThreadState.Unstarted:
+                    thread.Start();
+                    Console.WriteLine("Starting simulation...");
+                    break;
+
+                case System.Threading.ThreadState.Suspended:
+                    thread.Resume();
+                    Console.WriteLine("Resuming simulation...");
+                    break;
+
+                default:
+                    Console.WriteLine("Simulation already running...");
+                    break;
+            }
         }
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
-            System.Console.WriteLine("Stop simulation");
-            thread.Abort();
-            
+            //System.Console.WriteLine("Stop simulation");
+            //thread.Abort();
+            Console.WriteLine("Stoping simulation");
+            try
+            {
+                thread.Suspend();
+            }
+            catch (Exception exception)
+            {
+
+            }
         }
 
         private void openCameraControlButton_Click(object sender, EventArgs e)
@@ -50,24 +102,179 @@ namespace CMVP
         {
             controllerTypePanel.Controls.Clear();
 
-            if (controllerTypeDropDown.SelectedItem.ToString() == "P")
-                controllerTypePanel.Controls.Add(new PControlPanel());
+            if (controllerTypeDropDown.SelectedIndex != -1)
+            {
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                    controllerTypePanel.Controls.Add(new PIDControlPanel());
 
-            if (controllerTypeDropDown.SelectedItem.ToString() == "PI")
-                controllerTypePanel.Controls.Add(new PIControlPanel());
-
-            if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
-                controllerTypePanel.Controls.Add(new PIDControlPanel());
-
-            if (controllerTypeDropDown.SelectedItem.ToString() == "Manual Keyboard")
-                controllerTypePanel.Controls.Add(new KeyboardControlPanel());
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual Keyboard")
+                    controllerTypePanel.Controls.Add(new KeyboardControlPanel());
+            }
         }
 
         private void importTrackButton_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                TrackImporter ti = new TrackImporter(openFileDialog.FileName);
+                DialogResult result = MessageBox.Show(
+                    "Do you want to add the track to your 'Tracks' folder? If you press 'Yes', it will load automatically the next time you start the application.",
+                    "Importing track",
+                    MessageBoxButtons.YesNoCancel);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Open the file:
+                    string file = openFileDialog.FileName;
+
+                    // Create a track from the file:
+                    Track track = new Track(file);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+
+                    // Copy the file into the 'Tracks' folder:
+                    string currentFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    try
+                    {
+                        File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                    }
+                    catch (DirectoryNotFoundException exception)
+                    {
+                        Directory.CreateDirectory(currentFolder + @"\Tracks\");
+                        File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                    }
+
+                }
+                if (result == DialogResult.No)
+                {
+                    Track track = new Track(openFileDialog.FileName);
+                    tracksDropDown.Items.Add(track.name);
+                    tracks.Add(track);
+                }
+            }
+        }
+
+        private void trafficControlBasePanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
+        { 
+            foreach (Car car in Program.cars)
+            {
+                if (!controllerCarIDDropDown.Items.Contains(car.ID))
+                    controllerCarIDDropDown.Items.Add(car.ID);
+            }
+        }
+
+        private void trafficCarIDDropDown_DropDown(object sender, EventArgs e)
+        {
+            foreach (Car car in Program.cars)
+            {
+                if (!trafficCarIDDropDown.Items.Contains(car.ID))
+                    trafficCarIDDropDown.Items.Add(car.ID);
+            }
+        }
+
+        private void trafficApplyButton_Click(object sender, EventArgs e)
+        {
+            if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)trafficCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
+                    tempCar.setControlStrategy(new ControlStrategies.JustFollow());
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Stand still")
+                    tempCar.setControlStrategy(new ControlStrategies.StandStill(tempCar));
+            }
+        }
+
+        private void trafficCancelButton_Click(object sender, EventArgs e)
+        {
+            trafficCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
+            controlStrategyControlStrategyDropDown.SelectedIndex = -1;
+        }
+
+        private void trackCarIDDropDown_DropDown(object sender, EventArgs e)
+        {
+            foreach (Car car in Program.cars)
+            {
+                if (!trackCarIDDropDown.Items.Contains(car.ID))
+                    trackCarIDDropDown.Items.Add(car.ID);
+            }
+        }
+
+        private void controllerApplyButton_Click(object sender, EventArgs e)
+        {
+            if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)controllerCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                {
+                    tempCar.setController(new PIController());
+                }
+
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
+                {
+                    tempCar.setController(new KeyboardController());
+                }
+            }
+        }
+
+        private void controllerCancelButton_Click(object sender, EventArgs e)
+        {
+            controllerCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
+            controllerTypeDropDown.SelectedIndex = -1;
+            controllerTypePanel.Controls.Clear();
+        }
+
+        private void trackCancelButton_Click(object sender, EventArgs e)
+        {
+            trackCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
+            tracksDropDown.SelectedIndex = -1;
+        }
+
+        private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
+        {
+            PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
+            brain.analyzer = paw;
+            paw.Show();
+        }
+
+        private void trackApplyButton_Click(object sender, EventArgs e)
+        {
+            if (trackCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)trackCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                if(tracksDropDown.SelectedIndex != -1)
+                    tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
+            }
+        }
+
+        private void trafficCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)trafficCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                controlStrategyControlStrategyDropDown.SelectedItem = tempCar.getControlStrategy().getStrategyName();
+            }
+        }
+
+        private void controllerCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)controllerCarIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
             }
         }
 

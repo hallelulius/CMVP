@@ -8,10 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
-using System.ComponentModel;
-
-
-
 
 using AForge;
 using AForge.Video;

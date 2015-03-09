@@ -28,99 +28,205 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pNumeric = new System.Windows.Forms.NumericUpDown();
-            this.pLabel = new System.Windows.Forms.Label();
-            this.iNumeric = new System.Windows.Forms.NumericUpDown();
-            this.iLabel = new System.Windows.Forms.Label();
-            this.dNumeric = new System.Windows.Forms.NumericUpDown();
-            this.dLabel = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dNumeric)).BeginInit();
+            this.pSteerNumeric = new System.Windows.Forms.NumericUpDown();
+            this.pSteerLabel = new System.Windows.Forms.Label();
+            this.iSteerNumeric = new System.Windows.Forms.NumericUpDown();
+            this.iSteerLabel = new System.Windows.Forms.Label();
+            this.dSteerNumeric = new System.Windows.Forms.NumericUpDown();
+            this.dSteerLabel = new System.Windows.Forms.Label();
+            this.dThrottleNumeric = new System.Windows.Forms.NumericUpDown();
+            this.dThrottleLabel = new System.Windows.Forms.Label();
+            this.iThrottleNumeric = new System.Windows.Forms.NumericUpDown();
+            this.iThrottleLabel = new System.Windows.Forms.Label();
+            this.pThrottleNumeric = new System.Windows.Forms.NumericUpDown();
+            this.pThrottleLabel = new System.Windows.Forms.Label();
+            this.steeringLabel = new System.Windows.Forms.Label();
+            this.throttleLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.pSteerNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iSteerNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dSteerNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dThrottleNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iThrottleNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pThrottleNumeric)).BeginInit();
             this.SuspendLayout();
             // 
-            // pNumeric
+            // pSteerNumeric
             // 
-            this.pNumeric.DecimalPlaces = 3;
-            this.pNumeric.Location = new System.Drawing.Point(114, 2);
-            this.pNumeric.Maximum = new decimal(new int[] {
+            this.pSteerNumeric.DecimalPlaces = 3;
+            this.pSteerNumeric.Location = new System.Drawing.Point(26, 23);
+            this.pSteerNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.pNumeric.Name = "pNumeric";
-            this.pNumeric.Size = new System.Drawing.Size(74, 20);
-            this.pNumeric.TabIndex = 3;
+            this.pSteerNumeric.Name = "pSteerNumeric";
+            this.pSteerNumeric.Size = new System.Drawing.Size(70, 20);
+            this.pSteerNumeric.TabIndex = 3;
             // 
-            // pLabel
+            // pSteerLabel
             // 
-            this.pLabel.AutoSize = true;
-            this.pLabel.Location = new System.Drawing.Point(4, 4);
-            this.pLabel.Name = "pLabel";
-            this.pLabel.Size = new System.Drawing.Size(104, 13);
-            this.pLabel.TabIndex = 2;
-            this.pLabel.Text = "P (proportional gain):";
+            this.pSteerLabel.AutoSize = true;
+            this.pSteerLabel.Location = new System.Drawing.Point(3, 25);
+            this.pSteerLabel.Name = "pSteerLabel";
+            this.pSteerLabel.Size = new System.Drawing.Size(17, 13);
+            this.pSteerLabel.TabIndex = 2;
+            this.pSteerLabel.Text = "P:";
             // 
-            // iNumeric
+            // iSteerNumeric
             // 
-            this.iNumeric.DecimalPlaces = 3;
-            this.iNumeric.Location = new System.Drawing.Point(114, 23);
-            this.iNumeric.Maximum = new decimal(new int[] {
+            this.iSteerNumeric.DecimalPlaces = 3;
+            this.iSteerNumeric.Location = new System.Drawing.Point(26, 44);
+            this.iSteerNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.iNumeric.Name = "iNumeric";
-            this.iNumeric.Size = new System.Drawing.Size(74, 20);
-            this.iNumeric.TabIndex = 5;
+            this.iSteerNumeric.Name = "iSteerNumeric";
+            this.iSteerNumeric.Size = new System.Drawing.Size(70, 20);
+            this.iSteerNumeric.TabIndex = 5;
             // 
-            // iLabel
+            // iSteerLabel
             // 
-            this.iLabel.AutoSize = true;
-            this.iLabel.Location = new System.Drawing.Point(4, 25);
-            this.iLabel.Name = "iLabel";
-            this.iLabel.Size = new System.Drawing.Size(79, 13);
-            this.iLabel.TabIndex = 4;
-            this.iLabel.Text = "I (integral gain):";
+            this.iSteerLabel.AutoSize = true;
+            this.iSteerLabel.Location = new System.Drawing.Point(3, 46);
+            this.iSteerLabel.Name = "iSteerLabel";
+            this.iSteerLabel.Size = new System.Drawing.Size(13, 13);
+            this.iSteerLabel.TabIndex = 4;
+            this.iSteerLabel.Text = "I:";
             // 
-            // dNumeric
+            // dSteerNumeric
             // 
-            this.dNumeric.DecimalPlaces = 3;
-            this.dNumeric.Location = new System.Drawing.Point(114, 44);
-            this.dNumeric.Maximum = new decimal(new int[] {
+            this.dSteerNumeric.DecimalPlaces = 3;
+            this.dSteerNumeric.Location = new System.Drawing.Point(26, 65);
+            this.dSteerNumeric.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
-            this.dNumeric.Name = "dNumeric";
-            this.dNumeric.Size = new System.Drawing.Size(74, 20);
-            this.dNumeric.TabIndex = 7;
-            this.dNumeric.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.dSteerNumeric.Name = "dSteerNumeric";
+            this.dSteerNumeric.Size = new System.Drawing.Size(70, 20);
+            this.dSteerNumeric.TabIndex = 7;
+            this.dSteerNumeric.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
-            // dLabel
+            // dSteerLabel
             // 
-            this.dLabel.AutoSize = true;
-            this.dLabel.Location = new System.Drawing.Point(3, 46);
-            this.dLabel.Name = "dLabel";
-            this.dLabel.Size = new System.Drawing.Size(96, 13);
-            this.dLabel.TabIndex = 6;
-            this.dLabel.Text = "D (derivative gain):";
+            this.dSteerLabel.AutoSize = true;
+            this.dSteerLabel.Location = new System.Drawing.Point(2, 67);
+            this.dSteerLabel.Name = "dSteerLabel";
+            this.dSteerLabel.Size = new System.Drawing.Size(18, 13);
+            this.dSteerLabel.TabIndex = 6;
+            this.dSteerLabel.Text = "D:";
+            // 
+            // dThrottleNumeric
+            // 
+            this.dThrottleNumeric.DecimalPlaces = 3;
+            this.dThrottleNumeric.Location = new System.Drawing.Point(127, 65);
+            this.dThrottleNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.dThrottleNumeric.Name = "dThrottleNumeric";
+            this.dThrottleNumeric.Size = new System.Drawing.Size(70, 20);
+            this.dThrottleNumeric.TabIndex = 13;
+            // 
+            // dThrottleLabel
+            // 
+            this.dThrottleLabel.AutoSize = true;
+            this.dThrottleLabel.Location = new System.Drawing.Point(103, 67);
+            this.dThrottleLabel.Name = "dThrottleLabel";
+            this.dThrottleLabel.Size = new System.Drawing.Size(18, 13);
+            this.dThrottleLabel.TabIndex = 12;
+            this.dThrottleLabel.Text = "D:";
+            // 
+            // iThrottleNumeric
+            // 
+            this.iThrottleNumeric.DecimalPlaces = 3;
+            this.iThrottleNumeric.Location = new System.Drawing.Point(127, 44);
+            this.iThrottleNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.iThrottleNumeric.Name = "iThrottleNumeric";
+            this.iThrottleNumeric.Size = new System.Drawing.Size(70, 20);
+            this.iThrottleNumeric.TabIndex = 11;
+            // 
+            // iThrottleLabel
+            // 
+            this.iThrottleLabel.AutoSize = true;
+            this.iThrottleLabel.Location = new System.Drawing.Point(104, 46);
+            this.iThrottleLabel.Name = "iThrottleLabel";
+            this.iThrottleLabel.Size = new System.Drawing.Size(13, 13);
+            this.iThrottleLabel.TabIndex = 10;
+            this.iThrottleLabel.Text = "I:";
+            // 
+            // pThrottleNumeric
+            // 
+            this.pThrottleNumeric.DecimalPlaces = 3;
+            this.pThrottleNumeric.Location = new System.Drawing.Point(127, 23);
+            this.pThrottleNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.pThrottleNumeric.Name = "pThrottleNumeric";
+            this.pThrottleNumeric.Size = new System.Drawing.Size(70, 20);
+            this.pThrottleNumeric.TabIndex = 9;
+            // 
+            // pThrottleLabel
+            // 
+            this.pThrottleLabel.AutoSize = true;
+            this.pThrottleLabel.Location = new System.Drawing.Point(104, 25);
+            this.pThrottleLabel.Name = "pThrottleLabel";
+            this.pThrottleLabel.Size = new System.Drawing.Size(17, 13);
+            this.pThrottleLabel.TabIndex = 8;
+            this.pThrottleLabel.Text = "P:";
+            // 
+            // steeringLabel
+            // 
+            this.steeringLabel.AutoSize = true;
+            this.steeringLabel.Location = new System.Drawing.Point(2, 4);
+            this.steeringLabel.Name = "steeringLabel";
+            this.steeringLabel.Size = new System.Drawing.Size(46, 13);
+            this.steeringLabel.TabIndex = 14;
+            this.steeringLabel.Text = "Steering";
+            // 
+            // throttleLabel
+            // 
+            this.throttleLabel.AutoSize = true;
+            this.throttleLabel.Location = new System.Drawing.Point(104, 4);
+            this.throttleLabel.Name = "throttleLabel";
+            this.throttleLabel.Size = new System.Drawing.Size(43, 13);
+            this.throttleLabel.TabIndex = 15;
+            this.throttleLabel.Text = "Throttle";
             // 
             // PIDControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.dNumeric);
-            this.Controls.Add(this.dLabel);
-            this.Controls.Add(this.iNumeric);
-            this.Controls.Add(this.iLabel);
-            this.Controls.Add(this.pNumeric);
-            this.Controls.Add(this.pLabel);
+            this.Controls.Add(this.throttleLabel);
+            this.Controls.Add(this.steeringLabel);
+            this.Controls.Add(this.dThrottleNumeric);
+            this.Controls.Add(this.dThrottleLabel);
+            this.Controls.Add(this.iThrottleNumeric);
+            this.Controls.Add(this.iThrottleLabel);
+            this.Controls.Add(this.pThrottleNumeric);
+            this.Controls.Add(this.pThrottleLabel);
+            this.Controls.Add(this.dSteerNumeric);
+            this.Controls.Add(this.dSteerLabel);
+            this.Controls.Add(this.iSteerNumeric);
+            this.Controls.Add(this.iSteerLabel);
+            this.Controls.Add(this.pSteerNumeric);
+            this.Controls.Add(this.pSteerLabel);
             this.Name = "PIDControlPanel";
-            this.Size = new System.Drawing.Size(200, 114);
-            ((System.ComponentModel.ISupportInitialize)(this.pNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.iNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dNumeric)).EndInit();
+            this.Size = new System.Drawing.Size(200, 159);
+            ((System.ComponentModel.ISupportInitialize)(this.pSteerNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iSteerNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dSteerNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dThrottleNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.iThrottleNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pThrottleNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -128,11 +234,19 @@
 
         #endregion
 
-        private System.Windows.Forms.NumericUpDown pNumeric;
-        private System.Windows.Forms.Label pLabel;
-        private System.Windows.Forms.NumericUpDown iNumeric;
-        private System.Windows.Forms.Label iLabel;
-        private System.Windows.Forms.Label dLabel;
-        private System.Windows.Forms.NumericUpDown dNumeric;
+        private System.Windows.Forms.NumericUpDown pSteerNumeric;
+        private System.Windows.Forms.Label pSteerLabel;
+        private System.Windows.Forms.NumericUpDown iSteerNumeric;
+        private System.Windows.Forms.Label iSteerLabel;
+        private System.Windows.Forms.Label dSteerLabel;
+        private System.Windows.Forms.NumericUpDown dSteerNumeric;
+        private System.Windows.Forms.NumericUpDown dThrottleNumeric;
+        private System.Windows.Forms.Label dThrottleLabel;
+        private System.Windows.Forms.NumericUpDown iThrottleNumeric;
+        private System.Windows.Forms.Label iThrottleLabel;
+        private System.Windows.Forms.NumericUpDown pThrottleNumeric;
+        private System.Windows.Forms.Label pThrottleLabel;
+        private System.Windows.Forms.Label steeringLabel;
+        private System.Windows.Forms.Label throttleLabel;
     }
 }
