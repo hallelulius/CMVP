@@ -43,7 +43,6 @@
             this.trackApplyButton = new System.Windows.Forms.Button();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
             this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,7 +66,6 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.ptgrey = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
