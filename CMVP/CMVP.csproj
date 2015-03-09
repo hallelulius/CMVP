@@ -11,6 +11,7 @@
     <AssemblyName>CMVP</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -23,7 +24,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -35,7 +35,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -95,6 +95,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -137,6 +138,13 @@
     <Compile Include="GUI\PIControlPanel.Designer.cs">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\PTGreyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\PTGreyForm.Designer.cs">
+      <DependentUpon>PTGreyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PTGreyCamera.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -273,6 +281,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Vision.dll</HintPath>
     </Reference>
+    <Reference Include="FlyCap2CameraControl_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=5abeeda345e59824, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FlyCapture2\bin\FlyCap2CameraControl_v110.dll</HintPath>
+    </Reference>
+    <Reference Include="FlyCapture2Managed_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=76c6583b4a4585f4, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FlyCapture2\bin\FlyCapture2Managed_v110.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -303,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SeriesControl.resx">
       <DependentUpon>SeriesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PTGreyForm.resx">
+      <DependentUpon>PTGreyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

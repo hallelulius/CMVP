@@ -157,9 +157,9 @@ namespace CMVP
 
         public void send()
         {
-            Console.WriteLine("Throttel: " + controller.getThrottle());
-            Program.com.updateCar(id, controller.getThrottle(), "Throttle");
-            Program.com.updateCar(id, controller.getSteer(), "Steering");
+            //Console.WriteLine("Throttel: " + controller.getThrottle());
+            Program.com.updateThrottle(id, controller.getThrottle());
+            Program.com.updateSteering(id, controller.getSteer());
         }
 
         public Point getPosition() // Return the cars current position 

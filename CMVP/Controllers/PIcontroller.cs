@@ -48,7 +48,7 @@ namespace CMVP
             steerIntegratorSum += errorHeading;
             outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
 
-            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle > 1)outThrottle = 1;
             if (outThrottle < -1) outThrottle = -1;
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;

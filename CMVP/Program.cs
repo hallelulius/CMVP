@@ -23,18 +23,21 @@ namespace CMVP
         private static bool simulating = false;
         public static VideoStream videoStream;
         public static VideoStream imageProcess;
+        public static PTGreyCamera ptg;
         public static List<Car> carList = new List<Car>();
 
         [STAThread]
         public static void Main()
         {
-            cars.Add(new Car(1, new System.Drawing.Point(0, 0), new PointF(1, 0))); // endast för att testa en imaginär bil 
+            //cars.Add(new Car(1, new System.Drawing.Point(0, 0), new PointF(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
-            videoStream = new Camera();
-            imageProcess = new ImageProcessing(videoStream, carList); // Changed to cars from carList for debugging purposes //Viktor I
-            videoStream.start();
-            imageProcess.start();
+            //videoStream = new Camera();
+            videoStream = new PTGreyCamera();
             
+            imageProcess = new ImageProcessing(videoStream, carList);
+            videoStream.start();
+            System.Threading.Thread.Sleep(1000);
+            imageProcess.start();
             Application.Run(mainFrame);
 
         }

@@ -285,5 +285,11 @@ namespace CMVP
                 controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
             }
         }
+
+        private void ptgrey_Click(object sender, EventArgs e)
+        {
+            GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
+            ptgf.Show();
+        }
     }
 }

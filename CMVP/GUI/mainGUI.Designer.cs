@@ -38,11 +38,11 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackCancelButton = new System.Windows.Forms.Button();
             this.trackApplyButton = new System.Windows.Forms.Button();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
             this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
