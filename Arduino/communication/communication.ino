@@ -17,7 +17,6 @@
 // Load pin
 const int loadPin = 9;
 
-
 //addresses for the DACs
 const byte throttleA = 0b00000000;    // DAC A gain 1
 const byte throttleB = 0b00000010;    // DAC B gain 1
@@ -56,25 +55,21 @@ void setup()
   setToNeutral();                       // Sets all DACs to "neutral" voltage
 
   Serial.begin(115200);
-  delay(5000);
+  delay(1000);
   Serial.println("Setup complete");
 }
 
 //Main Loop
 void loop() 
 { 
-  //int micro1 = micros();
   program();
-  //int micro2 = micros();
-  //int time = micro2-micro1;
-  //Serial.println(time);
  }
 
 void changeDAC(byte DAC, byte value){
   SPI.transfer(DAC);
   SPI.transfer(value);
   digitalWrite(loadPin,LOW);
-  delay(1);
+  delay(5);
   digitalWrite(loadPin,HIGH);
 }
 

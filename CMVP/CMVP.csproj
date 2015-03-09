@@ -118,12 +118,20 @@
     <Compile Include="Brain.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Car.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
     <Compile Include="ControlStrategy.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Controllers\PIController.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\PerformanceAnalyzerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\PerformanceAnalyzerWindow.Designer.cs">
+      <DependentUpon>PerformanceAnalyzerWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\PIControlPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -138,6 +146,13 @@
     </Compile>
     <Compile Include="PTGreyCamera.cs" />
     <Compile Include="TrackImporter.cs" />
+    <Compile Include="GUI\SeriesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\SeriesControl.Designer.cs">
+      <DependentUpon>SeriesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Track.cs" />
     <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>
@@ -267,19 +282,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Vision.dll</HintPath>
     </Reference>
-    <Reference Include="FlyCap2CameraControl_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=5abeeda345e59824, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FlyCapture2\bin\FlyCap2CameraControl_v110.dll</HintPath>
-    </Reference>
-    <Reference Include="FlyCapture2Managed_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=76c6583b4a4585f4, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\FlyCapture2\bin\FlyCapture2Managed_v110.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GUI\CameraControlWindow.resx">
@@ -291,14 +300,17 @@
     <EmbeddedResource Include="GUI\PControlPanel.resx">
       <DependentUpon>PControlPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PerformanceAnalyzerWindow.resx">
+      <DependentUpon>PerformanceAnalyzerWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIControlPanel.resx">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PTGreyForm.resx">
-      <DependentUpon>PTGreyForm.cs</DependentUpon>
+    <EmbeddedResource Include="GUI\SeriesControl.resx">
+      <DependentUpon>SeriesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

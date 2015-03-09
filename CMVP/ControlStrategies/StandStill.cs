@@ -9,7 +9,7 @@ namespace CMVP.ControlStrategies
 {
     class StandStill : ControlStrategy
     {
-        public StandStill() : base(null,null,null)
+        public StandStill(Car owner) : base(owner,null, "Stand still")
         {
         }
 
