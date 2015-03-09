@@ -43,6 +43,8 @@
             this.trackApplyButton = new System.Windows.Forms.Button();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
             this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
+>>>>>>> Temporary merge branch 2
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();

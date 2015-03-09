@@ -31,12 +31,12 @@ namespace CMVP
         {
             //cars.Add(new Car(1, new System.Drawing.Point(0, 0), new PointF(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
-            videoStream = new Camera();
-            imageProcess = new ImageProcessing(videoStream, cars); // Changed to cars from carList for debugging purposes //Viktor I
             //videoStream = new Camera();
             videoStream = new PTGreyCamera();
-            imageProcess = new ImageProcessing(videoStream, cars);
+            
+            imageProcess = new ImageProcessing(videoStream, carList);
             videoStream.start();
+            System.Threading.Thread.Sleep(1000);
             imageProcess.start();
             Application.Run(mainFrame);
 

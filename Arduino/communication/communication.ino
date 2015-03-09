@@ -17,7 +17,6 @@
 // Load pin
 const int loadPin = 9;
 
-
 //addresses for the DACs
 const byte throttleA = 0b00000000;    // DAC A gain 1
 const byte throttleB = 0b00000010;    // DAC B gain 1
@@ -63,18 +62,18 @@ void setup()
 //Main Loop
 void loop() 
 { 
-  //int micro1 = micros();
   program();
-  //int micro2 = micros();
-  //int time = micro2-micro1;
-  //Serial.println(time);
  }
 
 void changeDAC(byte DAC, byte value){
   SPI.transfer(DAC);
   SPI.transfer(value);
   digitalWrite(loadPin,LOW);
+<<<<<<< HEAD
   delay(1);
+=======
+  delay(5);
+>>>>>>> 7f39df91e2a704141e4ecdeeff6b77c86e5b6ac0
   digitalWrite(loadPin,HIGH);
 }
 
