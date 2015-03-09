@@ -145,7 +145,6 @@
       <DependentUpon>PTGreyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PTGreyCamera.cs" />
-    <Compile Include="TrackImporter.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
