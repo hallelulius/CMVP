@@ -42,29 +42,32 @@ namespace CMVP
 
         private void addSeriesDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Check if the series is already present:
-            bool alreadyPresent = false;
-            foreach(Control c in seriesPanel.Controls)
+            if (addSeriesDropDown.SelectedIndex != -1)
             {
-                alreadyPresent = (c.ToString() == addSeriesDropDown.SelectedItem.ToString());
-                if (alreadyPresent) break;
+                //Check if the series is already present:
+                bool alreadyPresent = false;
+                foreach (Control c in seriesPanel.Controls)
+                {
+                    alreadyPresent = (c.ToString() == addSeriesDropDown.SelectedItem.ToString());
+                    if (alreadyPresent) break;
+                }
+
+                //Add the right control:
+                if (!alreadyPresent)
+                {
+                    //SeriesControl sc;
+                    string name = addSeriesDropDown.SelectedItem.ToString();
+
+                    Series series = new Series(name);
+                    performanceChart.Series.Add(series);
+                    series.ChartType = SeriesChartType.FastLine;
+                    SeriesControl sc = new SeriesControl(name, performanceChart);
+                    sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
+                    seriesPanel.Controls.Add(sc);
+                }
+
+                //addSeriesDropDown.SelectedIndex = -1;
             }
-
-            //Add the right control:
-            if (!alreadyPresent)
-            {
-                //SeriesControl sc;
-                string name = addSeriesDropDown.SelectedItem.ToString();
-
-                Series series = new Series(name);
-                performanceChart.Series.Add(series);
-                series.ChartType = SeriesChartType.FastLine;
-                SeriesControl sc = new SeriesControl(name, performanceChart);
-                sc.Location = new Point(0, sc.Size.Height * seriesPanel.Controls.Count);
-                seriesPanel.Controls.Add(sc);
-            }
-
-            //addSeriesDropDown.SelectedIndex = -1;
         }
 
         private void PerformanceAnalyzerWindow_FormClosing(object sender, FormClosingEventArgs e)

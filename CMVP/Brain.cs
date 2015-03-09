@@ -55,10 +55,14 @@ namespace CMVP
                     if (!analyzer.IsDisposed)
                     {
                         // Give car values to analyzer:
+                        double xValue = Convert.ToDouble(time.ElapsedMilliseconds) / 1000;
                         foreach (Car car in cars)
                         {
                             string s = "Car " + car.ID + " ";
-                            sendDataThreadSafe(s + "velocity", Convert.ToDouble(time.ElapsedMilliseconds) / 1000, cars.Find(x => x.ID == car.ID).getSpeed());
+                            sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
+                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed());
+                            sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
+                            sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle());
                             // Add more sendDataThreadSafe calls here.
                         }
 

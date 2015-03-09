@@ -43,5 +43,13 @@ namespace CMVP
         {
             return controllerName;
         }
+        public float getRefSpeed()
+        {
+            return refSpeed;
+        }
+        public float getRefHeading()
+        {
+            return refHeading;
+        }
     }
 }

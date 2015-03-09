@@ -184,9 +184,17 @@ namespace CMVP
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
 
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
-                    tempCar.setControlStrategy(new ControlStrategies.JustFollow());
+                {
+                    ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow();
+                    jf.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(jf);
+                }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-                    tempCar.setControlStrategy(new ControlStrategies.StandStill(tempCar));
+                {
+                    ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
+                    ss.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ss);
+                }
             }
         }
 
