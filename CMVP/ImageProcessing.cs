@@ -99,6 +99,8 @@ namespace CMVP
         
         private Bitmap processImage()
         {
+            Console.WriteLine("Size: "+img.Size.ToString());
+            Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
             List<AForge.Point> centers = new List<AForge.Point>();
             List<DoublePoint> direktions = new List<DoublePoint>();
             Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);

@@ -66,7 +66,6 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.ptgrey = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -111,7 +110,6 @@
             // 
             this.simulationBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.simulationBasePanel.Controls.Add(this.openPerformanceAnalyzerButton);
-            this.simulationBasePanel.Controls.Add(this.ptgrey);
             this.simulationBasePanel.Controls.Add(this.openCameraControlButton);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsNumeric);
             this.simulationBasePanel.Controls.Add(this.numberOfCarsLabel);
@@ -473,13 +471,7 @@
             // 
             this.openFileDialog.FileName = "track.txt";
             this.openFileDialog.Filter = "Text files (*.txt)|*.txt;";
-            this.ptgrey.Location = new System.Drawing.Point(38, 82);
-            this.ptgrey.Name = "ptgrey";
-            this.ptgrey.Size = new System.Drawing.Size(122, 23);
-            this.ptgrey.TabIndex = 8;
-            this.ptgrey.Text = "Open PTGrey";
-            this.ptgrey.UseVisualStyleBackColor = true;
-            this.ptgrey.Click += new System.EventHandler(this.ptgrey_Click);
+            
             // 
             // mainGUI
             // 

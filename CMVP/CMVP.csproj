@@ -145,7 +145,6 @@
       <DependentUpon>PTGreyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PTGreyCamera.cs" />
-    <Compile Include="TrackImporter.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -281,6 +280,14 @@
     <Reference Include="AForge.Vision, Version=2.2.5.0, Culture=neutral, PublicKeyToken=b612fa915eefaa06, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\AForge.NET Framework-2.2.5-(libs only)\Release\AForge.Vision.dll</HintPath>
+    </Reference>
+    <Reference Include="FlyCap2CameraControl_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=5abeeda345e59824, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FlyCapture2\bin\FlyCap2CameraControl_v110.dll</HintPath>
+    </Reference>
+    <Reference Include="FlyCapture2Managed_v110, Version=2.7.3.17, Culture=neutral, PublicKeyToken=76c6583b4a4585f4, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FlyCapture2\bin\FlyCapture2Managed_v110.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
