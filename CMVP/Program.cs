@@ -24,7 +24,6 @@ namespace CMVP
         public static VideoStream videoStream;
         public static VideoStream imageProcess;
         public static PTGreyCamera ptg;
-        public static List<Car> carList = new List<Car>();
 
         [STAThread]
         public static void Main()
@@ -34,7 +33,7 @@ namespace CMVP
             //videoStream = new Camera();
             videoStream = new PTGreyCamera();
             
-            imageProcess = new ImageProcessing(videoStream, carList);
+            imageProcess = new ImageProcessing(videoStream, cars);
             videoStream.start();
             System.Threading.Thread.Sleep(1000);
             imageProcess.start();

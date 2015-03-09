@@ -23,9 +23,9 @@ namespace CMVP
         {
             this.heading = heading;
         }
-        public void setSpeed(float speed)
+        public void setRefSpeed(float speed)
         {
-            this.speed = speed;
+            this.refSpeed = speed;
         }
         public float getThrottle()
         {

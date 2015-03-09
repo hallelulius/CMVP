@@ -27,7 +27,7 @@ namespace CMVP
         {
             float refAngle = (float) Math.Atan2(refPoint.Y-car.getPosition().Y , refPoint.X-car.getPosition().X);
             car.getController().setHeading(refAngle);
-            car.getController().setSpeed(speed);
+            car.getController().setRefSpeed(speed);
         }
 
         public void setTrack(Track track)

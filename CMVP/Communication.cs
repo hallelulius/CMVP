@@ -112,7 +112,7 @@ namespace CMVP
 
         public void updateThrottle(int carID, float value)
         {
-            Console.WriteLine("Updating Throttle...");
+            //Console.WriteLine("Updating Throttle...");
             float val = 0;
             if (value > 0)
             {
@@ -131,7 +131,7 @@ namespace CMVP
 
          public void updateSteering(int carID, float value)
         {
-            Console.WriteLine("Updating Steering...");
+            //Console.WriteLine("Updating Steering...");
             float val = 0;
             if (value > 0)
             {

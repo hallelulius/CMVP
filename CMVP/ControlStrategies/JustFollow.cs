@@ -9,7 +9,7 @@ namespace CMVP.ControlStrategies
 {
     class JustFollow : ControlStrategy
     {
-        public JustFollow() : base(null,null, "Follow track")
+        public JustFollow(Car car) : base(car,null, "Follow track")
         {
 
         }
@@ -20,9 +20,9 @@ namespace CMVP.ControlStrategies
             int index = -1;
             if (track != null)
             {
-                for (int i = 0; i < track.m.Length; i++)
+                for (int i = 0; i < track.m.Length/3; i++)
                 {
-                    PointF tempPoint = new PointF(track.m[1, i] - car.getPosition().X, track.m[2, i] - car.getPosition().Y);
+                    PointF tempPoint = new PointF(track.m[0,i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
                     float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
                     if (Math.Acos(scalarProduct) < Math.PI / 2)
                     {
@@ -38,11 +38,12 @@ namespace CMVP.ControlStrategies
                 if (index < 0)
                 {
                     setReference(new PointF(0, 0), 0);
+                    Console.WriteLine("No points found");
                     return;
                 }
                 else
                 {
-                    setReference(new PointF(track.m[1, index], track.m[2, index]), track.m[3, index]);
+                    setReference(new PointF(track.m[0,index], track.m[1, index]), track.m[2, index]);
                 }
             }
         }

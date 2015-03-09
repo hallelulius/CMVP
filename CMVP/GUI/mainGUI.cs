@@ -185,7 +185,7 @@ namespace CMVP
 
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
                 {
-                    ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow();
+                    ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
                     jf.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(jf);
                 }
