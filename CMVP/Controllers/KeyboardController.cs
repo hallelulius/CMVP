@@ -16,27 +16,30 @@ namespace CMVP
         {
             if (NativeKeyboard.IsKeyDown(KeyCode.Up))
             {
-                outThrottle += 3;
-                Console.WriteLine("Key up pressed.");
+                outThrottle += 3/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Down))
             {
-                outThrottle -= 3;
-                Console.WriteLine("Key down pressed.");
+                outThrottle -= 3/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
-                outSteer = 200;
+                outSteer -= 5/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Right))
             {
-                outSteer = 10;
+                outSteer += 5/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
             {
                 outThrottle = 0;
                 Console.WriteLine("Emergency Stop ");
             }
+            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle < -1) outThrottle = -1;
+            if (outSteer > 1) outSteer = 1;
+            if (outSteer < -1) outSteer = -1;
+            Console.WriteLine("Throttle: " + outThrottle);
         }
 
         /// <summary>
