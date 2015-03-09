@@ -31,7 +31,7 @@ namespace CMVP
             cars.Add(new Car(1, new System.Drawing.Point(0, 0), new PointF(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
             videoStream = new Camera();
-            imageProcess = new ImageProcessing(videoStream, cars); // Changed to cars from carList for debugging purposes //Viktor I
+            imageProcess = new ImageProcessing(videoStream, carList); // Changed to cars from carList for debugging purposes //Viktor I
             videoStream.start();
             imageProcess.start();
             
