@@ -81,8 +81,10 @@ namespace CMVP
 
                 lock (this)
                 {
-                    m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
+                    //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
+                    m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
                 }
+  
                 try
                 {
                     worker.ReportProgress(0);

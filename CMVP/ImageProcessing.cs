@@ -96,7 +96,6 @@ namespace CMVP
         {
             return img;
         }
-        
         private Bitmap processImage()
         {
             Console.WriteLine("Size: "+img.Size.ToString());
@@ -104,9 +103,8 @@ namespace CMVP
             List<AForge.Point> centers = new List<AForge.Point>();
             List<DoublePoint> direktions = new List<DoublePoint>();
             Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
-
             this.g = Graphics.FromImage(img);
-
+            Console.WriteLine("Graphics: " + System.DateTime.Now.Millisecond);
             Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> cirkels = getCircularBlobs(1, 13);
             Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
@@ -143,6 +141,15 @@ namespace CMVP
                 Console.WriteLine(k);
                 int id = getId(centers[k],direktions[k], rectangles);
                 Console.WriteLine("ID: " + id);
+                Car car = objects.Find(x => x.ID == id);
+                if(car == null )
+                {
+                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y)));
+                }
+                else
+                {
+                    car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y),new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y));
+                }
 
                 //Draw Graphics
                 if (drawCenterOnImg)
