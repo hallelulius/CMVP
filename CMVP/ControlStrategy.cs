@@ -26,7 +26,7 @@ namespace CMVP
         protected void setReference(PointF refPoint, float speed) // Transform the reference points coordinate and the cars current coordinates to a reference signal (speed and angle) 
         {
             float refAngle = (float) Math.Atan2(refPoint.Y-car.getPosition().Y , refPoint.X-car.getPosition().X);
-            car.getController().setHeading(refAngle);
+            car.getController().setHeading(refAngle); //sets controllers
             car.getController().setRefSpeed(speed);
         }
 
