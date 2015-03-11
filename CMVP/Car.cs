@@ -80,11 +80,13 @@ namespace CMVP
             //Add the new position to the list and remove the oldest one.
             position.Add(pos);
             position.Remove(position.First());
-
             //Calculate orientation and add to the list and remove the oldest one.
             PointF tempPoint = new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
             direction.Add(tempPoint);
             direction.Remove(direction.First());
+
+            //The heading of the car is assuming to be the direction of the vehicle.
+            controller.setHeading((float)angle);
 
             //Update the cars state.
             updateState();
@@ -97,15 +99,8 @@ namespace CMVP
         /// <param name="dir"> The new direction of the car. </param>
         public void setPositionAndOrientation(Point pos, PointF dir)
         {
-            //Add the new position to the list and remove the oldest one.
-            position.Add(pos);
-            position.Remove(position.First());
-
-            //Add the new orientation to the list and remove the oldest one.
-            direction.Add(dir);
-            direction.Remove(direction.First());
-
-            //updateState();
+            float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
+            this.setPositionAndOrientation(pos, refAngle);
         }
 
         /// <summary>

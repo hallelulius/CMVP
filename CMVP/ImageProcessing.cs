@@ -44,6 +44,7 @@ namespace CMVP
         public Boolean drawDirectionOnImg;
         public Boolean drawTriangleOnImg;
         public Boolean drawCenterOnImg;
+        private Boolean firstTime;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
@@ -61,6 +62,7 @@ namespace CMVP
             this.drawCenterOnImg = false;
             this.drawTriangleOnImg = false;
             this.drawDirectionOnImg = false;
+            this.firstTime = true;
 
         }
         void updatePanels(object sender, EventArgs e)
@@ -142,15 +144,31 @@ namespace CMVP
                 int id = getId(centers[k],direktions[k], rectangles);
                 Console.WriteLine("ID: " + id);
                 Car car = objects.Find(x => x.ID == id);
-                if(car == null )
+                if (car == null && firstTime)
                 {
-                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y)));
+                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y)));
                 }
-               else
-               {
-                    car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y),new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y));
-               }
-
+                else
+                {
+                    if (car != null)
+                    {
+                        car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y));
+                        
+                        if (drawTriangleOnImg)
+                        {
+                            int[,] track = car.getControlStrategy().getTrack().m;
+                            System.Drawing.Point[] pointTrack = new System.Drawing.Point[track.Length / 3];
+                            for (int i = 0; i < track.Length / 3; i++)
+                            {
+                                pointTrack[i] = new System.Drawing.Point(track[0, i], track[1, i]);
+                            }
+                            float heading = car.getController().getRefHeading();
+                            System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
+                            g.DrawLine(bluePen, car.getPosition(), pointHeading);
+                            g.DrawLines(greenPen, pointTrack);
+                        }
+                    }
+                }
                 //Draw Graphics
                 if (drawCenterOnImg)
                 {
@@ -162,6 +180,7 @@ namespace CMVP
                 }
             
             }
+            firstTime = false;
 
             if(drawCirkelsOnImg)
                 drawCirkels(cirkels);

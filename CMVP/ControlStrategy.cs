@@ -11,7 +11,7 @@ namespace CMVP
     {
         protected Track track;
         protected Car car;
-        protected float scaleSpeed = 1;
+        protected float scaleSpeed = 0f; //Is not
         protected String strategyName;
 
         public ControlStrategy(Car car, Track track, String strategyName) // Constructor 

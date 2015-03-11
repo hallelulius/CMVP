@@ -47,7 +47,6 @@ namespace CMVP.ControlStrategies
                 }
             }
         }
-
         private PointF Subtract(PointF point1, PointF point2) // Subtract two ponts in 2 dimentions 
         {
             return new PointF(point1.X - point2.X, point1.Y - point2.Y);
