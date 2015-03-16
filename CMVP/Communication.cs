@@ -54,7 +54,7 @@ namespace CMVP
                 catch (Exception e)
                 {
                    System.Console.WriteLine("Could not open port");
-                   Console.WriteLine(e);
+                   Console.WriteLine(e.ToString());
                 }
             }
             else
@@ -79,11 +79,11 @@ namespace CMVP
         private byte convertCarID(int id, String mode)
         {
             byte DAC;
-            if (id == 1 && mode.Equals("Throttle") )
+            if (id == 0 && mode.Equals("Throttle") )
             {
                 DAC = throttleA;
             }
-            else if (id == 1 && mode.Equals("Steering"))
+            else if (id == 0 && mode.Equals("Steering"))
             {
                 DAC = steeringA;
             }
@@ -154,8 +154,7 @@ namespace CMVP
             {
                 byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
-                //port.Close();
-                System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
+                //System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
             }
             else
             {
@@ -170,7 +169,7 @@ namespace CMVP
 
                     byte[] bits = { carID, value };
                     port.Write(bits, 0, 2);
-                    System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+                    //System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
             }
             else
             {
@@ -192,8 +191,7 @@ namespace CMVP
             }
             catch (System.ArgumentOutOfRangeException e)        
             {
-                System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC. \n");
-                System.Console.WriteLine(e.ToString());
+                System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC.");
                 return null;
             }
         }

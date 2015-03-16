@@ -286,10 +286,6 @@ namespace CMVP
             }
         }
 
-        private void ptgrey_Click(object sender, EventArgs e)
-        {
-            GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
-            ptgf.Show();
-        }
+       
     }
 }

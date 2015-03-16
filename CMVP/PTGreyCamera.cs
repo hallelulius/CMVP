@@ -41,13 +41,16 @@ namespace CMVP
         }
         ~PTGreyCamera()
         {
+            if (m_camera != null)
+            {
+                m_camera.Dispose();
+            }
             m_rawImage.Dispose();
-            m_camera.Dispose();
             m_processedImage.Dispose();
             m_camCtlDlg.Disconnect();
             m_grabThreadExited.Dispose();
-            Console.WriteLine("Closing Camera");
-            
+            disconnect();
+            Console.WriteLine("Closing Camera");      
         }
 
         public Bitmap getImage()
@@ -82,6 +85,7 @@ namespace CMVP
                 try
                 {
                     m_camera.RetrieveBuffer(m_rawImage);
+
                 }
                 catch (FC2Exception ex)
                 {
@@ -101,7 +105,9 @@ namespace CMVP
                 }
                 catch (InvalidOperationException ex)
                 {
-                    //dont care
+                    Debug.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("Worker report failed!");
+                    continue;
                 }
                 
 
@@ -147,11 +153,19 @@ namespace CMVP
                         m_camera.StartCapture();
 
                         m_grabImages = true;
+                        System.Console.WriteLine("Camera OK");
 
                     }
                     catch (FC2Exception ex)
                     {
                         Debug.WriteLine("Failed to load form successfully: " + ex.Message);
+                        Environment.ExitCode = -1;
+                        Application.Exit();
+                        return;
+                    }
+                    catch (IndexOutOfRangeException ex)
+                    {
+                        Console.WriteLine("No camera found: " + ex.Message);
                         Environment.ExitCode = -1;
                         Application.Exit();
                         return;
@@ -187,6 +201,10 @@ namespace CMVP
         {
             m_grabImages = true;
             StartGrabLoop();
+        }
+        public void showCameraSettings()
+        {
+            m_camCtlDlg.Show();
         }
          public void stop()
         {

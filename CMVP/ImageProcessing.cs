@@ -21,8 +21,8 @@ namespace CMVP
 {
     class ImageProcessing : VideoStream
     {
-        static private Pen redPen=new Pen(Color.Red, 2);
-        static private Pen bluePen = new Pen(Color.LightSkyBlue,2);
+        static private Pen redPen = new Pen(Color.Red, 2);
+        static private Pen bluePen = new Pen(Color.LightSkyBlue, 2);
         static private Pen greenPen = new Pen(Color.Green, 2);
         static private Pen yellowPen = new Pen(Color.Yellow, 2);
 
@@ -32,36 +32,33 @@ namespace CMVP
         private Bitmap img;
         private Bitmap processedImage;
         //Temporary variable until the physical filter is in use.
-       // private Bitmap filteredImg;
-        private List<AForge.Point> Acenters;
-        private List<AForge.DoublePoint> Adirections;
+        // private Bitmap filteredImg;
         private List<Panel> panelsToUpdate;
-        private Timer imgProcesTimer;
-        private int tempTime;
+        private Timer imgProcessTimer;
         private Graphics g;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
         public Boolean drawTriangleOnImg;
         public Boolean drawCenterOnImg;
-        
 
-        public ImageProcessing(VideoStream videoStream,List<Car> objects)
+
+        public ImageProcessing(VideoStream videoStream, List<Car> objects)
         {
-            System.Console.WriteLine("CreatImageProcessingClass");
-            this.imgProcesTimer = new Timer();
-            this.imgProcesTimer.Interval=1;
-            this.imgProcesTimer.Tick += new EventHandler(updatePanels);
+            this.imgProcessTimer = new Timer();
+            this.imgProcessTimer.Interval = 1;
+            this.imgProcessTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.tempTime=0;
 
+            //bör flyttas
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
             this.drawTriangleOnImg = false;
             this.drawDirectionOnImg = false;
-
+            getIDs();
+            System.Console.WriteLine("Image Processing OK");
         }
         void updatePanels(object sender, EventArgs e)
         {
@@ -74,11 +71,11 @@ namespace CMVP
         }
         public void start()
         {
-            imgProcesTimer.Start();
+            imgProcessTimer.Start();
         }
         public void stop()
         {
-            imgProcesTimer.Stop();
+            imgProcessTimer.Stop();
         }
         public void pushDestination(Panel panel)
         {
@@ -94,91 +91,93 @@ namespace CMVP
         }
         public Bitmap getImage()
         {
-            return img;
+            //test
+            return processedImage;
+
         }
         private Bitmap processImage()
         {
-            Console.WriteLine("Size: "+img.Size.ToString());
-            Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
+            //Console.WriteLine("Size: "+img.Size.ToString());
+            //Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
             List<AForge.Point> centers = new List<AForge.Point>();
-            List<DoublePoint> direktions = new List<DoublePoint>();
-            Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
+            List<DoublePoint> directions = new List<DoublePoint>();
+            //Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
             this.g = Graphics.FromImage(img);
-            Console.WriteLine("Graphics: " + System.DateTime.Now.Millisecond);
-            Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
-            List<Blob> cirkels = getCircularBlobs(1, 13);
-            Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Graphics: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
+            List<Blob> circles = getCircularBlobs(1, 13);
+            //Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
-            Console.WriteLine("after Blobs: " + System.DateTime.Now.Millisecond);
-            List<System.Drawing.Point> points = getPoints(cirkels);
+            //Console.WriteLine("after Blobs: " + System.DateTime.Now.Millisecond);
+            List<System.Drawing.Point> points = getPoints(circles);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
 
 
-           Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
 
-            triangles = filterDubblets(triangles);
+            triangles = filterDoublets(triangles);
 
-            Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
-            
-            foreach(System.Drawing.Point[] triangle in triangles)
+            //Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
+
+            foreach (System.Drawing.Point[] triangle in triangles)
             {
                 AForge.Point Acenter;
                 AForge.DoublePoint Adirektion;
                 AForge.Point[] Atriangle = new AForge.Point[3];
 
-                Atriangle[0] = new AForge.Point(triangle[0].X,triangle[0].Y);
+                Atriangle[0] = new AForge.Point(triangle[0].X, triangle[0].Y);
                 Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
                 Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
 
                 if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
-            {
+                {
                     centers.Add(Acenter);
-                    direktions.Add(Adirektion);
-            }
+                    directions.Add(Adirektion);
+                }
             }
             for (int k = 0; k < centers.Count; k++)
             {
-                Console.WriteLine(k);
-                int id = getId(centers[k],direktions[k], rectangles);
-                Console.WriteLine("ID: " + id);
+                //Console.WriteLine(k);
+                int id = getId(centers[k], directions[k], rectangles);
+                //Console.WriteLine("ID: " + id);
                 Car car = objects.Find(x => x.ID == id);
-                if(car == null )
+                if (car == null)
                 {
-                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y)));
+                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)directions[k].X, (float)directions[k].Y)));
                 }
-               else
-               {
-                    car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X,(int) centers[k].Y),new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y));
-               }
+                else
+                {
+                    car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)directions[k].X, (float)directions[k].Y));
+                }
 
                 //Draw Graphics
                 if (drawCenterOnImg)
                 {
-                    g.DrawEllipse(bluePen, new Rectangle((int)centers[k].X - 2,(int)centers[k].Y - 2, 2, 2));
+                    g.DrawEllipse(bluePen, new Rectangle((int)centers[k].X - 2, (int)centers[k].Y - 2, 2, 2));
                 }
                 if (drawDirectionOnImg)
                 {
-                    g.DrawLine(yellowPen, new System.Drawing.Point((int)centers[k].X, (int) centers[k].Y), new System.Drawing.Point((int)(centers[k].X + direktions[k].X * 40), (int)(centers[k].Y + direktions[k].Y * 40)));
+                    g.DrawLine(yellowPen, new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.Point((int)(centers[k].X + directions[k].X * 40), (int)(centers[k].Y + directions[k].Y * 40)));
                 }
-            
+
             }
 
-            if(drawCirkelsOnImg)
-                drawCirkels(cirkels);
+            if (drawCirkelsOnImg)
+                drawCirkels(circles);
             return img;
         }
-        private void drawCirkels(List<Blob> cirkels)
+        private void drawCirkels(List<Blob> circles)
         {
-            foreach(Blob cirkel in cirkels)
+            foreach (Blob circle in circles)
             {
-                g.DrawEllipse(redPen, cirkel.Rectangle);
+                g.DrawEllipse(redPen, circle.Rectangle);
             }
         }
         private List<Blob> getCircularBlobs(int minRadius, int maxRadius)
         {
 
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(200,200,200).Color;
+            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
             blobCounter.MinHeight = minRadius;
             blobCounter.MaxHeight = maxRadius;
             blobCounter.FilterBlobs = true;
@@ -187,7 +186,7 @@ namespace CMVP
 
             SimpleShapeChecker s = new SimpleShapeChecker();
             s.MinAcceptableDistortion = 1;
-            List<Blob> cirkels = new List<Blob>();
+            List<Blob> circles = new List<Blob>();
             BlobCountingObjectsProcessing bcop = new BlobCountingObjectsProcessing();
 
             for (int n = 0; n < blobs.Length; n++)
@@ -197,18 +196,18 @@ namespace CMVP
                 float radius = b.Rectangle.Width / 2;
                 if (s.IsCircle(edgePoint))
                 {
-                    cirkels.Add(b);
+                    circles.Add(b);
                 }
             }
-            return cirkels;
+            return circles;
         }
         private List<System.Drawing.Point> getPoints(List<Blob> blobs)
         {
             List<System.Drawing.Point> points = new List<System.Drawing.Point>();
 
-            foreach(Blob b in blobs)
+            foreach (Blob b in blobs)
             {
-                points.Add(new System.Drawing.Point((int)b.CenterOfGravity.X,(int)b.CenterOfGravity.Y));
+                points.Add(new System.Drawing.Point((int)b.CenterOfGravity.X, (int)b.CenterOfGravity.Y));
             }
             return points;
         }
@@ -216,11 +215,11 @@ namespace CMVP
         private List<System.Drawing.Point[]> getTriangels(List<System.Drawing.Point> points)
         {
             List<System.Drawing.Point[]> pointList = new List<System.Drawing.Point[]>();
-            foreach(System.Drawing.Point a in points)
+            foreach (System.Drawing.Point a in points)
             {
-                foreach(System.Drawing.Point b in points)
+                foreach (System.Drawing.Point b in points)
                 {
-                    foreach(System.Drawing.Point c in points)
+                    foreach (System.Drawing.Point c in points)
                     {
                         if (a != b && a != c && b != c)
                         {
@@ -238,7 +237,7 @@ namespace CMVP
             }
             return pointList;
         }
-        bool getInformationFromTriangle(AForge.Point[] points,double idealHeight, double idealBase, double heightError, double baseError, out AForge.Point center, out AForge.DoublePoint direction)
+        bool getInformationFromTriangle(AForge.Point[] points, double idealHeight, double idealBase, double heightError, double baseError, out AForge.Point center, out AForge.DoublePoint direction)
         {
             double d0 = points[1].DistanceTo(points[2]);
             double d1 = points[2].DistanceTo(points[0]);
@@ -247,39 +246,39 @@ namespace CMVP
 
             AForge.DoublePoint top, base1, base2;
 
-            if(d0 < d1 && d0 < d2)
-                {
+            if (d0 < d1 && d0 < d2)
+            {
                 //Console.WriteLine("d0 base");
-                top=points[0];
-                base1=points[1];
-                base2=points[2];
+                top = points[0];
+                base1 = points[1];
+                base2 = points[2];
 
 
-                }
+            }
             else if (d1 < d0 && d1 < d2)
-                {
-                    //Console.WriteLine("d1 base");
+            {
+                //Console.WriteLine("d1 base");
                 top = points[1];
                 base1 = points[0];
                 base2 = points[2];
-                }
-                else
-                {
-                    //Console.WriteLine("d2 base");
+            }
+            else
+            {
+                //Console.WriteLine("d2 base");
                 top = points[2];
                 base1 = points[1];
                 base2 = points[0];
-                }
+            }
             double baseLength = base1.DistanceTo(base2);
             double height = Math.Sqrt(top.DistanceTo(base1) * top.DistanceTo(base1) - (baseLength / 2) * (baseLength / 2));
-            System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
-            System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
+            //System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
+            //System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
             if (height > (idealHeight - heightError) && height < idealHeight + heightError)
-                {
+            {
                 if (baseLength > (idealBase - baseError) && baseLength < idealBase + baseError)
                 {
 
-                    center = new AForge.Point((int)(top.X / 2 + (base1.X + base2.X) / 4),(int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
+                    center = new AForge.Point((int)(top.X / 2 + (base1.X + base2.X) / 4), (int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
                     direction = new AForge.DoublePoint(top.X - center.X, top.Y - center.Y);
                     direction = new AForge.DoublePoint(direction.X / direction.EuclideanNorm(), direction.Y / direction.EuclideanNorm());
                     return true;
@@ -324,8 +323,8 @@ namespace CMVP
                     triangleBase = d3;
                     triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
-                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
-                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                //System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                //System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
                 if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
                 {
                     if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)
@@ -335,34 +334,34 @@ namespace CMVP
             }
             return passedTriangels;
         }
-        private List<System.Drawing.Point[]> filterDubblets(List<System.Drawing.Point[]> triangles)
+        private List<System.Drawing.Point[]> filterDoublets(List<System.Drawing.Point[]> triangles)
         {
             List<System.Drawing.Point[]> filteredTriangles = new List<System.Drawing.Point[]>();
 
-            foreach(System.Drawing.Point[] triangle in triangles)
+            foreach (System.Drawing.Point[] triangle in triangles)
             {
                 Array.Sort(triangle,
                     delegate(System.Drawing.Point p1, System.Drawing.Point p2)
                     {
-                        if(p1.Y==p2.Y)
+                        if (p1.Y == p2.Y)
                             return p1.X - p2.X;
                         else
-                            return p1.Y-p2.Y;
+                            return p1.Y - p2.Y;
                     }
                 );
             }
-            if(triangles.Count>0)
+            if (triangles.Count > 0)
                 filteredTriangles.Add(triangles[0]);
-            foreach(System.Drawing.Point[] t1 in triangles)
+            foreach (System.Drawing.Point[] t1 in triangles)
             {
                 Boolean add = true;
-                foreach(System.Drawing.Point[] t2 in filteredTriangles)
+                foreach (System.Drawing.Point[] t2 in filteredTriangles)
                 {
                     if (t1[0].Equals(t2[0]) && t1[1].Equals(t2[1]) && t1[2].Equals(t2[2]))
                         add = false;
-                        
+
                 }
-                if(add)
+                if (add)
                 {
                     filteredTriangles.Add(t1);
                 }
@@ -372,7 +371,7 @@ namespace CMVP
         }
         private int getId(AForge.Point center, AForge.DoublePoint direction, List<Blob> rectangles)
         {
-            List<Blob> idRectangles = filterOutIdRectangles(rectangles,center);
+            List<Blob> idRectangles = filterOutIdRectangles(rectangles, center);
             return idRectangles.Count;
         }
         private List<Blob> getRectangularBlobs(int minWidth, int maxWidth, int minHight, int maxHight)
@@ -389,11 +388,11 @@ namespace CMVP
             SimpleShapeChecker shapeChecker = new SimpleShapeChecker();
             shapeChecker.MinAcceptableDistortion = 5f;
             List<Blob> rectangles = new List<Blob>();
-            foreach(Blob b in blobs)
+            foreach (Blob b in blobs)
             {
                 List<IntPoint> edgePoints = blobCounter.GetBlobsEdgePoints(b);
 
-                if(edgePoints.Count>1 && shapeChecker.IsQuadrilateral(edgePoints))
+                if (edgePoints.Count > 1 && shapeChecker.IsQuadrilateral(edgePoints))
                 {
                     rectangles.Add(b);
                 }
@@ -404,14 +403,24 @@ namespace CMVP
         private List<Blob> filterOutIdRectangles(List<Blob> rectangles, AForge.Point p)
         {
             List<Blob> idTag = new List<Blob>();
-            foreach(Blob b in rectangles)
+            foreach (Blob b in rectangles)
             {
-                if(b.CenterOfGravity.DistanceTo(p)<14)
+                if (b.CenterOfGravity.DistanceTo(p) < 14)
                 {
                     idTag.Add(b);
                 }
             }
             return idTag;
+        }
+        private void getIDs()
+        {
+
+        }
+
+        private static Bitmap cropBitmap(Bitmap bmp, Rectangle cropArea)
+        {
+            Bitmap bmpCrop = bmp.Clone(cropArea, bmp.PixelFormat);
+            return bmpCrop;
         }
     }
 }
