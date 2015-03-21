@@ -10,30 +10,36 @@ namespace CMVP
     {
         public KeyboardController () : base()
         {
-
+            controllerName = "Manual keyboard";
         }
         public override void updateController()
         {
             if (NativeKeyboard.IsKeyDown(KeyCode.Up))
             {
-                outThrottle += 1/150;
+                outThrottle += 3/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Down))
             {
-                outThrottle -= 1 / 150;
+                outThrottle -= 3/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
-                outSteer -= 1 / 150;
+                outSteer += 5/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Right))
             {
-                outSteer += 1 / 150;
+                outSteer -= 5/150F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
             {
-                outThrottle = 0; 
+                outThrottle = 0;
+                Console.WriteLine("Emergency Stop ");
             }
+            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle < -1) outThrottle = -1;
+            if (outSteer > 1) outSteer = 1;
+            if (outSteer < -1) outSteer = -1;
+            Console.WriteLine("Throttle: " + outThrottle);
         }
 
         /// <summary>
@@ -64,7 +70,12 @@ namespace CMVP
             /// <summary>
             /// The down arrow key.
             /// </summary>
-            Space
+            Space=0x20,
+
+            /// <summary>
+            /// The r key.
+            /// </summary>
+            R=0x52
         }
 
         /// <summary>

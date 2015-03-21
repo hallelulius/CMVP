@@ -30,6 +30,8 @@ namespace CMVP
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
+            // Set controler name:
+            controllerName = "PID";
         }
 
         public override void updateController()      //PI-controller 
@@ -42,11 +44,11 @@ namespace CMVP
 
             outSteer = 0;
             float errorHeading = refHeading - heading;
-            outSteer += Kp_steer * errorHeading * Program.sampleTime;
+            outSteer += errorHeading * 1.33f; //Kp_steer * errorHeading* Program.sampleTime;
             steerIntegratorSum += errorHeading;
-            outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
+            //outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
 
-            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle > 1)outThrottle = 1;
             if (outThrottle < -1) outThrottle = -1;
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;

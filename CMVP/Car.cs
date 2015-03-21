@@ -42,11 +42,12 @@ namespace CMVP
             this.position = new List<Point>();
             this.speed = new List<double>();
             this.acceleration = new List<double>();
+            this.controlStrategy = new ControlStrategies.StandStill(this);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);
                 this.position.Add(pos);
-                this.speed.Add(0);
+                this.speed.Add(1.0);
                 this.acceleration.Add(0);
             }
         }
@@ -79,11 +80,13 @@ namespace CMVP
             //Add the new position to the list and remove the oldest one.
             position.Add(pos);
             position.Remove(position.First());
-
             //Calculate orientation and add to the list and remove the oldest one.
             PointF tempPoint = new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
             direction.Add(tempPoint);
             direction.Remove(direction.First());
+
+            //The heading of the car is assuming to be the direction of the vehicle.
+            controller.setHeading((float)angle);
 
             //Update the cars state.
             updateState();
@@ -96,15 +99,8 @@ namespace CMVP
         /// <param name="dir"> The new direction of the car. </param>
         public void setPositionAndOrientation(Point pos, PointF dir)
         {
-            //Add the new position to the list and remove the oldest one.
-            position.Add(pos);
-            position.Remove(position.First());
-
-            //Add the new orientation to the list and remove the oldest one.
-            direction.Add(dir);
-            direction.Remove(direction.First());
-
-            //updateState();
+            float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
+            this.setPositionAndOrientation(pos, refAngle);
         }
 
         /// <summary>
@@ -156,8 +152,9 @@ namespace CMVP
 
         public void send()
         {
-            Program.com.updateCar(id, controller.getThrottle(), "Throttle");
-            Program.com.updateCar(id, controller.getSteer(), "Steering");
+            //Console.WriteLine("Throttel: " + controller.getThrottle());
+            Program.com.updateThrottle(id, controller.getThrottle());
+            Program.com.updateSteering(id, controller.getSteer());
         }
 
         public Point getPosition() // Return the cars current position 
@@ -177,5 +174,19 @@ namespace CMVP
             return controlStrategy;
         }
 
+        public void setControlStrategy(ControlStrategy cs)
+        {
+            controlStrategy = cs;
+        }
+
+        public void setController(Controller c)
+        {
+            controller = c;
+        }
+
+        public double getSpeed()
+        {
+            return speed.First();
+        }
     }
 }

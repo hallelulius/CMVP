@@ -21,19 +21,19 @@ namespace CMVP
         private const byte throttleB = 2;    // DAC B gain 1
         private const byte steeringA = 4;    // DAC C gain 1
         private const byte steeringB = 6;    // DAC D gain 1
-        private const byte error = 220;
+        private const byte error = 230;
 
         //Variables used to debug and trim  Vref=3.3V
-        private const byte max_throttle = 57;      //output = 0.74V
-        private const byte neutral_throttle = 111;  //output = 1.44V
-        private const byte reverse_throttle = 157;  //output = 2.03V
+        private const byte max_throttle = 170;  //200     //output = 0.74V
+        private const byte neutral_throttle = 90; //111  //output = 1.44V
+        private const byte reverse_throttle = 0;  //output = 2.03V
         private const byte neutral_steering = 114;  //output = 1.47V
         private const byte left_steering = 218;     //output = 2.82V
-        private const byte right_steering = 7;    //output = 0.09V
-        private const byte voltage_cap = 219;  //voltage cap
+        private const byte right_steering = 7;      //output = 0.09V
+        private const byte voltage_cap = 230;       //voltage cap
 
         private SerialPort port;
-        private bool active = false;
+        private bool portOpen = false;
 
         /// <summary>
         /// Takes the first COM port it find and opens up a serial communcation with it.
@@ -44,11 +44,35 @@ namespace CMVP
             if (getFirstPort() != null)
             {
                 port = new SerialPort(getFirstPort(), 115200); //remeber to sync baudrate with arduino
-                active = true;
+                portOpen = port.IsOpen;
+                System.Threading.Thread.Sleep(1000);
+                try
+                {
+                    port.Open();
+                    System.Console.WriteLine("Communication OK");
+                }
+                catch (Exception e)
+                {
+                   System.Console.WriteLine("Could not open port");
+                   Console.WriteLine(e);
+                }
             }
             else
             {
                 System.Console.WriteLine("Connect Arduino");
+            }
+        }
+
+        ~Communication()
+        {
+            if (port != null)
+            {
+                if (port.IsOpen)
+                {
+                    port.Close();
+                }
+                port.Dispose();
+                Console.WriteLine("Closing Communication");
             }
         }
 
@@ -78,56 +102,59 @@ namespace CMVP
             }
             return DAC;
         }
-
-        private byte convertValue(int value, String mode)
-        {
-            byte val;
-            if (value > error || value < 0)
-                value = error;
-            if ((byte)value > voltage_cap)
-            {
-                val = error;
-            }
-            else
-            {
-                val = (byte)value;
-            }
-            return val;
-        }
+      
 
         public void stopCar(int carID)
         {
-            updateCar(carID, neutral_steering, "Steering");
-            updateCar(carID, neutral_throttle, "Throttle");
+            updateSteering(carID, neutral_steering);
+            updateThrottle(carID, neutral_throttle);
         }
 
-        public void updateCar(int carID, float value1, String mode)
+        public void updateThrottle(int carID, float value)
         {
-            int value = (int)value1;  //ÄNDRA DETTA!
-            byte val = convertValue(value,mode);
-            byte id = convertCarID(carID, mode);
-            
-            switch (mode){
-                case "Throttle":
-                    updateThrottle(id, val);
-                    break;
-                case "Steering":
-                    updateSteering(id, val);
-                    break;
-                default:
-                    System.Console.WriteLine("Didn't update " +carID +" "+ mode);
-                    break;
-            }
-        }
-
-        private void updateSteering(byte carID, byte value)
-        {
-            if (port != null && carID < error && value < error ) 
+            //Console.WriteLine("Updating Throttle...");
+            float val = 0;
+            if (value > 0)
             {
-                port.Open();
+                val = neutral_throttle + value * (max_throttle - neutral_throttle);
+            }
+            else if (value < 0)
+            {
+                val = neutral_throttle + value * -(reverse_throttle - neutral_throttle);
+            }   
+
+            byte id = convertCarID(carID,"Throttle");
+            sendThrottle(id,(byte) val);
+        }
+
+        
+
+         public void updateSteering(int carID, float value)
+        {
+            //Console.WriteLine("Updating Steering...");
+            float val = 0;
+            if (value > 0)
+            {
+                val = neutral_steering + value * -(right_steering - neutral_steering);
+            }
+            else if (value < 0)
+            {
+                val = neutral_steering + value * (left_steering - neutral_steering);
+            }
+            
+            byte id = convertCarID(carID,"Steering");
+            sendSteering(id, (byte) val);
+
+            
+        }
+
+        private void sendSteering(byte carID, byte value)
+        {
+            if (port != null && carID < error && value < voltage_cap ) 
+            {
                 byte[] bits = {carID, value };
                 port.Write(bits, 0, 2);
-                port.Close();
+                //port.Close();
                 System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
             }
             else
@@ -136,15 +163,14 @@ namespace CMVP
             }
         }
 
-        private void updateThrottle(byte carID, byte value)
+        private void sendThrottle(byte carID, byte value)
         {
-            if (port != null && carID < error && value < error)
+            if (port != null && carID < error && value < voltage_cap )
             {
-                port.Open();
-                byte[] bits = { carID, value };
-                port.Write(bits, 0, 2);
-                port.Close();
-                System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
+
+                    byte[] bits = { carID, value };
+                    port.Write(bits, 0, 2);
+                    System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
             }
             else
             {
@@ -172,38 +198,34 @@ namespace CMVP
             }
         }
 
-        public void reverse(int carID, String mode)
-        {
-
-        }
-
-        public void reverseSetting(int carID, String mode, bool b)
-        {
+    
+         
+         public void reverseSetting(int carID, String mode, bool b)
+         {
             if (b && mode.Equals("Throttle"))
             {
-                updateCar(carID, max_throttle, mode);
+                sendThrottle(convertCarID(carID,mode), max_throttle);
                 Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
-                
             }
             else if (!b && mode.Equals("Throttle"))
             {
-                updateCar(carID, reverse_throttle, mode);
+                sendThrottle(convertCarID(carID, mode), reverse_throttle);
                 Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (b && mode.Equals("Steering"))
             {
-                updateCar(carID, left_steering, mode);
+                sendSteering(convertCarID(carID, mode), left_steering);
                 Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (!b && mode.Equals("Throttle"))
             {
-                updateCar(carID, right_steering, mode);
+                sendSteering(convertCarID(carID, mode), right_steering);
                 Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
@@ -212,7 +234,7 @@ namespace CMVP
         }
         public bool isActive()
         {
-            return active;
+            return port.IsOpen;
         }
 
     }

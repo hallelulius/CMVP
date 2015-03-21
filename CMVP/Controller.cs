@@ -15,6 +15,7 @@ namespace CMVP
         protected float refSpeed;
         protected float outThrottle;
         protected float outSteer;
+        protected String controllerName;
 
         public abstract void updateController();
 
@@ -22,9 +23,13 @@ namespace CMVP
         {
             this.heading = heading;
         }
-        public void setSpeed(float speed)
+        public void setRefHeading(float refHeading)
         {
-            this.speed = speed;
+            this.refHeading = refHeading;
+        }
+        public void setRefSpeed(float speed)
+        {
+            this.refSpeed = speed;
         }
         public float getThrottle()
         {
@@ -33,6 +38,22 @@ namespace CMVP
         public float getSteer()
         {
             return outSteer;
+        }
+        public void setThrottle(float outThrottle)
+        {
+            this.outThrottle = outThrottle;
+        }
+        public string getName()
+        {
+            return controllerName;
+        }
+        public float getRefSpeed()
+        {
+            return refSpeed;
+        }
+        public float getRefHeading()
+        {
+            return refHeading;
         }
     }
 }
