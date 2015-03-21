@@ -124,14 +124,13 @@ namespace CMVP
         {
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(4, 13,img);
-            List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
             Acenters = new List<AForge.IntPoint>();
             Adirections = new List<AForge.Point>();
-            List<System.Drawing.Point> points = getPoints(cirkels);
-            List<System.Drawing.Point[]> triangles = getTriangels(points);
+            List<AForge.IntPoint> points = getPoints(cirkels);
+            List<AForge.IntPoint[]> triangles = getTriangels(points);
             triangles = filterDubblets(triangles);
 
-            foreach (System.Drawing.Point[] triangle in triangles)
+            foreach (AForge.IntPoint[] triangle in triangles)
             {
                 AForge.IntPoint Acenter;
                 AForge.Point Adirektion;
@@ -197,11 +196,11 @@ namespace CMVP
                 Adirections = new List<AForge.Point>();
 
                 List<Blob> cirkels = getBlobs(4, 13, cropedImg);
-                List<System.Drawing.Point> points = getPoints(cirkels);
-                List<System.Drawing.Point[]> triangles = getTriangels(points);
+                List<AForge.IntPoint> points = getPoints(cirkels);
+                List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
 
-                foreach (System.Drawing.Point[] triangle in triangles)
+                foreach (AForge.IntPoint[] triangle in triangles)
                 {
                     AForge.IntPoint Acenter;
                     AForge.Point Adirektion;
@@ -258,30 +257,30 @@ namespace CMVP
             }
             return cirkels;
         }
-        private List<System.Drawing.Point> getPoints(List<Blob> blobs)
+        private List<AForge.IntPoint> getPoints(List<Blob> blobs)
         {
-            List<System.Drawing.Point> points = new List<System.Drawing.Point>();
+            List<AForge.IntPoint> points = new List<AForge.IntPoint>();
 
             foreach(Blob b in blobs)
             {
-                points.Add(new System.Drawing.Point((int)b.CenterOfGravity.X,(int)b.CenterOfGravity.Y));
+                points.Add(b.CenterOfGravity.Round());
             }
             return points;
         }
         //function to get triangels in se
-        private List<System.Drawing.Point[]> getTriangels(List<System.Drawing.Point> points)
+        private List<AForge.IntPoint[]> getTriangels(List<AForge.IntPoint> points)
         {
-            List<System.Drawing.Point[]> pointList = new List<System.Drawing.Point[]>();
-            foreach(System.Drawing.Point a in points)
+            List<AForge.IntPoint[]> pointList = new List<AForge.IntPoint[]>();
+            foreach(AForge.IntPoint a in points)
             {
-                foreach(System.Drawing.Point b in points)
+                foreach (AForge.IntPoint b in points)
                 {
-                    foreach(System.Drawing.Point c in points)
+                    foreach (AForge.IntPoint c in points)
                     {
                         if (a != b && a != c && b != c)
                         {
                             //We need to check a that there doesn't excist any duplicates
-                            System.Drawing.Point[] locations = new System.Drawing.Point[3];
+                            AForge.IntPoint[] locations = new AForge.IntPoint[3];
 
                             locations[0] = a;
                             locations[1] = b;
@@ -391,14 +390,14 @@ namespace CMVP
             }
             return passedTriangels;
         }
-        private List<System.Drawing.Point[]> filterDubblets(List<System.Drawing.Point[]> triangles)
+        private List<AForge.IntPoint[]> filterDubblets(List<AForge.IntPoint[]> triangles)
         {
-            List<System.Drawing.Point[]> filteredTriangles = new List<System.Drawing.Point[]>();
+            List<AForge.IntPoint[]> filteredTriangles = new List<AForge.IntPoint[]>();
 
-            foreach(System.Drawing.Point[] triangle in triangles)
+            foreach (AForge.IntPoint[] triangle in triangles)
             {
                 Array.Sort(triangle,
-                    delegate(System.Drawing.Point p1, System.Drawing.Point p2)
+                    delegate(AForge.IntPoint p1, AForge.IntPoint p2)
                     {
                         if(p1.Y==p2.Y)
                             return p1.X - p2.X;
@@ -409,10 +408,10 @@ namespace CMVP
             }
             if(triangles.Count>0)
                 filteredTriangles.Add(triangles[0]);
-            foreach(System.Drawing.Point[] t1 in triangles)
+            foreach (AForge.IntPoint[] t1 in triangles)
             {
                 Boolean add = true;
-                foreach(System.Drawing.Point[] t2 in filteredTriangles)
+                foreach (AForge.IntPoint[] t2 in filteredTriangles)
                 {
                     if (t1[0].Equals(t2[0]) && t1[1].Equals(t2[1]) && t1[2].Equals(t2[2]))
                         add = false;
