@@ -87,12 +87,19 @@ namespace CMVP
         Bitmap drawFeaturesOnImg()
         {
             Console.WriteLine("draw: " + System.DateTime.Now.Millisecond);
+           
             Bitmap canvas;
             if (img != null)
                 canvas = (Bitmap)img.Clone();
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(canvas);
+            if(drawTriangleOnImg)
+                foreach(Car car in objects)
+                {
+                    System.Drawing.Point pos = car.getPosition();
+                    g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
+                }
             if (drawCirkelsOnImg)
                 drawCirkels(cirkels);
             for (int k = 0; k < Acenters.Count; k++)
@@ -106,20 +113,17 @@ namespace CMVP
                     g.DrawLine(yellowPen, new System.Drawing.Point((int)Acenters[k].X, (int)Acenters[k].Y), new System.Drawing.Point((int)(Acenters[k].X + Adirections[k].X * 40), (int)(Acenters[k].Y + Adirections[k].Y * 40)));
                 }
             }
-
-
             return canvas;
         }
         public void start()
         {
-            initiate();
             imgProcesTimer.Start();
             drawTimer.Start();
         }
-        void initiate()
+        public void initiate()
         {
             img = videoStream.getImage();
-            List<Blob> cirkels = getCircularBlobs(1, 13);
+            List<Blob> cirkels = getBlobs(4, 13,img);
             List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
             Acenters = new List<AForge.Point>();
             Adirections = new List<DoublePoint>();
@@ -146,14 +150,17 @@ namespace CMVP
             for (int k = 0; k < Acenters.Count; k++)
             {
                 Console.WriteLine(k);
-                int id = getId(Acenters[k], Adirections[k], rectangles);
+                int id = getId(Acenters[k], Adirections[k], cirkels);
                 Console.WriteLine("ID: " + id);
-                carMap.Add(id, new Car(id, Acenters[k], Adirections[k]));
-                Car car;
-                carMap.TryGetValue(id,out car);
+                Car car = new Car(id, Acenters[k], Adirections[k]);
                 objects.Add(car);
             }
-            MessageBox.Show("The following cars where found: " + String.Join(",", carMap.Keys.ToArray()));
+            List<int> intList = new List<int>();
+            foreach(Car car in objects)
+            {
+                intList.Add(car.ID);
+            }
+            MessageBox.Show("The following cars where found: " + String.Join(",",intList.ToArray()));
         }
         public void stop()
         {
@@ -178,51 +185,43 @@ namespace CMVP
         }
         private void processImage(object sender, EventArgs e)
         {
+            Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
-            Console.WriteLine("ImgProcess: " + System.DateTime.Now.Millisecond);
-  //          Console.WriteLine("Size: "+img.Size.ToString());
-  //          Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
-            Acenters = new List<AForge.Point>();
-            Adirections = new List<DoublePoint>();
-   //         Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
-            List<Blob> cirkels = getCircularBlobs(1, 13);
-   //         Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
-            List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
-   //         Console.WriteLine("after Blobs: " + System.DateTime.Now.Millisecond);
-            List<System.Drawing.Point> points = getPoints(cirkels);
-            List<System.Drawing.Point[]> triangles = getTriangels(points);
-
-
-    //       Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
-
-            triangles = filterDubblets(triangles);
-
-   //         Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
-            
-            foreach(System.Drawing.Point[] triangle in triangles)
+            foreach (Car car in objects)
             {
-                AForge.Point Acenter;
-                AForge.DoublePoint Adirektion;
-                AForge.Point[] Atriangle = new AForge.Point[3];
+                System.Drawing.Point pos=car.getPosition();
+                Bitmap cropedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
 
-                Atriangle[0] = new AForge.Point(triangle[0].X,triangle[0].Y);
-                Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
-                Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
 
-                if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                Acenters = new List<AForge.Point>();
+                Adirections = new List<DoublePoint>();
+
+                List<Blob> cirkels = getBlobs(4, 13, cropedImg);
+                List<System.Drawing.Point> points = getPoints(cirkels);
+                List<System.Drawing.Point[]> triangles = getTriangels(points);
+                triangles = filterDubblets(triangles);
+
+                foreach (System.Drawing.Point[] triangle in triangles)
                 {
-                    Acenters.Add(Acenter);
-                    Adirections.Add(Adirektion);
-                    int id = getId(Acenter,Adirektion,rectangles);
-                    Car car;
-                    if (carMap.TryGetValue(id,out car))
+                    AForge.Point Acenter;
+                    AForge.DoublePoint Adirektion;
+                    AForge.Point[] Atriangle = new AForge.Point[3];
+
+                    Atriangle[0] = new AForge.Point(triangle[0].X, triangle[0].Y);
+                    Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
+                    Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
+
+                    if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                     {
-                        car.setPositionAndOrientation(Acenter, Adirektion);
+                        AForge.Point translation = new AForge.Point(pos.X - 100, pos.Y - 100);
+                        Acenters.Add(translation+Acenter);
+                        Adirections.Add(Adirektion);
+                        Console.WriteLine("id: " + car.ID);
+                        car.setPositionAndOrientation(Acenter+translation, Adirektion);
                     }
-                        
                 }
             }
-            
+            Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
         private void drawCirkels(List<Blob> cirkels)
         {
@@ -329,8 +328,8 @@ namespace CMVP
                 }
             double baseLength = base1.DistanceTo(base2);
             double height = Math.Sqrt(top.DistanceTo(base1) * top.DistanceTo(base1) - (baseLength / 2) * (baseLength / 2));
-            System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
-            System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
+            //System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
+            //System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
             if (height > (idealHeight - heightError) && height < idealHeight + heightError)
                 {
                 if (baseLength > (idealBase - baseError) && baseLength < idealBase + baseError)
@@ -469,6 +468,19 @@ namespace CMVP
                 }
             }
             return idTag;
+        }
+        private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
+        {
+            Console.WriteLine("Start BlobFinder: " + System.DateTime.Now.Millisecond);
+            BlobCounter blobCounter = new BlobCounter();
+            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
+            blobCounter.MinHeight = minHeight;
+            blobCounter.MaxHeight = maxHeight;
+            blobCounter.FilterBlobs = true;
+            blobCounter.ProcessImage(img);
+            Blob[] blobs = blobCounter.GetObjectsInformation();
+            Console.WriteLine("End BlobFinder: " + System.DateTime.Now.Millisecond);
+            return blobs.ToList<Blob>();
         }
     }
 }

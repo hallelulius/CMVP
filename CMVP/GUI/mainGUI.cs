@@ -293,5 +293,11 @@ namespace CMVP
             GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
             ptgf.Show();
         }
+        private void Initiate_Click(object sender, EventArgs e)
+        {
+            Program.imageProcess.initiate();
+            startSimulationButton.Enabled = true;
+
+        }
     }
 }

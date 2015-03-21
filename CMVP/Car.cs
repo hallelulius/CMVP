@@ -51,9 +51,8 @@ namespace CMVP
                 this.acceleration.Add(0);
             }
         }
-        public Car(int id, AForge.Point pos, AForge.DoublePoint dir)
+        public Car(int id, AForge.Point pos, AForge.DoublePoint dir): this(id, new Point((int)pos.X, (int)pos.Y), new PointF((float)dir.X,(float)dir.Y))
         {
-            new Car(id, new Point((int)pos.X, (int)pos.Y), new PointF((float)dir.X,(float)dir.Y));
         }
 
         /// <summary>
