@@ -51,6 +51,10 @@ namespace CMVP
                 this.acceleration.Add(0);
             }
         }
+        public Car(int id, AForge.Point pos, AForge.DoublePoint dir)
+        {
+            new Car(id, new Point((int)pos.X, (int)pos.Y), new PointF((float)dir.X,(float)dir.Y));
+        }
 
         /// <summary>
         /// Update the state of the car. Only call this once for every car in each program loop.
@@ -101,6 +105,10 @@ namespace CMVP
         {
             float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
             this.setPositionAndOrientation(pos, refAngle);
+        }
+        public void setPositionAndOrientation(AForge.Point pos, AForge.DoublePoint dir)
+        {
+            this.setPositionAndOrientation(new Point((int)pos.X,(int)pos.Y),new PointF((float)dir.X,(float)dir.Y));
         }
 
         /// <summary>

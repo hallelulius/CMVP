@@ -37,8 +37,11 @@ namespace CMVP
         private List<AForge.DoublePoint> Adirections;
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
+        private Timer drawTimer;
         private int tempTime;
         private Graphics g;
+        List<Blob> cirkels;
+        Dictionary<int, Car> carMap;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
@@ -51,12 +54,20 @@ namespace CMVP
         {
             System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
+            this.drawTimer = new Timer();
             this.imgProcesTimer.Interval=1;
-            this.imgProcesTimer.Tick += new EventHandler(updatePanels);
+            this.drawTimer.Interval = 500;
+            this.imgProcesTimer.Tick += new EventHandler(processImage);
+            this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
             this.tempTime=0;
+            this.carMap = new Dictionary<int, Car>();
+
+            this.cirkels = new List<Blob>();
+            this.Acenters = new List<AForge.Point>();
+            this.Adirections = new List<AForge.DoublePoint>();
 
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
@@ -67,20 +78,87 @@ namespace CMVP
         }
         void updatePanels(object sender, EventArgs e)
         {
-            img = videoStream.getImage();
-            processedImage = processImage();
+            Bitmap panelImage = drawFeaturesOnImg();
             foreach (Panel panel in panelsToUpdate)
             {
-                panel.BackgroundImage = processedImage;
+                panel.BackgroundImage = panelImage;
             }
+        }
+        Bitmap drawFeaturesOnImg()
+        {
+            Console.WriteLine("draw: " + System.DateTime.Now.Millisecond);
+            Bitmap canvas;
+            if (img != null)
+                canvas = (Bitmap)img.Clone();
+            else
+                return new Bitmap(10, 10);
+            this.g = Graphics.FromImage(canvas);
+            if (drawCirkelsOnImg)
+                drawCirkels(cirkels);
+            for (int k = 0; k < Acenters.Count; k++)
+            {
+                if (drawCenterOnImg)
+                {
+                    g.DrawEllipse(bluePen, new Rectangle((int)Acenters[k].X - 2, (int)Acenters[k].Y - 2, 2, 2));
+                }
+                if (drawDirectionOnImg)
+                {
+                    g.DrawLine(yellowPen, new System.Drawing.Point((int)Acenters[k].X, (int)Acenters[k].Y), new System.Drawing.Point((int)(Acenters[k].X + Adirections[k].X * 40), (int)(Acenters[k].Y + Adirections[k].Y * 40)));
+                }
+            }
+
+
+            return canvas;
         }
         public void start()
         {
+            initiate();
             imgProcesTimer.Start();
+            drawTimer.Start();
+        }
+        void initiate()
+        {
+            img = videoStream.getImage();
+            List<Blob> cirkels = getCircularBlobs(1, 13);
+            List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
+            Acenters = new List<AForge.Point>();
+            Adirections = new List<DoublePoint>();
+            List<System.Drawing.Point> points = getPoints(cirkels);
+            List<System.Drawing.Point[]> triangles = getTriangels(points);
+            triangles = filterDubblets(triangles);
+
+            foreach (System.Drawing.Point[] triangle in triangles)
+            {
+                AForge.Point Acenter;
+                AForge.DoublePoint Adirektion;
+                AForge.Point[] Atriangle = new AForge.Point[3];
+
+                Atriangle[0] = new AForge.Point(triangle[0].X, triangle[0].Y);
+                Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
+                Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
+
+                if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                {
+                    Acenters.Add(Acenter);
+                    Adirections.Add(Adirektion);
+                }
+            }
+            for (int k = 0; k < Acenters.Count; k++)
+            {
+                Console.WriteLine(k);
+                int id = getId(Acenters[k], Adirections[k], rectangles);
+                Console.WriteLine("ID: " + id);
+                carMap.Add(id, new Car(id, Acenters[k], Adirections[k]));
+                Car car;
+                carMap.TryGetValue(id,out car);
+                objects.Add(car);
+            }
+            MessageBox.Show("The following cars where found: " + String.Join(",", carMap.Keys.ToArray()));
         }
         public void stop()
         {
             imgProcesTimer.Stop();
+            drawTimer.Stop();
         }
         public void pushDestination(Panel panel)
         {
@@ -98,29 +176,28 @@ namespace CMVP
         {
             return img;
         }
-        private Bitmap processImage()
+        private void processImage(object sender, EventArgs e)
         {
-            Console.WriteLine("Size: "+img.Size.ToString());
-            Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
-            List<AForge.Point> centers = new List<AForge.Point>();
-            List<DoublePoint> direktions = new List<DoublePoint>();
-            Console.WriteLine("Start: "+System.DateTime.Now.Millisecond);
-            this.g = Graphics.FromImage(img);
-            Console.WriteLine("Graphics: " + System.DateTime.Now.Millisecond);
-            Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
+            img = videoStream.getImage();
+            Console.WriteLine("ImgProcess: " + System.DateTime.Now.Millisecond);
+  //          Console.WriteLine("Size: "+img.Size.ToString());
+  //          Console.WriteLine("PixelFormat: " + img.PixelFormat.ToString());
+            Acenters = new List<AForge.Point>();
+            Adirections = new List<DoublePoint>();
+   //         Console.WriteLine("Before circular Blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> cirkels = getCircularBlobs(1, 13);
-            Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
+   //         Console.WriteLine("Before rectangular blobs: " + System.DateTime.Now.Millisecond);
             List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
-            Console.WriteLine("after Blobs: " + System.DateTime.Now.Millisecond);
+   //         Console.WriteLine("after Blobs: " + System.DateTime.Now.Millisecond);
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
 
 
-           Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
+    //       Console.WriteLine("Before dubblets: " + System.DateTime.Now.Millisecond);
 
             triangles = filterDubblets(triangles);
 
-            Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
+   //         Console.WriteLine("Before wrong triangles: " + System.DateTime.Now.Millisecond);
             
             foreach(System.Drawing.Point[] triangle in triangles)
             {
@@ -133,58 +210,19 @@ namespace CMVP
                 Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
 
                 if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
-            {
-                    centers.Add(Acenter);
-                    direktions.Add(Adirektion);
-            }
-            }
-            for (int k = 0; k < centers.Count; k++)
-            {
-                Console.WriteLine(k);
-                int id = getId(centers[k],direktions[k], rectangles);
-                Console.WriteLine("ID: " + id);
-                Car car = objects.Find(x => x.ID == id);
-                if (car == null && firstTime)
                 {
-                    objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y)));
-                }
-                else
-                {
-                    if (car != null)
+                    Acenters.Add(Acenter);
+                    Adirections.Add(Adirektion);
+                    int id = getId(Acenter,Adirektion,rectangles);
+                    Car car;
+                    if (carMap.TryGetValue(id,out car))
                     {
-                        car.setPositionAndOrientation(new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)direktions[k].X, (float)direktions[k].Y));
-                        
-                        if (drawTriangleOnImg)
-                        {
-                            int[,] track = car.getControlStrategy().getTrack().m;
-                            System.Drawing.Point[] pointTrack = new System.Drawing.Point[track.Length / 3];
-                            for (int i = 0; i < track.Length / 3; i++)
-                            {
-                                pointTrack[i] = new System.Drawing.Point(track[0, i], track[1, i]);
-                            }
-                            float heading = car.getController().getRefHeading();
-                            System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
-                            g.DrawLine(bluePen, car.getPosition(), pointHeading);
-                            g.DrawLines(greenPen, pointTrack);
-                        }
+                        car.setPositionAndOrientation(Acenter, Adirektion);
                     }
+                        
                 }
-                //Draw Graphics
-                if (drawCenterOnImg)
-                {
-                    g.DrawEllipse(bluePen, new Rectangle((int)centers[k].X - 2,(int)centers[k].Y - 2, 2, 2));
-                }
-                if (drawDirectionOnImg)
-                {
-                    g.DrawLine(yellowPen, new System.Drawing.Point((int)centers[k].X, (int) centers[k].Y), new System.Drawing.Point((int)(centers[k].X + direktions[k].X * 40), (int)(centers[k].Y + direktions[k].Y * 40)));
-                }
-            
             }
-            firstTime = false;
-
-            if(drawCirkelsOnImg)
-                drawCirkels(cirkels);
-            return img;
+            
         }
         private void drawCirkels(List<Blob> cirkels)
         {
