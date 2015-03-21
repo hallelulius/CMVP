@@ -33,8 +33,8 @@ namespace CMVP
         private Bitmap processedImage;
         //Temporary variable until the physical filter is in use.
        // private Bitmap filteredImg;
-        private List<AForge.Point> Acenters;
-        private List<AForge.DoublePoint> Adirections;
+        private List<AForge.IntPoint> Acenters;
+        private List<AForge.Point> Adirections;
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
         private Timer drawTimer;
@@ -66,8 +66,8 @@ namespace CMVP
             this.carMap = new Dictionary<int, Car>();
 
             this.cirkels = new List<Blob>();
-            this.Acenters = new List<AForge.Point>();
-            this.Adirections = new List<AForge.DoublePoint>();
+            this.Acenters = new List<AForge.IntPoint>();
+            this.Adirections = new List<AForge.Point>();
 
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
@@ -97,7 +97,7 @@ namespace CMVP
             if(drawTriangleOnImg)
                 foreach(Car car in objects)
                 {
-                    System.Drawing.Point pos = car.getPosition();
+                    AForge.IntPoint pos = car.getPosition();
                     g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
                 }
             if (drawCirkelsOnImg)
@@ -125,21 +125,21 @@ namespace CMVP
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(4, 13,img);
             List<Blob> rectangles = getRectangularBlobs(5, 14, 5, 14);
-            Acenters = new List<AForge.Point>();
-            Adirections = new List<DoublePoint>();
+            Acenters = new List<AForge.IntPoint>();
+            Adirections = new List<AForge.Point>();
             List<System.Drawing.Point> points = getPoints(cirkels);
             List<System.Drawing.Point[]> triangles = getTriangels(points);
             triangles = filterDubblets(triangles);
 
             foreach (System.Drawing.Point[] triangle in triangles)
             {
-                AForge.Point Acenter;
-                AForge.DoublePoint Adirektion;
-                AForge.Point[] Atriangle = new AForge.Point[3];
+                AForge.IntPoint Acenter;
+                AForge.Point Adirektion;
+                AForge.IntPoint[] Atriangle = new AForge.IntPoint[3];
 
-                Atriangle[0] = new AForge.Point(triangle[0].X, triangle[0].Y);
-                Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
-                Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
+                Atriangle[0] = new AForge.IntPoint(triangle[0].X, triangle[0].Y);
+                Atriangle[1] = new AForge.IntPoint(triangle[1].X, triangle[1].Y);
+                Atriangle[2] = new AForge.IntPoint(triangle[2].X, triangle[2].Y);
 
                 if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                 {
@@ -189,12 +189,12 @@ namespace CMVP
             img = videoStream.getImage();
             foreach (Car car in objects)
             {
-                System.Drawing.Point pos=car.getPosition();
+                AForge.IntPoint pos=car.getPosition();
                 Bitmap cropedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
 
 
-                Acenters = new List<AForge.Point>();
-                Adirections = new List<DoublePoint>();
+                Acenters = new List<AForge.IntPoint>();
+                Adirections = new List<AForge.Point>();
 
                 List<Blob> cirkels = getBlobs(4, 13, cropedImg);
                 List<System.Drawing.Point> points = getPoints(cirkels);
@@ -203,17 +203,17 @@ namespace CMVP
 
                 foreach (System.Drawing.Point[] triangle in triangles)
                 {
-                    AForge.Point Acenter;
-                    AForge.DoublePoint Adirektion;
-                    AForge.Point[] Atriangle = new AForge.Point[3];
+                    AForge.IntPoint Acenter;
+                    AForge.Point Adirektion;
+                    AForge.IntPoint[] Atriangle = new AForge.IntPoint[3];
 
-                    Atriangle[0] = new AForge.Point(triangle[0].X, triangle[0].Y);
-                    Atriangle[1] = new AForge.Point(triangle[1].X, triangle[1].Y);
-                    Atriangle[2] = new AForge.Point(triangle[2].X, triangle[2].Y);
+                    Atriangle[0] = new AForge.IntPoint(triangle[0].X, triangle[0].Y);
+                    Atriangle[1] = new AForge.IntPoint(triangle[1].X, triangle[1].Y);
+                    Atriangle[2] = new AForge.IntPoint(triangle[2].X, triangle[2].Y);
 
                     if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                     {
-                        AForge.Point translation = new AForge.Point(pos.X - 100, pos.Y - 100);
+                        AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         Acenters.Add(translation+Acenter);
                         Adirections.Add(Adirektion);
                         Console.WriteLine("id: " + car.ID);
@@ -294,14 +294,14 @@ namespace CMVP
             }
             return pointList;
         }
-        bool getInformationFromTriangle(AForge.Point[] points,double idealHeight, double idealBase, double heightError, double baseError, out AForge.Point center, out AForge.DoublePoint direction)
+        bool getInformationFromTriangle(AForge.IntPoint[] points,double idealHeight, double idealBase, double heightError, double baseError, out AForge.IntPoint center, out AForge.Point direction)
         {
             double d0 = points[1].DistanceTo(points[2]);
             double d1 = points[2].DistanceTo(points[0]);
             double d2 = points[1].DistanceTo(points[0]);
 
 
-            AForge.DoublePoint top, base1, base2;
+            AForge.Point top, base1, base2;
 
             if(d0 < d1 && d0 < d2)
                 {
@@ -335,14 +335,14 @@ namespace CMVP
                 if (baseLength > (idealBase - baseError) && baseLength < idealBase + baseError)
                 {
 
-                    center = new AForge.Point((int)(top.X / 2 + (base1.X + base2.X) / 4),(int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
-                    direction = new AForge.DoublePoint(top.X - center.X, top.Y - center.Y);
-                    direction = new AForge.DoublePoint(direction.X / direction.EuclideanNorm(), direction.Y / direction.EuclideanNorm());
+                    center = new AForge.IntPoint((int)(top.X / 2 + (base1.X + base2.X) / 4),(int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
+                    direction = top-center;
+                    direction = new AForge.Point(direction.X / direction.EuclideanNorm(), direction.Y / direction.EuclideanNorm());
                     return true;
                 }
             }
-            center = new AForge.Point(0, 0);
-            direction = new AForge.DoublePoint(0, 0);
+            center = new AForge.IntPoint(0, 0);
+            direction = new AForge.Point(0, 0);
             return false;
         }
         List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangles, double idealHight, double idealBase, double errorHight, double errorBase, Boolean b)

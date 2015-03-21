@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
+
+using AForge.Imaging;
+using AForge.Math.Geometry;
+using AForge.Math;
+
 //using Math;
 
 namespace CMVP
@@ -12,8 +17,8 @@ namespace CMVP
     public class Car
     {
         //The first element in the lists is the last one logged, ie. the current one.
-        private List<Point> position; //Position of the car as two integers.
-        private List<PointF> direction; //The direction of the car as a normalized 2D vector.
+        private List<AForge.IntPoint> position; //Position of the car as two integers.
+        private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<double> speed; //Velocity of the car.
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
@@ -35,11 +40,11 @@ namespace CMVP
         /// </summary>
         /// <param name="id"> Identification number of the car. </param>
         /// <param name="pos"> The starting position of the car. </param>
-        public Car(int id, Point pos, PointF dir)
+        public Car(int id, AForge.IntPoint pos, AForge.Point dir)
         {
             this.id = id;
-            this.direction = new List<PointF>();
-            this.position = new List<Point>();
+            this.direction = new List<AForge.Point>();
+            this.position = new List<AForge.IntPoint>();
             this.speed = new List<double>();
             this.acceleration = new List<double>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
@@ -51,10 +56,6 @@ namespace CMVP
                 this.acceleration.Add(0);
             }
         }
-        public Car(int id, AForge.Point pos, AForge.DoublePoint dir): this(id, new Point((int)pos.X, (int)pos.Y), new PointF((float)dir.X,(float)dir.Y))
-        {
-        }
-
         /// <summary>
         /// Update the state of the car. Only call this once for every car in each program loop.
         /// </summary>
@@ -78,13 +79,13 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="angle"> The new orientation of the car. </param>
-        public void setPositionAndOrientation(Point pos, double angle)
+        public void setPositionAndOrientation(AForge.IntPoint pos, double angle)
         {
             //Add the new position to the list and remove the oldest one.
             position.Add(pos);
             position.Remove(position.First());
             //Calculate orientation and add to the list and remove the oldest one.
-            PointF tempPoint = new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
+            AForge.Point tempPoint = new AForge.Point((float)Math.Cos(angle), (float)Math.Sin(angle));
             direction.Add(tempPoint);
             direction.Remove(direction.First());
 
@@ -100,16 +101,11 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="dir"> The new direction of the car. </param>
-        public void setPositionAndOrientation(Point pos, PointF dir)
+        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir)
         {
             float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
             this.setPositionAndOrientation(pos, refAngle);
         }
-        public void setPositionAndOrientation(AForge.Point pos, AForge.DoublePoint dir)
-        {
-            this.setPositionAndOrientation(new Point((int)pos.X,(int)pos.Y),new PointF((float)dir.X,(float)dir.Y));
-        }
-
         /// <summary>
         /// Is true if the car was found by the image processing.
         /// </summary>
@@ -164,7 +160,7 @@ namespace CMVP
             Program.com.updateSteering(id, controller.getSteer());
         }
 
-        public Point getPosition() // Return the cars current position 
+        public AForge.IntPoint getPosition() // Return the cars current position 
         {
             return position.First();
         }
@@ -172,7 +168,7 @@ namespace CMVP
         {
             return controller;
         }
-        public PointF getDirection()
+        public AForge.Point getDirection()
         {
             return direction.First();
         }
