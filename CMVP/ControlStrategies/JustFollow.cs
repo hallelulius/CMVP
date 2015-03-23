@@ -22,11 +22,13 @@ namespace CMVP.ControlStrategies
             {
                 for (int i = 0; i < track.m.Length/3; i++)
                 {
-                    PointF tempPoint = new PointF(track.m[0,i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
-                    float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
+                    AForge.Point tempPoint = new AForge.Point(track.m[0,i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
+                    //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
+                    float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
                     if (Math.Acos(scalarProduct) < Math.PI / 2)
                     {
-                        float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
+                        //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
+                        float currentLength = (tempPoint-car.getPosition()).EuclideanNorm();
                         if (currentLength < shortestLength)
                         {
                             shortestLength = currentLength;
@@ -47,7 +49,6 @@ namespace CMVP.ControlStrategies
                 }
             }
         }
-
         private PointF Subtract(PointF point1, PointF point2) // Subtract two ponts in 2 dimentions 
         {
             return new PointF(point1.X - point2.X, point1.Y - point2.Y);

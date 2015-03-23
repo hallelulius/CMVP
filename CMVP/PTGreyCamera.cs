@@ -39,6 +39,16 @@ namespace CMVP
             panelsToUpdate = new List<Panel>();
             setup();
         }
+        ~PTGreyCamera()
+        {
+            m_rawImage.Dispose();
+            m_camera.Dispose();
+            m_processedImage.Dispose();
+            m_camCtlDlg.Disconnect();
+            m_grabThreadExited.Dispose();
+            Console.WriteLine("Closing Camera");
+            
+        }
 
         public Bitmap getImage()
         {
@@ -65,7 +75,7 @@ namespace CMVP
 
         private void GrabLoop(object sender, DoWorkEventArgs e)
         {
-            Console.WriteLine("GrabLoop");
+            Console.WriteLine("GrabLoop started");
             BackgroundWorker worker = sender as BackgroundWorker;
             while (m_grabImages)
             {
@@ -138,7 +148,6 @@ namespace CMVP
 
                         m_grabImages = true;
 
-                        StartGrabLoop();
                     }
                     catch (FC2Exception ex)
                     {

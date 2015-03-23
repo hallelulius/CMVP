@@ -24,8 +24,8 @@ namespace CMVP
         private const byte error = 230;
 
         //Variables used to debug and trim  Vref=3.3V
-        private const byte max_throttle = 200;       //output = 0.74V
-        private const byte neutral_throttle = 111;  //output = 1.44V
+        private const byte max_throttle = 170;  //200     //output = 0.74V
+        private const byte neutral_throttle = 90; //111  //output = 1.44V
         private const byte reverse_throttle = 0;  //output = 2.03V
         private const byte neutral_steering = 114;  //output = 1.47V
         private const byte left_steering = 218;     //output = 2.82V

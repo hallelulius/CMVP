@@ -19,10 +19,10 @@ namespace CMVP
         public static Communication com = new Communication();
         public static List<Car> cars = new List<Car>();
         //Simulation variables
-        public static float sampleTime = 1 / 150;             // Iteration time, equal 1/(updating frequency)
+        public static float sampleTime = 1/150F;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
         public static VideoStream videoStream;
-        public static VideoStream imageProcess;
+        public static ImageProcessing imageProcess;
         public static PTGreyCamera ptg;
 
         [STAThread]
@@ -36,9 +36,7 @@ namespace CMVP
             imageProcess = new ImageProcessing(videoStream, cars);
             videoStream.start();
             System.Threading.Thread.Sleep(1000);
-            imageProcess.start();
             Application.Run(mainFrame);
-
         }
         public static bool isSimulating()
         {
