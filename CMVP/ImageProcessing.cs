@@ -94,6 +94,12 @@ namespace CMVP
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(canvas);
+            foreach(Car car in objects)
+            {
+                Controller controller = car.getController();
+                ControlStrategy controlStra = car.getControlStrategy();
+                
+            }
             if(drawTriangleOnImg)
                 foreach(Car car in objects)
                 {
