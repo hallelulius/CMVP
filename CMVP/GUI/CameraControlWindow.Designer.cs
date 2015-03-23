@@ -37,11 +37,11 @@
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cameraSettings = new System.Windows.Forms.Button();
             this.checkBoxDrawDirection = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawTriangles = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -121,7 +121,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.cameraSettings);
             this.groupBox2.Controls.Add(this.checkBoxDrawDirection);
             this.groupBox2.Controls.Add(this.checkBoxDrawTriangles);
             this.groupBox2.Controls.Add(this.checkBoxDrawCenters);
@@ -135,6 +135,16 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
+            // 
+            // cameraSettings
+            // 
+            this.cameraSettings.Location = new System.Drawing.Point(17, 218);
+            this.cameraSettings.Name = "cameraSettings";
+            this.cameraSettings.Size = new System.Drawing.Size(156, 23);
+            this.cameraSettings.TabIndex = 10;
+            this.cameraSettings.Text = "Show Camera Settings";
+            this.cameraSettings.UseVisualStyleBackColor = true;
+            this.cameraSettings.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkBoxDrawDirection
             // 
@@ -180,16 +190,6 @@
             this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
             this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 222);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(156, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Show Camera Settings";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // CameraControlWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -224,6 +224,6 @@
         private System.Windows.Forms.CheckBox checkBoxDrawDirection;
         private System.Windows.Forms.CheckBox checkBoxDrawTriangles;
         private System.Windows.Forms.CheckBox checkBoxDrawCenters;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button cameraSettings;
     }
 }

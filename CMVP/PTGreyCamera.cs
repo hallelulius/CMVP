@@ -29,6 +29,7 @@ namespace CMVP
         private BackgroundWorker m_grabThread;
         private Bitmap image;
         private List<Panel> panelsToUpdate;
+        private TimeStamp timestamp;
 
         public PTGreyCamera()
         {
@@ -70,19 +71,7 @@ namespace CMVP
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
  	        image = m_processedImage.bitmap;
-            TimeStamp timestamp;
-            lock (this)
-            {
-                timestamp = m_rawImage.timeStamp;
-            }
-            String statusString = String.Format(
-                "Requested frame rate: {0}Hz",
-                m_camera.GetProperty(PropertyType.FrameRate).absValue);
-            statusString = String.Format(
-                "Timestamp: {0:000}.{1:0000}.{2:0000}",
-                timestamp.cycleSeconds,
-                timestamp.cycleCount,
-                timestamp.cycleOffset);
+            //timestamp needs to be send somewhere somehow
             foreach (Panel p in panelsToUpdate)
             {
                 p.BackgroundImage = image;
@@ -110,6 +99,7 @@ namespace CMVP
                 {
                     //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
+                    timestamp = m_rawImage.timeStamp;
                 }
   
                 try

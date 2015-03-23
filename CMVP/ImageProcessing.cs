@@ -31,6 +31,8 @@ namespace CMVP
         private VideoStream videoStream;
         private Bitmap img;
         private Bitmap processedImage;
+        private Bitmap croppedImg;
+        private Bitmap canvas;
         //Temporary variable until the physical filter is in use.
        // private Bitmap filteredImg;
         private List<AForge.IntPoint> Acenters;
@@ -52,7 +54,6 @@ namespace CMVP
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
         {
-            System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
             this.imgProcesTimer.Interval=1;
@@ -74,6 +75,7 @@ namespace CMVP
             this.drawTriangleOnImg = false;
             this.drawDirectionOnImg = false;
             this.firstTime = true;
+            System.Console.WriteLine("Image processing OK");
 
         }
         void updatePanels(object sender, EventArgs e)
@@ -86,9 +88,7 @@ namespace CMVP
         }
         Bitmap drawFeaturesOnImg()
         {
-            Console.WriteLine("draw: " + System.DateTime.Now.Millisecond);
-           
-            Bitmap canvas;
+            //Console.WriteLine("draw: " + System.DateTime.Now.Millisecond); 
             if (img != null)
                 canvas = (Bitmap)img.Clone();
             else
@@ -98,7 +98,7 @@ namespace CMVP
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
-                    g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
+                    g.DrawRectangle(redPen, new Rectangle(pos.X-200,pos.Y-200, 200, 200));
                 }
             if (drawCirkelsOnImg)
                 drawCirkels(cirkels);
@@ -161,6 +161,7 @@ namespace CMVP
             }
             MessageBox.Show("The following cars where found: " + String.Join(",",intList.ToArray()));
         }
+
         public void stop()
         {
             imgProcesTimer.Stop();
@@ -184,18 +185,19 @@ namespace CMVP
         }
         private void processImage(object sender, EventArgs e)
         {
-            Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
-                Bitmap cropedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
+                //bör ta hänsyn till riktningen för minimera fönstret
+                croppedImg = img.Clone(new Rectangle(pos.X-200,pos.Y-200, 200, 200), img.PixelFormat);
 
 
                 Acenters = new List<AForge.IntPoint>();
                 Adirections = new List<AForge.Point>();
 
-                List<Blob> cirkels = getBlobs(4, 13, cropedImg);
+                List<Blob> cirkels = getBlobs(4, 13, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
@@ -220,7 +222,7 @@ namespace CMVP
                     }
                 }
             }
-            Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
+           // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
         private void drawCirkels(List<Blob> cirkels)
         {
@@ -379,8 +381,8 @@ namespace CMVP
                     triangleBase = d3;
                     triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
-                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
-                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                //System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                //System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
                 if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
                 {
                     if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)
