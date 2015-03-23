@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using AForge.Imaging.Filters;
+using AForge.Vision.Motion;
+using AForge.Imaging;
+using AForge.Math.Geometry;
+using AForge.Math;
 
 namespace CMVP.ControlStrategies
 {
@@ -24,13 +32,16 @@ namespace CMVP.ControlStrategies
                 for (int i = 0; i < track.m.Length/3; i++)
                 {
                     AForge.Point tempPoint = new AForge.Point(track.m[0,i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
+                    float carNorm = car.getDirection().EuclideanNorm();
+                    float trackNorm = tempPoint.EuclideanNorm();
+
                     //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
                     float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                    if (Math.Acos(scalarProduct) < Math.PI / 2)
+                    if (Math.Acos(Math.Abs(scalarProduct)) < Math.PI / 6)
                     {
                         //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                        float currentLength = (tempPoint-car.getPosition()).EuclideanNorm();
-                        if (currentLength < shortestLength)
+                        float currentLength = ((new Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
+                        if (currentLength < shortestLength && currentLength > 10)
                         {
                             shortestLength = currentLength;
                             index = i;
@@ -40,23 +51,15 @@ namespace CMVP.ControlStrategies
 
                 if (index < 0)
                 {
-                    setReference(new PointF(0, 0), 0);
+                    //setReference(new PointF(0, 0), 0);
                     Console.WriteLine("No points found");
                     return;
                 }
                 else
                 {
-                    setReference(new PointF(track.m[0,index], track.m[1, index]), track.m[2, index]);
+                    setReference(new IntPoint((int)track.m[0,index], (int)track.m[1, index]), track.m[2, index]);
                 }
             }
-        }
-        private PointF Subtract(PointF point1, PointF point2) // Subtract two ponts in 2 dimentions 
-        {
-            return new PointF(point1.X - point2.X, point1.Y - point2.Y);
-        }
-        private float Norm (PointF point) // Normalize a point in two dimentions
-        {
-            return (float) Math.Sqrt(point.X * point.X + point.Y * point.Y);
         }
     }
 }

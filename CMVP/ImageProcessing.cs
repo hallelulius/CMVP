@@ -122,6 +122,7 @@ namespace CMVP
                         System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X, car.getPosition().Y);
                         System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
                         g.DrawLine(bluePen, pos, pointHeading);
+                        g.DrawEllipse(yellowPen,new Rectangle(controller.getRefPoint().X - 5, controller.getRefPoint().Y - 5, 10, 10));
                     }
                     
                 }
@@ -137,7 +138,7 @@ namespace CMVP
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
-                    g.DrawRectangle(redPen, new Rectangle(pos.X-200,pos.Y-200, 200, 200));
+                    g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
                 }
             if (drawCirkelsOnImg)
             {
@@ -233,7 +234,7 @@ namespace CMVP
             {
                 AForge.IntPoint pos=car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                croppedImg = img.Clone(new Rectangle(pos.X-200,pos.Y-200, 200, 200), img.PixelFormat);
+                croppedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
 
 
                 Acenters = new List<AForge.IntPoint>();

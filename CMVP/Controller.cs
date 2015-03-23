@@ -4,6 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using AForge.Imaging.Filters;
+using AForge.Vision.Motion;
+using AForge.Imaging;
+using AForge.Math.Geometry;
+using AForge.Math;
+
 namespace CMVP
 {
 
@@ -16,6 +25,7 @@ namespace CMVP
         protected float outThrottle;
         protected float outSteer;
         protected String controllerName;
+        protected IntPoint refPoint;
 
         public abstract void updateController();
 
@@ -54,6 +64,14 @@ namespace CMVP
         public float getRefHeading()
         {
             return refHeading;
+        }
+        public void setRefPoint(IntPoint refPoint)
+        {
+            this.refPoint = refPoint;
+        }
+        public IntPoint getRefPoint()
+        {
+            return refPoint;
         }
     }
 }
