@@ -21,8 +21,9 @@ namespace CMVP
         //Simulation variables
         public static float sampleTime = 1/150F;             // Iteration time, equal 1/(updating frequency)
         private static bool simulating = false;
-        public static PTGreyCamera videoStream;
-        public static VideoStream imageProcess;
+        public static VideoStream videoStream;
+        public static ImageProcessing imageProcess;
+        public static PTGreyCamera ptg;
 
         [STAThread]
         public static void Main()
@@ -31,15 +32,11 @@ namespace CMVP
             mainGUI mainFrame = new mainGUI();
             //videoStream = new Camera();
             videoStream = new PTGreyCamera();
-            //videoStream.showCameraSettings();
+            
             imageProcess = new ImageProcessing(videoStream, cars);
             videoStream.start();
             System.Threading.Thread.Sleep(1000);
-            imageProcess.start();
-            
             Application.Run(mainFrame);
-           
-            
         }
         public static bool isSimulating()
         {

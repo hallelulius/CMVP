@@ -44,9 +44,9 @@ namespace CMVP
 
             outSteer = 0;
             float errorHeading = refHeading - heading;
-            outSteer += Kp_steer * errorHeading * Program.sampleTime;
+            outSteer += errorHeading * 1.33f; //Kp_steer * errorHeading* Program.sampleTime;
             steerIntegratorSum += errorHeading;
-            outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
+            //outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
 
             if (outThrottle > 1)outThrottle = 1;
             if (outThrottle < -1) outThrottle = -1;

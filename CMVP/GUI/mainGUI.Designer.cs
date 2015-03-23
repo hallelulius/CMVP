@@ -38,11 +38,11 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackCancelButton = new System.Windows.Forms.Button();
             this.trackApplyButton = new System.Windows.Forms.Button();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
             this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -66,6 +66,7 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.Initiate = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -78,6 +79,7 @@
             // 
             this.startSimulationButton.BackColor = System.Drawing.Color.GreenYellow;
             this.startSimulationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.startSimulationButton.Enabled = false;
             this.startSimulationButton.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
             this.startSimulationButton.FlatAppearance.BorderSize = 0;
             this.startSimulationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -472,11 +474,28 @@
             this.openFileDialog.FileName = "track.txt";
             this.openFileDialog.Filter = "Text files (*.txt)|*.txt;";
             // 
+            // Initiate
+            // 
+            this.Initiate.BackColor = System.Drawing.Color.Gold;
+            this.Initiate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Initiate.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
+            this.Initiate.FlatAppearance.BorderSize = 0;
+            this.Initiate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Initiate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Initiate.Location = new System.Drawing.Point(294, 12);
+            this.Initiate.Name = "Initiate";
+            this.Initiate.Size = new System.Drawing.Size(135, 38);
+            this.Initiate.TabIndex = 6;
+            this.Initiate.Text = "Initiate";
+            this.Initiate.UseVisualStyleBackColor = false;
+            this.Initiate.Click += new System.EventHandler(this.Initiate_Click);
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 401);
+            this.Controls.Add(this.Initiate);
             this.Controls.Add(this.trafficControlPanelLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.trafficControlBasePanel);
@@ -546,5 +565,6 @@
         private System.Windows.Forms.Button trackCancelButton;
         private System.Windows.Forms.Button trackApplyButton;
         private System.Windows.Forms.Button openPerformanceAnalyzerButton;
+        private System.Windows.Forms.Button Initiate;
     }
 }

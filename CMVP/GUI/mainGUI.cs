@@ -51,6 +51,7 @@ namespace CMVP
 
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
+            Program.imageProcess.start();
             //System.Console.WriteLine("Start simulation");
 
             //brain = new Brain();
@@ -78,6 +79,7 @@ namespace CMVP
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
+            Program.imageProcess.stop();
             //System.Console.WriteLine("Stop simulation");
             //thread.Abort();
             Console.WriteLine("Stoping simulation");
@@ -286,6 +288,16 @@ namespace CMVP
             }
         }
 
-       
+        private void ptgrey_Click(object sender, EventArgs e)
+        {
+            GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
+            ptgf.Show();
+        }
+        private void Initiate_Click(object sender, EventArgs e)
+        {
+            Program.imageProcess.initiate();
+            startSimulationButton.Enabled = true;
+
+        }
     }
 }
