@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace CMVP
         private string _s;   //The string extracted from the file.
         private int _p = 0;  //A pointer to a character in the string.
         private int _size;   //The number of vertices in the matrix being read.
-        private int[,] _m;   //The matrix containing the track.
+        private float[,] _m;   //The matrix containing the track.
 
         /// <summary>
         /// TrackImporter is used to import tracks stored as .txt files.
@@ -30,14 +31,14 @@ namespace CMVP
 
             //Get size of the matrix and create an array accordingly:
             _size = Convert.ToInt32(getNextWord());
-            _m = new int[3, _size];
+            _m = new float[3, _size];
 
             //Extract data from matrix:
             for(int i = 0; i < _size; i++)
             {
-                _m[0, i] = Convert.ToInt32(getNextWord());
-                _m[1, i] = Convert.ToInt32(getNextWord());
-                _m[2, i] = Convert.ToInt32(getNextWord());
+                _m[0, i] = (float) float.Parse(getNextWord());
+                _m[1, i] = (float) float.Parse(getNextWord());
+                _m[2, i] = (float)float.Parse(getNextWord(), CultureInfo.InvariantCulture);
                 //Console.WriteLine(_m[0, i] + "\t" + _m[1, i] + "\t" + _m[2, i]);
             }
             
@@ -90,7 +91,7 @@ namespace CMVP
         /// <summary>
         /// The matrix representing the track as an 3 * X int array, where X is the number of vertices in the track.
         /// </summary>
-        public int[,] m
+        public float[,] m
         {
             get { return _m; }
         }

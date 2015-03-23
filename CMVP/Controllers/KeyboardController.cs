@@ -39,7 +39,7 @@ namespace CMVP
             if (outThrottle < -1) outThrottle = -1;
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;
-            Console.WriteLine("Throttle: " + outThrottle);
+            //Console.WriteLine("Throttle: " + outThrottle);
         }
 
         /// <summary>

@@ -41,6 +41,7 @@ namespace CMVP
         public Boolean drawDirectionOnImg;
         public Boolean drawTriangleOnImg;
         public Boolean drawCenterOnImg;
+        Boolean first = true;
 
 
         public ImageProcessing(VideoStream videoStream, List<Car> objects)
@@ -51,6 +52,9 @@ namespace CMVP
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
+            
+            //snabb fix
+            
 
             //bör flyttas
             this.drawCirkelsOnImg = false;
@@ -141,9 +145,10 @@ namespace CMVP
                 int id = getId(centers[k], directions[k], rectangles);
                 //Console.WriteLine("ID: " + id);
                 Car car = objects.Find(x => x.ID == id);
-                if (car == null)
+                if (car == null && first)
                 {
                     objects.Add(new Car(id, new System.Drawing.Point((int)centers[k].X, (int)centers[k].Y), new System.Drawing.PointF((float)directions[k].X, (float)directions[k].Y)));
+                    first = false;
                 }
                 else
                 {

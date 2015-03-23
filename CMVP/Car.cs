@@ -82,7 +82,7 @@ namespace CMVP
             position.Remove(position.First());
 
             //Calculate orientation and add to the list and remove the oldest one.
-            PointF tempPoint = new PointF((float)Math.Cos(angle), (float)Math.Sin(angle));
+            PointF tempPoint = new PointF((float) Math.Cos(angle), (float) Math.Sin(angle));
             direction.Add(tempPoint);
             direction.Remove(direction.First());
 
@@ -157,7 +157,6 @@ namespace CMVP
 
         public void send()
         {
-            //Console.WriteLine("Throttel: " + controller.getThrottle());
             Program.com.updateThrottle(id, controller.getThrottle());
             Program.com.updateSteering(id, controller.getSteer());
         }

@@ -79,11 +79,11 @@ namespace CMVP
         private byte convertCarID(int id, String mode)
         {
             byte DAC;
-            if (id == 0 && mode.Equals("Throttle") )
+            if (id == 2 && mode.Equals("Throttle") )
             {
                 DAC = throttleA;
             }
-            else if (id == 0 && mode.Equals("Steering"))
+            else if (id == 1 && mode.Equals("Steering"))
             {
                 DAC = steeringA;
             }
@@ -158,7 +158,7 @@ namespace CMVP
             }
             else
             {
-                System.Console.WriteLine("Error in steering");
+                //System.Console.WriteLine("Error in steering");
             }
         }
 

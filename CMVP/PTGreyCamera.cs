@@ -70,6 +70,19 @@ namespace CMVP
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
  	        image = m_processedImage.bitmap;
+            TimeStamp timestamp;
+            lock (this)
+            {
+                timestamp = m_rawImage.timeStamp;
+            }
+            String statusString = String.Format(
+                "Requested frame rate: {0}Hz",
+                m_camera.GetProperty(PropertyType.FrameRate).absValue);
+            statusString = String.Format(
+                "Timestamp: {0:000}.{1:0000}.{2:0000}",
+                timestamp.cycleSeconds,
+                timestamp.cycleCount,
+                timestamp.cycleOffset);
             foreach (Panel p in panelsToUpdate)
             {
                 p.BackgroundImage = image;
