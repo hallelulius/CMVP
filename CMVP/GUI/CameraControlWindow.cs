@@ -13,7 +13,6 @@ namespace CMVP
     
     public partial class CameraControlWindow : Form
     {
-        private Timer updatePreviewTimer;
         private ImageProcessing imgProcess;
         public CameraControlWindow()
         {
@@ -70,16 +69,35 @@ namespace CMVP
         {
             imgProcess.drawCenterOnImg = checkBoxDrawCenters.Checked;
         }
-
-        private void checkBoxDrawTriangles_CheckedChanged(object sender, EventArgs e)
-        {
-            imgProcess.drawTriangleOnImg = checkBoxDrawTriangles.Checked;
-        }
-
         private void checkBoxDrawDirection_CheckedChanged(object sender, EventArgs e)
         {
             imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
 
+        }
+
+        private void checkBoxDrawId_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawCarIdOnImg = checkBoxDrawId.Checked;
+        }
+
+        private void checkBoxDrawWindows_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawWindowsOnImg = checkBoxDrawWindows.Checked;
+        }
+
+        private void checkBoxDrawRefHeading_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
+        }
+
+        private void checkBoxDrawTrack_CheckedChanged_1(object sender, EventArgs e)
+        {
+            imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Program.videoStream.showCameraSettings();
         }
 
     }

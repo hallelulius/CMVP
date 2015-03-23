@@ -31,6 +31,8 @@ namespace CMVP
         private VideoStream videoStream;
         private Bitmap img;
         private Bitmap processedImage;
+        private Bitmap croppedImg;
+        private Bitmap canvas;
         //Temporary variable until the physical filter is in use.
        // private Bitmap filteredImg;
         private List<AForge.IntPoint> Acenters;
@@ -45,14 +47,16 @@ namespace CMVP
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
-        public Boolean drawTriangleOnImg;
+        public Boolean drawWindowsOnImg;
         public Boolean drawCenterOnImg;
+        public Boolean drawTrackOnImg;
+        public Boolean drawCarIdOnImg;
+        public Boolean drawRefHeadingOnImg;
         private Boolean firstTime;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
         {
-            System.Console.WriteLine("CreatImageProcessingClass");
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
             this.imgProcesTimer.Interval=1;
@@ -71,9 +75,10 @@ namespace CMVP
 
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
-            this.drawTriangleOnImg = false;
+            this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
             this.firstTime = true;
+            System.Console.WriteLine("Image processing OK");
 
         }
         void updatePanels(object sender, EventArgs e)
@@ -86,28 +91,59 @@ namespace CMVP
         }
         Bitmap drawFeaturesOnImg()
         {
-            Console.WriteLine("draw: " + System.DateTime.Now.Millisecond);
-           
-            Bitmap canvas;
+            //Console.WriteLine("draw: " + System.DateTime.Now.Millisecond); 
             if (img != null)
                 canvas = (Bitmap)img.Clone();
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(canvas);
+
             foreach(Car car in objects)
             {
+
                 Controller controller = car.getController();
                 ControlStrategy controlStra = car.getControlStrategy();
-                
+                float dir = controller.getRefHeading();
+                if (controlStra != null)
+                {
+                    if (drawTrackOnImg)
+                    {
+                        float[,] track = car.getControlStrategy().getTrack().m;
+                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
+                        for (int i = 0; i < track.Length / 3; i++)
+                        {
+                            pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
+                        }
+                        g.DrawLines(greenPen, pointTrack);
+                    }
+                    if (drawRefHeadingOnImg)
+                    {
+                        float heading = car.getController().getRefHeading();
+                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X, car.getPosition().Y);
+                        System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
+                        g.DrawLine(bluePen, pos, pointHeading);
+                    }
+                    
+                }
+                if (drawCarIdOnImg)
+                {
+                    Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
+                    Brush b = Brushes.Lime;
+                    System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X-100, car.getPosition().Y-100);
+                    g.DrawString(car.ID.ToString(),f, b,idPos);
+                }
             }
-            if(drawTriangleOnImg)
+            if(drawWindowsOnImg)
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
-                    g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
+                    g.DrawRectangle(redPen, new Rectangle(pos.X-200,pos.Y-200, 200, 200));
                 }
             if (drawCirkelsOnImg)
+            {
+                List<Blob> cirkels = getBlobs(4, 13, img);
                 drawCirkels(cirkels);
+            }
             for (int k = 0; k < Acenters.Count; k++)
             {
                 if (drawCenterOnImg)
@@ -167,6 +203,7 @@ namespace CMVP
             }
             MessageBox.Show("The following cars where found: " + String.Join(",",intList.ToArray()));
         }
+
         public void stop()
         {
             imgProcesTimer.Stop();
@@ -190,18 +227,19 @@ namespace CMVP
         }
         private void processImage(object sender, EventArgs e)
         {
-            Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
-                Bitmap cropedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
+                //bör ta hänsyn till riktningen för minimera fönstret
+                croppedImg = img.Clone(new Rectangle(pos.X-200,pos.Y-200, 200, 200), img.PixelFormat);
 
 
                 Acenters = new List<AForge.IntPoint>();
                 Adirections = new List<AForge.Point>();
 
-                List<Blob> cirkels = getBlobs(4, 13, cropedImg);
+                List<Blob> cirkels = getBlobs(4, 13, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
@@ -226,7 +264,7 @@ namespace CMVP
                     }
                 }
             }
-            Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
+           // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
         private void drawCirkels(List<Blob> cirkels)
         {
@@ -385,8 +423,8 @@ namespace CMVP
                     triangleBase = d3;
                     triangleHight = Math.Sqrt(d1 * d1 - (d3 / 2) * (d3 / 2));
                 }
-                System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
-                System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
+                //System.Console.WriteLine("TriangleBase: " + triangleBase + " Ideal: " + idealBase);
+                //System.Console.WriteLine("TriangleHight: " + triangleHight + "Ideal: " + idealHight);
                 if (triangleHight > (idealHight - errorHight) && triangleHight < idealHight + errorHight)
                 {
                     if (triangleBase > (idealBase - errorBase) && triangleBase < idealBase + errorBase)

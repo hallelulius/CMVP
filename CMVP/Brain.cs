@@ -14,6 +14,7 @@ namespace CMVP
         
         private List<Car> cars;   
         public PerformanceAnalyzerWindow analyzer;
+        int i = 0;
 
         public void run()
         {
@@ -41,6 +42,13 @@ namespace CMVP
                 foreach (Car car in cars)
                 {
                     car.getController().updateController();
+                    if (i >= 25)
+                    {
+                        Console.WriteLine(car.getPosition());
+                        Console.WriteLine(car.getSpeed());
+                        i=0;
+                    }
+                    i++;
                 }
                 foreach (Car car in cars)
                 {
