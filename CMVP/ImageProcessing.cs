@@ -108,11 +108,11 @@ namespace CMVP
                 {
                     if (drawTrackOnImg)
                     {
-                        int[,] track = car.getControlStrategy().getTrack().m;
-                        System.Drawing.Point[] pointTrack = new System.Drawing.Point[track.Length / 3];
+                        float[,] track = car.getControlStrategy().getTrack().m;
+                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
                         for (int i = 0; i < track.Length / 3; i++)
                         {
-                            pointTrack[i] = new System.Drawing.Point(track[0, i], track[1, i]);
+                            pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
                         }
                         g.DrawLines(greenPen, pointTrack);
                     }
