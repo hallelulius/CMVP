@@ -21,5 +21,10 @@ namespace CMVP
         {
 
         }
+
+        private void pSteerNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
