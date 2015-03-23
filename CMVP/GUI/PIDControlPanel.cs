@@ -17,14 +17,9 @@ namespace CMVP
             InitializeComponent();
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void numericValueChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void pSteerNumeric_ValueChanged(object sender, EventArgs e)
-        {
-            
+            ((Button)this.ParentForm.Controls.Find("controllerApplyButton", true)[0]).Enabled = true;
         }
     }
 }

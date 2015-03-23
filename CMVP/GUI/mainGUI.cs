@@ -101,6 +101,7 @@ namespace CMVP
         private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             controllerTypePanel.Controls.Clear();
+            controllerApplyButton.Enabled = true;
 
             if (controllerTypeDropDown.SelectedIndex != -1)
             {
@@ -195,6 +196,8 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
+
+                trafficApplyButton.Enabled = false;
             }
         }
 
@@ -233,8 +236,9 @@ namespace CMVP
                         controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
                     }
                     tempCar.setController(controller);
-
                     updateControllerParametersGUI(tempCar);
+                    this.controllerApplyButton.Enabled = false;
+
                 }
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
@@ -319,6 +323,16 @@ namespace CMVP
         {
             GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
             ptgf.Show();
+        }
+
+        private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trafficApplyButton.Enabled = true;
+        }
+
+        private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            trafficApplyButton.Enabled = true;
         }
     }
 }

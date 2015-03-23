@@ -79,7 +79,7 @@
             0,
             0,
             262144});
-            this.kpSteerNumeric.ValueChanged += new System.EventHandler(this.pSteerNumeric_ValueChanged);
+            this.kpSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kpSteerLabel
             // 
@@ -107,6 +107,7 @@
             0,
             0,
             262144});
+            this.kiSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kiSteerLabel
             // 
@@ -130,7 +131,7 @@
             this.kdSteerNumeric.Name = "kdSteerNumeric";
             this.kdSteerNumeric.Size = new System.Drawing.Size(70, 20);
             this.kdSteerNumeric.TabIndex = 7;
-            this.kdSteerNumeric.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.kdSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kdSteerLabel
             // 
@@ -154,6 +155,7 @@
             this.kdThrottleNumeric.Name = "kdThrottleNumeric";
             this.kdThrottleNumeric.Size = new System.Drawing.Size(70, 20);
             this.kdThrottleNumeric.TabIndex = 13;
+            this.kdThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kdThrottleLabel
             // 
@@ -181,6 +183,7 @@
             0,
             0,
             196608});
+            this.kiThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kiThrottleLabel
             // 
@@ -208,6 +211,7 @@
             0,
             0,
             262144});
+            this.kpThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kpThrottleLabel
             // 
@@ -253,6 +257,7 @@
             0,
             0,
             262144});
+            this.tiSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // tiSteerLabel
             // 
@@ -276,6 +281,7 @@
             this.tdSteerNumeric.Name = "tdSteerNumeric";
             this.tdSteerNumeric.Size = new System.Drawing.Size(70, 20);
             this.tdSteerNumeric.TabIndex = 18;
+            this.tdSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // tiThrottleNumeric
             // 
@@ -294,6 +300,7 @@
             0,
             0,
             262144});
+            this.tiThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // tdThrottleNumeric
             // 
@@ -308,6 +315,7 @@
             this.tdThrottleNumeric.Name = "tdThrottleNumeric";
             this.tdThrottleNumeric.Size = new System.Drawing.Size(70, 20);
             this.tdThrottleNumeric.TabIndex = 20;
+            this.tdThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // tdSteerLabel
             // 

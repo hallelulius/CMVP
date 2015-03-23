@@ -38,11 +38,11 @@
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
-            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackCancelButton = new System.Windows.Forms.Button();
             this.trackApplyButton = new System.Windows.Forms.Button();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
             this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
+            this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -66,12 +66,19 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.CarID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Xpos = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Ypos = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Velocity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Heading = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
             this.controllerBasePanel.SuspendLayout();
             this.trafficControlBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // startSimulationButton
@@ -140,6 +147,7 @@
             // 
             // numberOfCarsNumeric
             // 
+            this.numberOfCarsNumeric.Enabled = false;
             this.numberOfCarsNumeric.Location = new System.Drawing.Point(91, 14);
             this.numberOfCarsNumeric.Name = "numberOfCarsNumeric";
             this.numberOfCarsNumeric.Size = new System.Drawing.Size(43, 20);
@@ -416,6 +424,7 @@
             // trafficMaxSpeedNumeric
             // 
             this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
+            this.trafficMaxSpeedNumeric.Enabled = false;
             this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
             this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
             10000,
@@ -430,6 +439,7 @@
             0,
             0,
             0});
+            this.trafficMaxSpeedNumeric.ValueChanged += new System.EventHandler(this.trafficMaxSpeedNumeric_ValueChanged);
             // 
             // trafficMaxSpeedLabel
             // 
@@ -442,9 +452,9 @@
             // 
             // controlStrategyTypePanel
             // 
-            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 117);
+            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 93);
             this.controlStrategyTypePanel.Name = "controlStrategyTypePanel";
-            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 114);
+            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 138);
             this.controlStrategyTypePanel.TabIndex = 7;
             // 
             // controlStrategyControlStrategyLabel
@@ -466,17 +476,62 @@
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
             this.controlStrategyControlStrategyDropDown.TabIndex = 4;
+            this.controlStrategyControlStrategyDropDown.SelectedIndexChanged += new System.EventHandler(this.controlStrategyControlStrategyDropDown_SelectedIndexChanged);
             // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "track.txt";
             this.openFileDialog.Filter = "Text files (*.txt)|*.txt;";
             // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.CarID,
+            this.Xpos,
+            this.Ypos,
+            this.Velocity,
+            this.Heading});
+            this.dataGridView.Location = new System.Drawing.Point(12, 394);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersVisible = false;
+            this.dataGridView.RowTemplate.ReadOnly = true;
+            this.dataGridView.Size = new System.Drawing.Size(819, 178);
+            this.dataGridView.TabIndex = 6;
+            // 
+            // CarID
+            // 
+            this.CarID.HeaderText = "Car ID";
+            this.CarID.Name = "CarID";
+            // 
+            // Xpos
+            // 
+            this.Xpos.HeaderText = "X pos";
+            this.Xpos.Name = "Xpos";
+            // 
+            // Ypos
+            // 
+            this.Ypos.HeaderText = "Y pos";
+            this.Ypos.Name = "Ypos";
+            // 
+            // Velocity
+            // 
+            this.Velocity.HeaderText = "Velocity";
+            this.Velocity.Name = "Velocity";
+            // 
+            // Heading
+            // 
+            this.Heading.HeaderText = "Heading (degrees)";
+            this.Heading.Name = "Heading";
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 401);
+            this.ClientSize = new System.Drawing.Size(843, 584);
+            this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.trafficControlPanelLabel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.trafficControlBasePanel);
@@ -500,6 +555,7 @@
             this.trafficControlBasePanel.ResumeLayout(false);
             this.trafficControlBasePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -546,5 +602,11 @@
         private System.Windows.Forms.Button trackCancelButton;
         private System.Windows.Forms.Button trackApplyButton;
         private System.Windows.Forms.Button openPerformanceAnalyzerButton;
+        private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CarID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Xpos;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Ypos;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Velocity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Heading;
     }
 }
