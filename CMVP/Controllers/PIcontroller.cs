@@ -53,5 +53,41 @@ namespace CMVP
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;
         }
+
+        public float KiSteer
+        {
+            get { return Ki_steer; }
+            set { Ki_steer = value; }
+        }
+
+        public float KiThrottle
+        {
+            get { return Ki_throttle; }
+            set { Ki_throttle = value; }
+        }
+
+        public float KpSteer
+        {
+            get { return Kp_steer; }
+            set { Kp_steer = value; }
+        }
+
+        public float KpThrottle
+        {
+            get { return Kp_throttle; }
+            set { Kp_throttle = value; }
+        }
+
+        public float TiSteer
+        {
+            get { return Ti_steer; }
+            set { Ti_steer = value; }
+        }
+
+        public float TiThrottle
+        {
+            get { return Ti_throttle; }
+            set { Ti_throttle = value; }
+        }
     }
 }

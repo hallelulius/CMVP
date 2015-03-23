@@ -103,8 +103,12 @@ namespace CMVP
         /// <param name="dir"> The new direction of the car. </param>
         public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir)
         {
-            float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
-            this.setPositionAndOrientation(pos, refAngle);
+            float tempAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
+            this.setPositionAndOrientation(pos, tempAngle);
+        }
+        public float getAngle()
+        {
+            return (float) Math.Atan2(position.First().Y,position.First().X);
         }
         /// <summary>
         /// Is true if the car was found by the image processing.

@@ -18,14 +18,17 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread thread;
+        private Thread brainThread, dataGridThread;
         private List<Track> tracks = new List<Track>();
+        private int dataGridUpdateTime = 1000;
 
         public mainGUI()
         {
             InitializeComponent();
             loadTracks();
-            thread = new Thread(new ThreadStart(brain.run));
+            brainThread = new Thread(new ThreadStart(brain.run));
+            dataGridThread = new Thread(new ThreadStart(updateDataGrid));
+            dataGridThread.Start();
         }
 
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
@@ -59,15 +62,15 @@ namespace CMVP
             //thread.Start();
             
             //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-            switch (thread.ThreadState)
+            switch (brainThread.ThreadState)
             {
                 case System.Threading.ThreadState.Unstarted:
-                    thread.Start();
+                    brainThread.Start();
                     Console.WriteLine("Starting simulation...");
                     break;
 
                 case System.Threading.ThreadState.Suspended:
-                    thread.Resume();
+                    brainThread.Resume();
                     Console.WriteLine("Resuming simulation...");
                     break;
 
@@ -85,7 +88,7 @@ namespace CMVP
             Console.WriteLine("Stoping simulation");
             try
             {
-                thread.Suspend();
+                brainThread.Suspend();
             }
             catch (Exception exception)
             {
@@ -103,6 +106,7 @@ namespace CMVP
         private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             controllerTypePanel.Controls.Clear();
+            controllerApplyButton.Enabled = true;
 
             if (controllerTypeDropDown.SelectedIndex != -1)
             {
@@ -197,6 +201,8 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
+
+                trafficApplyButton.Enabled = false;
             }
         }
 
@@ -224,7 +230,20 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
                 {
-                    tempCar.setController(new PIController());
+                    PIController controller = new PIController();
+                    foreach (Control ctrl in controllerTypePanel.Controls)
+                    {
+                        controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                        controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                        controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                        controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                        controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
+                        controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                    }
+                    tempCar.setController(controller);
+                    updateControllerParametersGUI(tempCar);
+                    this.controllerApplyButton.Enabled = false;
+
                 }
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
@@ -285,21 +304,81 @@ namespace CMVP
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
 
                 controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
+                updateControllerParametersGUI(tempCar);
             }
         }
 
-        /**
+        private void updateControllerParametersGUI(Car car)
+        {
+            foreach (Control ctrl in controllerTypePanel.Controls)
+            {
+                if (car.getController().getName() == "PID")
+                {
+                    ((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiThrottle);
+                }
+            }
+        }
+
         private void ptgrey_Click(object sender, EventArgs e)
         {
-            GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
-            ptgf.Show();
+            //GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
+           // ptgf.Show();
         }
-         **/
+
         private void Initiate_Click(object sender, EventArgs e)
         {
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
+            if (Program.cars.Count > 0)
+                dataGridView.Rows.Add(Program.cars.Count);
+        }
 
+        private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trafficApplyButton.Enabled = true;
+        }
+
+        private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            trafficApplyButton.Enabled = true;
+        }
+
+        private void updateDataGrid()
+        {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            long elapsedTime;
+            Console.WriteLine("Started data grid update thread!");
+
+            while(true)
+            {
+                Console.WriteLine("Updating data grid...");
+                elapsedTime = timer.ElapsedMilliseconds;
+                foreach(DataGridViewRow row in dataGridView.Rows)
+                {
+                    Car car = Program.cars.ElementAt(row.Index);
+
+                    row.Cells[0].Value = car.ID;
+                    row.Cells[1].Value = car.getPosition().X;
+                    row.Cells[2].Value = car.getPosition().Y;
+                    row.Cells[3].Value = car.getSpeed();
+                    row.Cells[4].Value = car.getAngle();
+                    row.Cells[5].Value = car.getController().getSteer();
+                    row.Cells[6].Value = car.getController().getThrottle();
+                }
+
+                Thread.Sleep(dataGridUpdateTime - (int)(timer.ElapsedMilliseconds - elapsedTime));
+            }
+        }
+
+        private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
         }
     }
 }
