@@ -77,6 +77,7 @@
             this.checkBoxDrawTrack.TabIndex = 3;
             this.checkBoxDrawTrack.Text = "Draw tracks";
             this.checkBoxDrawTrack.UseVisualStyleBackColor = true;
+            this.checkBoxDrawTrack.CheckedChanged += new System.EventHandler(this.checkBoxDrawTrack_CheckedChanged_1);
             // 
             // videoStreamPanel
             // 
@@ -134,6 +135,7 @@
             this.checkBoxDrawRefHeading.TabIndex = 10;
             this.checkBoxDrawRefHeading.Text = "Draw reference of headings";
             this.checkBoxDrawRefHeading.UseVisualStyleBackColor = true;
+            this.checkBoxDrawRefHeading.CheckedChanged += new System.EventHandler(this.checkBoxDrawRefHeading_CheckedChanged);
             // 
             // checkBoxDrawDirection
             // 
