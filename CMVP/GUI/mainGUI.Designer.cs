@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.startSimulationButton = new System.Windows.Forms.Button();
-            this.stopSimulationButton = new System.Windows.Forms.Button();
             this.simulationBasePanel = new System.Windows.Forms.Panel();
             this.openPerformanceAnalyzerButton = new System.Windows.Forms.Button();
             this.openCameraControlButton = new System.Windows.Forms.Button();
@@ -66,13 +65,18 @@
             this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.Initiate = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.stopSimulationButton = new System.Windows.Forms.Button();
+            this.Initiate = new System.Windows.Forms.Button();
+            this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.CarID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Xpos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ypos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Velocity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Heading = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SteeringControlSignal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ThrottleControlSignal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -80,6 +84,7 @@
             this.trafficControlBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTimeNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // startSimulationButton
@@ -98,22 +103,6 @@
             this.startSimulationButton.Text = "Start";
             this.startSimulationButton.UseVisualStyleBackColor = false;
             this.startSimulationButton.Click += new System.EventHandler(this.startSimulationButton_Click);
-            // 
-            // stopSimulationButton
-            // 
-            this.stopSimulationButton.BackColor = System.Drawing.Color.Crimson;
-            this.stopSimulationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.stopSimulationButton.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
-            this.stopSimulationButton.FlatAppearance.BorderSize = 0;
-            this.stopSimulationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stopSimulationButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopSimulationButton.Location = new System.Drawing.Point(153, 12);
-            this.stopSimulationButton.Name = "stopSimulationButton";
-            this.stopSimulationButton.Size = new System.Drawing.Size(135, 38);
-            this.stopSimulationButton.TabIndex = 1;
-            this.stopSimulationButton.Text = "Stop";
-            this.stopSimulationButton.UseVisualStyleBackColor = false;
-            this.stopSimulationButton.Click += new System.EventHandler(this.stopSimulationButton_Click);
             // 
             // simulationBasePanel
             // 
@@ -495,13 +484,74 @@
             this.Xpos,
             this.Ypos,
             this.Velocity,
-            this.Heading});
-            this.dataGridView.Location = new System.Drawing.Point(12, 394);
+            this.Heading,
+            this.SteeringControlSignal,
+            this.ThrottleControlSignal});
+            this.dataGridView.Location = new System.Drawing.Point(11, 419);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowTemplate.ReadOnly = true;
-            this.dataGridView.Size = new System.Drawing.Size(819, 178);
+            this.dataGridView.Size = new System.Drawing.Size(819, 153);
             this.dataGridView.TabIndex = 6;
+            // 
+            // stopSimulationButton
+            // 
+            this.stopSimulationButton.BackColor = System.Drawing.Color.Crimson;
+            this.stopSimulationButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.stopSimulationButton.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
+            this.stopSimulationButton.FlatAppearance.BorderSize = 0;
+            this.stopSimulationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stopSimulationButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.stopSimulationButton.Location = new System.Drawing.Point(153, 12);
+            this.stopSimulationButton.Name = "stopSimulationButton";
+            this.stopSimulationButton.Size = new System.Drawing.Size(135, 38);
+            this.stopSimulationButton.TabIndex = 1;
+            this.stopSimulationButton.Text = "Stop";
+            this.stopSimulationButton.UseVisualStyleBackColor = false;
+            this.stopSimulationButton.Click += new System.EventHandler(this.stopSimulationButton_Click);
+            // 
+            // Initiate
+            // 
+            this.Initiate.BackColor = System.Drawing.Color.Gold;
+            this.Initiate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Initiate.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
+            this.Initiate.FlatAppearance.BorderSize = 0;
+            this.Initiate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Initiate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Initiate.Location = new System.Drawing.Point(294, 12);
+            this.Initiate.Name = "Initiate";
+            this.Initiate.Size = new System.Drawing.Size(135, 38);
+            this.Initiate.TabIndex = 7;
+            this.Initiate.Text = "Initiate";
+            this.Initiate.UseVisualStyleBackColor = false;
+            this.Initiate.Click += new System.EventHandler(this.Initiate_Click);
+            // 
+            // dataGridTimeNumeric
+            // 
+            this.dataGridTimeNumeric.Location = new System.Drawing.Point(147, 393);
+            this.dataGridTimeNumeric.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.dataGridTimeNumeric.Name = "dataGridTimeNumeric";
+            this.dataGridTimeNumeric.Size = new System.Drawing.Size(64, 20);
+            this.dataGridTimeNumeric.TabIndex = 9;
+            this.dataGridTimeNumeric.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.dataGridTimeNumeric.ValueChanged += new System.EventHandler(this.dataGridTimeNumeric_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 395);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(133, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Data grid update time (ms):";
             // 
             // CarID
             // 
@@ -528,27 +578,24 @@
             this.Heading.HeaderText = "Heading (degrees)";
             this.Heading.Name = "Heading";
             // 
-            // Initiate
+            // SteeringControlSignal
             // 
-            this.Initiate.BackColor = System.Drawing.Color.Gold;
-            this.Initiate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.Initiate.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
-            this.Initiate.FlatAppearance.BorderSize = 0;
-            this.Initiate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Initiate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Initiate.Location = new System.Drawing.Point(294, 12);
-            this.Initiate.Name = "Initiate";
-            this.Initiate.Size = new System.Drawing.Size(135, 38);
-            this.Initiate.TabIndex = 6;
-            this.Initiate.Text = "Initiate";
-            this.Initiate.UseVisualStyleBackColor = false;
-            this.Initiate.Click += new System.EventHandler(this.Initiate_Click);
+            this.SteeringControlSignal.HeaderText = "Steering Control Signal";
+            this.SteeringControlSignal.Name = "SteeringControlSignal";
+            // 
+            // ThrottleControlSignal
+            // 
+            this.ThrottleControlSignal.HeaderText = "Throttle control signal";
+            this.ThrottleControlSignal.Name = "ThrottleControlSignal";
             // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 584);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.dataGridTimeNumeric);
+            this.Controls.Add(this.Initiate);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.trafficControlPanelLabel);
             this.Controls.Add(this.label3);
@@ -574,6 +621,7 @@
             this.trafficControlBasePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTimeNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -583,7 +631,6 @@
         #endregion
 
         private System.Windows.Forms.Button startSimulationButton;
-        private System.Windows.Forms.Button stopSimulationButton;
         private System.Windows.Forms.Panel simulationBasePanel;
         private System.Windows.Forms.Label simulationPanelLabel;
         private System.Windows.Forms.Label trackPanelLabel;
@@ -621,11 +668,16 @@
         private System.Windows.Forms.Button trackApplyButton;
         private System.Windows.Forms.Button openPerformanceAnalyzerButton;
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.Button stopSimulationButton;
+        private System.Windows.Forms.Button Initiate;
+        private System.Windows.Forms.NumericUpDown dataGridTimeNumeric;
+        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn CarID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Xpos;
         private System.Windows.Forms.DataGridViewTextBoxColumn Ypos;
         private System.Windows.Forms.DataGridViewTextBoxColumn Velocity;
         private System.Windows.Forms.DataGridViewTextBoxColumn Heading;
-        private System.Windows.Forms.Button Initiate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SteeringControlSignal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ThrottleControlSignal;
     }
 }

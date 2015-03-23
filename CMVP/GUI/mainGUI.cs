@@ -18,14 +18,17 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread thread;
+        private Thread brainThread, dataGridThread;
         private List<Track> tracks = new List<Track>();
+        private int dataGridUpdateTime = 1000;
 
         public mainGUI()
         {
             InitializeComponent();
             loadTracks();
-            thread = new Thread(new ThreadStart(brain.run));
+            brainThread = new Thread(new ThreadStart(brain.run));
+            dataGridThread = new Thread(new ThreadStart(updateDataGrid));
+            dataGridThread.Start();
         }
 
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
@@ -59,15 +62,15 @@ namespace CMVP
             //thread.Start();
             
             //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-            switch (thread.ThreadState)
+            switch (brainThread.ThreadState)
             {
                 case System.Threading.ThreadState.Unstarted:
-                    thread.Start();
+                    brainThread.Start();
                     Console.WriteLine("Starting simulation...");
                     break;
 
                 case System.Threading.ThreadState.Suspended:
-                    thread.Resume();
+                    brainThread.Resume();
                     Console.WriteLine("Resuming simulation...");
                     break;
 
@@ -85,7 +88,7 @@ namespace CMVP
             Console.WriteLine("Stoping simulation");
             try
             {
-                thread.Suspend();
+                brainThread.Suspend();
             }
             catch (Exception exception)
             {
@@ -331,7 +334,8 @@ namespace CMVP
         {
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
-
+            if (Program.cars.Count > 0)
+                dataGridView.Rows.Add(Program.cars.Count);
         }
 
         private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -342,6 +346,39 @@ namespace CMVP
         private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
         {
             trafficApplyButton.Enabled = true;
+        }
+
+        private void updateDataGrid()
+        {
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            long elapsedTime;
+            Console.WriteLine("Started data grid update thread!");
+
+            while(true)
+            {
+                Console.WriteLine("Updating data grid...");
+                elapsedTime = timer.ElapsedMilliseconds;
+                foreach(DataGridViewRow row in dataGridView.Rows)
+                {
+                    Car car = Program.cars.ElementAt(row.Index);
+
+                    row.Cells[0].Value = car.ID;
+                    row.Cells[1].Value = car.getPosition().X;
+                    row.Cells[2].Value = car.getPosition().Y;
+                    row.Cells[3].Value = car.getSpeed();
+                    row.Cells[4].Value = Math.Acos(car.getDirection().X);
+                    row.Cells[5].Value = car.getController().getSteer();
+                    row.Cells[6].Value = car.getController().getThrottle();
+                }
+
+                Thread.Sleep(dataGridUpdateTime - (int)(timer.ElapsedMilliseconds - elapsedTime));
+            }
+        }
+
+        private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
         }
     }
 }
