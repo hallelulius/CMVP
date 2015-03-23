@@ -47,8 +47,11 @@ namespace CMVP
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
-        public Boolean drawTriangleOnImg;
+        public Boolean drawWindowsOnImg;
         public Boolean drawCenterOnImg;
+        public Boolean drawTrackOnImg;
+        public Boolean drawCarIdOnImg;
+        public Boolean drawRefHeadingOnImg;
         private Boolean firstTime;
         
 
@@ -72,7 +75,7 @@ namespace CMVP
 
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
-            this.drawTriangleOnImg = false;
+            this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
             this.firstTime = true;
             System.Console.WriteLine("Image processing OK");
@@ -94,14 +97,53 @@ namespace CMVP
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(canvas);
-            if(drawTriangleOnImg)
+
+            foreach(Car car in objects)
+            {
+
+                Controller controller = car.getController();
+                ControlStrategy controlStra = car.getControlStrategy();
+                float dir = controller.getRefHeading();
+                if (controlStra != null)
+                {
+                    if (drawTrackOnImg)
+                    {
+                        float[,] track = car.getControlStrategy().getTrack().m;
+                        System.Drawing.Point[] pointTrack = new System.Drawing.Point[track.Length / 3];
+                        for (int i = 0; i < track.Length / 3; i++)
+                        {
+                            pointTrack[i] = new System.Drawing.Point((int)track[0, i], (int)track[1, i]);
+                        }
+                        g.DrawLines(greenPen, pointTrack);
+                    }
+                    if (drawRefHeadingOnImg)
+                    {
+                        float heading = car.getController().getRefHeading();
+                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X, car.getPosition().Y);
+                        System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
+                        g.DrawLine(bluePen, pos, pointHeading);
+                    }
+                    
+                }
+                if (drawCarIdOnImg)
+                {
+                    Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
+                    Brush b = Brushes.Lime;
+                    System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X-100, car.getPosition().Y-100);
+                    g.DrawString(car.ID.ToString(),f, b,idPos);
+                }
+            }
+            if(drawWindowsOnImg)
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
                     g.DrawRectangle(redPen, new Rectangle(pos.X-200,pos.Y-200, 200, 200));
                 }
             if (drawCirkelsOnImg)
+            {
+                List<Blob> cirkels = getBlobs(4, 13, img);
                 drawCirkels(cirkels);
+            }
             for (int k = 0; k < Acenters.Count; k++)
             {
                 if (drawCenterOnImg)

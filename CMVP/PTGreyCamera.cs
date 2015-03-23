@@ -94,7 +94,11 @@ namespace CMVP
                     Debug.WriteLine("Error: " + ex.Message);
                     continue;
                 }
-
+                catch (NullReferenceException) {
+                    Console.WriteLine("No Camera found");
+                    stop();
+                    break;
+                }
                 lock (this)
                 {
                     //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
@@ -212,6 +216,7 @@ namespace CMVP
          public void stop()
         {
             m_grabImages = false;
+            Console.WriteLine("GrabLoop stopped");
         }
         public void pushDestination(Panel panel)
         {
