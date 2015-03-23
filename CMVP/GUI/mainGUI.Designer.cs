@@ -122,7 +122,7 @@
             // 
             // openPerformanceAnalyzerButton
             // 
-            this.openPerformanceAnalyzerButton.Location = new System.Drawing.Point(21, 75);
+            this.openPerformanceAnalyzerButton.Location = new System.Drawing.Point(21, 73);
             this.openPerformanceAnalyzerButton.Name = "openPerformanceAnalyzerButton";
             this.openPerformanceAnalyzerButton.Size = new System.Drawing.Size(157, 23);
             this.openPerformanceAnalyzerButton.TabIndex = 8;

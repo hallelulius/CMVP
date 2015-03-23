@@ -138,12 +138,6 @@
     <Compile Include="GUI\PIControlPanel.Designer.cs">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\PTGreyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\PTGreyForm.Designer.cs">
-      <DependentUpon>PTGreyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="PTGreyCamera.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
@@ -319,9 +313,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SeriesControl.resx">
       <DependentUpon>SeriesControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\PTGreyForm.resx">
-      <DependentUpon>PTGreyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

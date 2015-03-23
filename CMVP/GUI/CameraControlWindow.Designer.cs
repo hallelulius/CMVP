@@ -36,6 +36,7 @@
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cameraSettings = new System.Windows.Forms.Button();
             this.checkBoxDrawRefHeading = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawDirection = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
@@ -112,6 +113,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cameraSettings);
             this.groupBox2.Controls.Add(this.checkBoxDrawRefHeading);
             this.groupBox2.Controls.Add(this.checkBoxDrawDirection);
             this.groupBox2.Controls.Add(this.checkBoxDrawWindows);
@@ -125,6 +127,16 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
+            // 
+            // cameraSettings
+            // 
+            this.cameraSettings.Location = new System.Drawing.Point(17, 218);
+            this.cameraSettings.Name = "cameraSettings";
+            this.cameraSettings.Size = new System.Drawing.Size(156, 23);
+            this.cameraSettings.TabIndex = 10;
+            this.cameraSettings.Text = "Show Camera Settings";
+            this.cameraSettings.UseVisualStyleBackColor = true;
+            this.cameraSettings.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkBoxDrawRefHeading
             // 
@@ -214,6 +226,7 @@
         private System.Windows.Forms.CheckBox checkBoxDrawDirection;
         private System.Windows.Forms.CheckBox checkBoxDrawWindows;
         private System.Windows.Forms.CheckBox checkBoxDrawCenters;
+        private System.Windows.Forms.Button cameraSettings;
         private System.Windows.Forms.CheckBox checkBoxDrawRefHeading;
     }
 }

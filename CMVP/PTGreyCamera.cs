@@ -29,6 +29,7 @@ namespace CMVP
         private BackgroundWorker m_grabThread;
         private Bitmap image;
         private List<Panel> panelsToUpdate;
+        private TimeStamp timestamp;
 
         public PTGreyCamera()
         {
@@ -41,13 +42,16 @@ namespace CMVP
         }
         ~PTGreyCamera()
         {
+            if (m_camera != null)
+            {
+                m_camera.Dispose();
+            }
             m_rawImage.Dispose();
-            m_camera.Dispose();
             m_processedImage.Dispose();
             m_camCtlDlg.Disconnect();
             m_grabThreadExited.Dispose();
-            Console.WriteLine("Closing Camera");
-            
+            disconnect();
+            Console.WriteLine("Closing Camera");      
         }
 
         public Bitmap getImage()
@@ -67,6 +71,7 @@ namespace CMVP
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
  	        image = m_processedImage.bitmap;
+            //timestamp needs to be send somewhere somehow
             foreach (Panel p in panelsToUpdate)
             {
                 p.BackgroundImage = image;
@@ -82,6 +87,7 @@ namespace CMVP
                 try
                 {
                     m_camera.RetrieveBuffer(m_rawImage);
+
                 }
                 catch (FC2Exception ex)
                 {
@@ -93,6 +99,7 @@ namespace CMVP
                 {
                     //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
+                    timestamp = m_rawImage.timeStamp;
                 }
   
                 try
@@ -101,7 +108,9 @@ namespace CMVP
                 }
                 catch (InvalidOperationException ex)
                 {
-                    //dont care
+                    Debug.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("Worker report failed!");
+                    continue;
                 }
                 
 
@@ -147,11 +156,19 @@ namespace CMVP
                         m_camera.StartCapture();
 
                         m_grabImages = true;
+                        System.Console.WriteLine("Camera OK");
 
                     }
                     catch (FC2Exception ex)
                     {
                         Debug.WriteLine("Failed to load form successfully: " + ex.Message);
+                        Environment.ExitCode = -1;
+                        Application.Exit();
+                        return;
+                    }
+                    catch (IndexOutOfRangeException ex)
+                    {
+                        Console.WriteLine("No camera found: " + ex.Message);
                         Environment.ExitCode = -1;
                         Application.Exit();
                         return;
@@ -187,6 +204,10 @@ namespace CMVP
         {
             m_grabImages = true;
             StartGrabLoop();
+        }
+        public void showCameraSettings()
+        {
+            m_camCtlDlg.Show();
         }
          public void stop()
         {

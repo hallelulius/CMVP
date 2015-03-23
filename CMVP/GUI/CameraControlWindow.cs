@@ -13,7 +13,6 @@ namespace CMVP
     
     public partial class CameraControlWindow : Form
     {
-        private Timer updatePreviewTimer;
         private ImageProcessing imgProcess;
         public CameraControlWindow()
         {
@@ -96,8 +95,10 @@ namespace CMVP
             imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
         }
 
-
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Program.videoStream.showCameraSettings();
+        }
 
     }
 }
