@@ -30,15 +30,15 @@
         {
             this.drawVideoRadioButton = new System.Windows.Forms.RadioButton();
             this.processedVideoRadioButton = new System.Windows.Forms.RadioButton();
-            this.drawDetectedFeaturesCheckBox = new System.Windows.Forms.CheckBox();
-            this.drawTrackCheckBox = new System.Windows.Forms.CheckBox();
+            this.checkBoxDrawTrack = new System.Windows.Forms.CheckBox();
             this.videoStreamPanel = new System.Windows.Forms.Panel();
-            this.drawCarIDCheckBox = new System.Windows.Forms.CheckBox();
+            this.checkBoxDrawId = new System.Windows.Forms.CheckBox();
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxDrawRefHeading = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawDirection = new System.Windows.Forms.CheckBox();
-            this.checkBoxDrawTriangles = new System.Windows.Forms.CheckBox();
+            this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
@@ -68,25 +68,15 @@
             this.processedVideoRadioButton.UseVisualStyleBackColor = true;
             this.processedVideoRadioButton.CheckedChanged += new System.EventHandler(this.processedVideoRadioButton_CheckedChanged);
             // 
-            // drawDetectedFeaturesCheckBox
+            // checkBoxDrawTrack
             // 
-            this.drawDetectedFeaturesCheckBox.AutoSize = true;
-            this.drawDetectedFeaturesCheckBox.Location = new System.Drawing.Point(6, 65);
-            this.drawDetectedFeaturesCheckBox.Name = "drawDetectedFeaturesCheckBox";
-            this.drawDetectedFeaturesCheckBox.Size = new System.Drawing.Size(137, 17);
-            this.drawDetectedFeaturesCheckBox.TabIndex = 2;
-            this.drawDetectedFeaturesCheckBox.Text = "Draw detected features";
-            this.drawDetectedFeaturesCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // drawTrackCheckBox
-            // 
-            this.drawTrackCheckBox.AutoSize = true;
-            this.drawTrackCheckBox.Location = new System.Drawing.Point(6, 19);
-            this.drawTrackCheckBox.Name = "drawTrackCheckBox";
-            this.drawTrackCheckBox.Size = new System.Drawing.Size(78, 17);
-            this.drawTrackCheckBox.TabIndex = 3;
-            this.drawTrackCheckBox.Text = "Draw track";
-            this.drawTrackCheckBox.UseVisualStyleBackColor = true;
+            this.checkBoxDrawTrack.AutoSize = true;
+            this.checkBoxDrawTrack.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxDrawTrack.Name = "checkBoxDrawTrack";
+            this.checkBoxDrawTrack.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxDrawTrack.TabIndex = 3;
+            this.checkBoxDrawTrack.Text = "Draw tracks";
+            this.checkBoxDrawTrack.UseVisualStyleBackColor = true;
             // 
             // videoStreamPanel
             // 
@@ -96,15 +86,16 @@
             this.videoStreamPanel.TabIndex = 4;
             this.videoStreamPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.videoStreamPanel_Paint);
             // 
-            // drawCarIDCheckBox
+            // checkBoxDrawId
             // 
-            this.drawCarIDCheckBox.AutoSize = true;
-            this.drawCarIDCheckBox.Location = new System.Drawing.Point(6, 42);
-            this.drawCarIDCheckBox.Name = "drawCarIDCheckBox";
-            this.drawCarIDCheckBox.Size = new System.Drawing.Size(83, 17);
-            this.drawCarIDCheckBox.TabIndex = 5;
-            this.drawCarIDCheckBox.Text = "Draw car ID";
-            this.drawCarIDCheckBox.UseVisualStyleBackColor = true;
+            this.checkBoxDrawId.AutoSize = true;
+            this.checkBoxDrawId.Location = new System.Drawing.Point(6, 42);
+            this.checkBoxDrawId.Name = "checkBoxDrawId";
+            this.checkBoxDrawId.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxDrawId.TabIndex = 5;
+            this.checkBoxDrawId.Text = "Draw car ID";
+            this.checkBoxDrawId.UseVisualStyleBackColor = true;
+            this.checkBoxDrawId.CheckedChanged += new System.EventHandler(this.checkBoxDrawId_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -120,13 +111,13 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxDrawRefHeading);
             this.groupBox2.Controls.Add(this.checkBoxDrawDirection);
-            this.groupBox2.Controls.Add(this.checkBoxDrawTriangles);
+            this.groupBox2.Controls.Add(this.checkBoxDrawWindows);
             this.groupBox2.Controls.Add(this.checkBoxDrawCenters);
             this.groupBox2.Controls.Add(this.checkBoxDrawCirkels);
-            this.groupBox2.Controls.Add(this.drawDetectedFeaturesCheckBox);
-            this.groupBox2.Controls.Add(this.drawCarIDCheckBox);
-            this.groupBox2.Controls.Add(this.drawTrackCheckBox);
+            this.groupBox2.Controls.Add(this.checkBoxDrawId);
+            this.groupBox2.Controls.Add(this.checkBoxDrawTrack);
             this.groupBox2.Location = new System.Drawing.Point(12, 87);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(196, 291);
@@ -134,10 +125,20 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
             // 
+            // checkBoxDrawRefHeading
+            // 
+            this.checkBoxDrawRefHeading.AutoSize = true;
+            this.checkBoxDrawRefHeading.Location = new System.Drawing.Point(6, 157);
+            this.checkBoxDrawRefHeading.Name = "checkBoxDrawRefHeading";
+            this.checkBoxDrawRefHeading.Size = new System.Drawing.Size(157, 17);
+            this.checkBoxDrawRefHeading.TabIndex = 10;
+            this.checkBoxDrawRefHeading.Text = "Draw reference of headings";
+            this.checkBoxDrawRefHeading.UseVisualStyleBackColor = true;
+            // 
             // checkBoxDrawDirection
             // 
             this.checkBoxDrawDirection.AutoSize = true;
-            this.checkBoxDrawDirection.Location = new System.Drawing.Point(6, 159);
+            this.checkBoxDrawDirection.Location = new System.Drawing.Point(6, 134);
             this.checkBoxDrawDirection.Name = "checkBoxDrawDirection";
             this.checkBoxDrawDirection.Size = new System.Drawing.Size(144, 17);
             this.checkBoxDrawDirection.TabIndex = 9;
@@ -145,21 +146,21 @@
             this.checkBoxDrawDirection.UseVisualStyleBackColor = true;
             this.checkBoxDrawDirection.CheckedChanged += new System.EventHandler(this.checkBoxDrawDirection_CheckedChanged);
             // 
-            // checkBoxDrawTriangles
+            // checkBoxDrawWindows
             // 
-            this.checkBoxDrawTriangles.AutoSize = true;
-            this.checkBoxDrawTriangles.Location = new System.Drawing.Point(6, 135);
-            this.checkBoxDrawTriangles.Name = "checkBoxDrawTriangles";
-            this.checkBoxDrawTriangles.Size = new System.Drawing.Size(138, 17);
-            this.checkBoxDrawTriangles.TabIndex = 8;
-            this.checkBoxDrawTriangles.Text = "Draw detected triangles";
-            this.checkBoxDrawTriangles.UseVisualStyleBackColor = true;
-            this.checkBoxDrawTriangles.CheckedChanged += new System.EventHandler(this.checkBoxDrawTriangles_CheckedChanged);
+            this.checkBoxDrawWindows.AutoSize = true;
+            this.checkBoxDrawWindows.Location = new System.Drawing.Point(6, 111);
+            this.checkBoxDrawWindows.Name = "checkBoxDrawWindows";
+            this.checkBoxDrawWindows.Size = new System.Drawing.Size(98, 17);
+            this.checkBoxDrawWindows.TabIndex = 8;
+            this.checkBoxDrawWindows.Text = "Draw Windows";
+            this.checkBoxDrawWindows.UseVisualStyleBackColor = true;
+            this.checkBoxDrawWindows.CheckedChanged += new System.EventHandler(this.checkBoxDrawWindows_CheckedChanged);
             // 
             // checkBoxDrawCenters
             // 
             this.checkBoxDrawCenters.AutoSize = true;
-            this.checkBoxDrawCenters.Location = new System.Drawing.Point(6, 111);
+            this.checkBoxDrawCenters.Location = new System.Drawing.Point(6, 88);
             this.checkBoxDrawCenters.Name = "checkBoxDrawCenters";
             this.checkBoxDrawCenters.Size = new System.Drawing.Size(137, 17);
             this.checkBoxDrawCenters.TabIndex = 7;
@@ -170,7 +171,7 @@
             // checkBoxDrawCirkels
             // 
             this.checkBoxDrawCirkels.AutoSize = true;
-            this.checkBoxDrawCirkels.Location = new System.Drawing.Point(6, 88);
+            this.checkBoxDrawCirkels.Location = new System.Drawing.Point(6, 65);
             this.checkBoxDrawCirkels.Name = "checkBoxDrawCirkels";
             this.checkBoxDrawCirkels.Size = new System.Drawing.Size(129, 17);
             this.checkBoxDrawCirkels.TabIndex = 6;
@@ -201,16 +202,16 @@
 
         private System.Windows.Forms.RadioButton drawVideoRadioButton;
         private System.Windows.Forms.RadioButton processedVideoRadioButton;
-        private System.Windows.Forms.CheckBox drawDetectedFeaturesCheckBox;
-        private System.Windows.Forms.CheckBox drawTrackCheckBox;
+        private System.Windows.Forms.CheckBox checkBoxDrawTrack;
         private System.Windows.Forms.Panel videoStreamPanel;
-        private System.Windows.Forms.CheckBox drawCarIDCheckBox;
+        private System.Windows.Forms.CheckBox checkBoxDrawId;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.ComponentModel.BackgroundWorker o;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBoxDrawCirkels;
         private System.Windows.Forms.CheckBox checkBoxDrawDirection;
-        private System.Windows.Forms.CheckBox checkBoxDrawTriangles;
+        private System.Windows.Forms.CheckBox checkBoxDrawWindows;
         private System.Windows.Forms.CheckBox checkBoxDrawCenters;
+        private System.Windows.Forms.CheckBox checkBoxDrawRefHeading;
     }
 }

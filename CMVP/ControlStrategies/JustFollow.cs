@@ -16,6 +16,7 @@ namespace CMVP.ControlStrategies
 
         public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
+
             float shortestLength = 2000; //Maximum search distance
             int index = -1;
             if (track != null)
