@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 namespace CMVP
 {
-
-    
-
        /// <summary>
        /// This class sends the right steering and throttle parametres to the arduino 
        /// </summary>
@@ -26,7 +23,7 @@ namespace CMVP
 
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE 
-        private const byte MAX_THROTTLE = 200;                //output = 0.74V
+        private const byte MAX_THROTTLE = 250; //MAX_THROTTLE = 200;                //output = 0.74V
         private const byte NEUTRAL_THROTTLE = 90;            //output = 1.44V
         private const byte REVERSE_THROTTLE = 0;             //output = 2.03V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
@@ -71,6 +68,7 @@ namespace CMVP
 
         ~Communication()
         {
+
             if (port != null)
             {
                 if (port.IsOpen)

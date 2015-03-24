@@ -21,6 +21,7 @@ namespace CMVP
         private Thread brainThread, dataGridThread;
         private List<Track> tracks = new List<Track>();
         private int dataGridUpdateTime = 1000;
+        public event FormClosingEventHandler FormClosing;
 
         public mainGUI()
         {
@@ -30,7 +31,11 @@ namespace CMVP
             dataGridThread = new Thread(new ThreadStart(updateDataGrid));
             dataGridThread.Start();
         }
-
+        private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            foreach (Car car in Program.cars)
+                Program.com.stopCar(car.ID);
+        }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
             string currentFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
@@ -51,7 +56,6 @@ namespace CMVP
                 MessageBox.Show("Couldn't locate the 'Tracks' folder. The program will not load tracks automatically. To fix this add the folder to the applications directory (" + currentFolder + ").");
             }
         }
-
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
             Program.imageProcess.start();
@@ -88,6 +92,10 @@ namespace CMVP
             Console.WriteLine("Stoping simulation");
             try
             {
+                foreach(Car car in Program.cars)
+                {
+                    Program.com.stopCar(car.ID);
+                }
                 brainThread.Suspend();
             }
             catch (Exception exception)
@@ -233,12 +241,12 @@ namespace CMVP
                     PIController controller = new PIController();
                     foreach (Control ctrl in controllerTypePanel.Controls)
                     {
-                        controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-                        controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-                        controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-                        controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                        controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-                        controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                        //controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                      //  controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                      //  controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                      //  controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                      //  controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
+                      //  controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
@@ -380,5 +388,7 @@ namespace CMVP
         {
             dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
         }
+
+
     }
 }

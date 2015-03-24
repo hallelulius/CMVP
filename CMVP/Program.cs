@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 using System.Drawing; // Anvnänds då man skapar en egen bil i Program
-
+using System.Runtime.InteropServices;
 using AForge;
 
 namespace CMVP
@@ -37,7 +37,9 @@ namespace CMVP
             videoStream.start();
             System.Threading.Thread.Sleep(2000);
             Application.Run(mainFrame);
+   
         }
+       
         public static bool isSimulating()
         {
             return simulating;

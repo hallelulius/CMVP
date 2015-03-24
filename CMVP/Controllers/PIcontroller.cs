@@ -25,8 +25,8 @@ namespace CMVP
             Ti_steer = 2.3397F;
             Ti_throttle = 10.5179F;
             // P-controller constants:
-            Kp_steer = Ki_steer / Ti_steer;
-            Kp_throttle = Ki_throttle / Ti_throttle;
+            Kp_steer = 1.5f; //Ki_steer / Ti_steer;
+            Kp_throttle = 0.4f; // Ki_throttle / Ti_throttle;
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
@@ -38,17 +38,20 @@ namespace CMVP
         {
             outThrottle = 0;
             float errorSpeed = refSpeed - speed;
-            outThrottle += Kp_throttle * errorSpeed * Program.sampleTime;
+            outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed;
-            outThrottle += Ki_throttle * throttleIntegratorSum * Program.sampleTime;
+            outThrottle += Ki_throttle * throttleIntegratorSum;
 
-            outSteer = 0;
+
+
+
+           outSteer = 0;
             float errorHeading = refHeading - heading;
-            outSteer += errorHeading * 1.33f; //Kp_steer * errorHeading* Program.sampleTime;
+            outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
-            //outSteer += Ki_steer * steerIntegratorSum * Program.sampleTime;
+            //outSteer += -Ki_steer * steerIntegratorSum ;
 
-            if (outThrottle > 1)outThrottle = 1;
+            if (outThrottle > 1)outThrottle = 0.5f; //Todo
             if (outThrottle < -1) outThrottle = -1;
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;
