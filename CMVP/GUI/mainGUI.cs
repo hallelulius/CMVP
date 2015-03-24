@@ -367,7 +367,7 @@ namespace CMVP
                     row.Cells[1].Value = car.getPosition().X;
                     row.Cells[2].Value = car.getPosition().Y;
                     row.Cells[3].Value = car.getSpeed();
-                    row.Cells[4].Value = Math.Acos(car.getDirection().X);
+                    row.Cells[4].Value = car.getAngle();
                     row.Cells[5].Value = car.getController().getSteer();
                     row.Cells[6].Value = car.getController().getThrottle();
                 }
