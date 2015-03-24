@@ -37,11 +37,11 @@ namespace CMVP.ControlStrategies
 
                     //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
                     float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                    if (Math.Acos(Math.Abs(scalarProduct)) < Math.PI / 6)
+                    if (Math.Acos(scalarProduct) < Math.PI / 6)
                     {
                         //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
                         float currentLength = ((new Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
-                        if (currentLength < shortestLength && currentLength > 10)
+                        if (currentLength < shortestLength && currentLength > 50)
                         {
                             shortestLength = currentLength;
                             index = i;

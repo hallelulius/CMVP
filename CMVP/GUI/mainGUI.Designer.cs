@@ -611,6 +611,7 @@
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "mainGUI";
             this.Text = "CMVP";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainGUI_FormClosed);
             this.simulationBasePanel.ResumeLayout(false);
             this.simulationBasePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).EndInit();

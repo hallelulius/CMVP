@@ -52,7 +52,6 @@ namespace CMVP
         public Boolean drawTrackOnImg;
         public Boolean drawCarIdOnImg;
         public Boolean drawRefHeadingOnImg;
-        private Boolean firstTime;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
@@ -60,7 +59,7 @@ namespace CMVP
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
             this.imgProcesTimer.Interval=1;
-            this.drawTimer.Interval = 500;
+            this.drawTimer.Interval = 100;
             this.imgProcesTimer.Tick += new EventHandler(processImage);
             this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
@@ -77,7 +76,7 @@ namespace CMVP
             this.drawCenterOnImg = false;
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
-            this.firstTime = true;
+            drawTimer.Start();
             System.Console.WriteLine("Image processing OK");
 
         }
@@ -106,15 +105,21 @@ namespace CMVP
                 float dir = controller.getRefHeading();
                 if (controlStra != null)
                 {
-                    if (drawTrackOnImg)
+                    if (drawTrackOnImg && controlStra.getTrack()!=null)
                     {
-                        float[,] track = car.getControlStrategy().getTrack().m;
+                        float[,] track = controlStra.getTrack().m;
                         System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
                         for (int i = 0; i < track.Length / 3; i++)
                         {
                             pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
                         }
                         g.DrawLines(greenPen, pointTrack);
+                    }
+                    else if(drawTrackOnImg)
+                    {
+                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X-100,car.getPosition().Y+100-20);
+                        g.DrawString("This Car has no track",new Font(FontFamily.GenericSansSerif,12.0F,FontStyle.Regular), Brushes.Green,pos);
+                       
                     }
                     if (drawRefHeadingOnImg)
                     {
@@ -129,7 +134,7 @@ namespace CMVP
                 if (drawCarIdOnImg)
                 {
                     Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
-                    Brush b = Brushes.Lime;
+                    Brush b = Brushes.Green;
                     System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X-100, car.getPosition().Y-100);
                     g.DrawString(car.ID.ToString(),f, b,idPos);
                 }
@@ -161,7 +166,6 @@ namespace CMVP
         public void start()
         {
             imgProcesTimer.Start();
-            drawTimer.Start();
         }
         public void initiate()
         {
@@ -234,7 +238,17 @@ namespace CMVP
             {
                 AForge.IntPoint pos=car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                croppedImg = img.Clone(new Rectangle(pos.X-100,pos.Y-100, 200, 200), img.PixelFormat);
+                int cropX = pos.X - 100;
+                int cropY = pos.Y - 100;
+                if( cropX < 0 )
+                    cropX=0;
+                else if(cropX > img.Width-200)
+                    cropX= img.Width-200;
+                if( cropY < 0 )
+                    cropY=0;
+                else if(cropY>img.Height-200)
+                    cropY=img.Height-200;
+                croppedImg = img.Clone(new Rectangle(cropX,cropY, 200, 200), img.PixelFormat);
 
 
                 Acenters = new List<AForge.IntPoint>();
