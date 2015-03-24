@@ -282,6 +282,8 @@ namespace CMVP
 
                 if(tracksDropDown.SelectedIndex != -1)
                     tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
+
+                trackApplyButton.Enabled = false;
             }
         }
 
@@ -326,8 +328,8 @@ namespace CMVP
 
         private void ptgrey_Click(object sender, EventArgs e)
         {
-            GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
-            ptgf.Show();
+            //GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
+            //ptgf.Show();
         }
 
         private void Initiate_Click(object sender, EventArgs e)
@@ -353,11 +355,9 @@ namespace CMVP
             Stopwatch timer = new Stopwatch();
             timer.Start();
             long elapsedTime;
-            Console.WriteLine("Started data grid update thread!");
 
             while(true)
             {
-                Console.WriteLine("Updating data grid...");
                 elapsedTime = timer.ElapsedMilliseconds;
                 foreach(DataGridViewRow row in dataGridView.Rows)
                 {
@@ -379,6 +379,11 @@ namespace CMVP
         private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)
         {
             dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
+        }
+
+        private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trackApplyButton.Enabled = true;
         }
     }
 }

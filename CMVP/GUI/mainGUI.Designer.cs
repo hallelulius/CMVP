@@ -66,10 +66,6 @@
             this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.stopSimulationButton = new System.Windows.Forms.Button();
-            this.Initiate = new System.Windows.Forms.Button();
-            this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.CarID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Xpos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ypos = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,6 +73,10 @@
             this.Heading = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SteeringControlSignal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ThrottleControlSignal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.stopSimulationButton = new System.Windows.Forms.Button();
+            this.Initiate = new System.Windows.Forms.Button();
+            this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -252,6 +252,7 @@
             this.tracksDropDown.Name = "tracksDropDown";
             this.tracksDropDown.Size = new System.Drawing.Size(148, 21);
             this.tracksDropDown.TabIndex = 2;
+            this.tracksDropDown.SelectedIndexChanged += new System.EventHandler(this.tracksDropDown_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -494,6 +495,41 @@
             this.dataGridView.Size = new System.Drawing.Size(819, 153);
             this.dataGridView.TabIndex = 6;
             // 
+            // CarID
+            // 
+            this.CarID.HeaderText = "Car ID";
+            this.CarID.Name = "CarID";
+            // 
+            // Xpos
+            // 
+            this.Xpos.HeaderText = "X pos";
+            this.Xpos.Name = "Xpos";
+            // 
+            // Ypos
+            // 
+            this.Ypos.HeaderText = "Y pos";
+            this.Ypos.Name = "Ypos";
+            // 
+            // Velocity
+            // 
+            this.Velocity.HeaderText = "Velocity";
+            this.Velocity.Name = "Velocity";
+            // 
+            // Heading
+            // 
+            this.Heading.HeaderText = "Heading (degrees)";
+            this.Heading.Name = "Heading";
+            // 
+            // SteeringControlSignal
+            // 
+            this.SteeringControlSignal.HeaderText = "Steering Control Signal";
+            this.SteeringControlSignal.Name = "SteeringControlSignal";
+            // 
+            // ThrottleControlSignal
+            // 
+            this.ThrottleControlSignal.HeaderText = "Throttle control signal";
+            this.ThrottleControlSignal.Name = "ThrottleControlSignal";
+            // 
             // stopSimulationButton
             // 
             this.stopSimulationButton.BackColor = System.Drawing.Color.Crimson;
@@ -552,41 +588,6 @@
             this.label1.Size = new System.Drawing.Size(133, 13);
             this.label1.TabIndex = 9;
             this.label1.Text = "Data grid update time (ms):";
-            // 
-            // CarID
-            // 
-            this.CarID.HeaderText = "Car ID";
-            this.CarID.Name = "CarID";
-            // 
-            // Xpos
-            // 
-            this.Xpos.HeaderText = "X pos";
-            this.Xpos.Name = "Xpos";
-            // 
-            // Ypos
-            // 
-            this.Ypos.HeaderText = "Y pos";
-            this.Ypos.Name = "Ypos";
-            // 
-            // Velocity
-            // 
-            this.Velocity.HeaderText = "Velocity";
-            this.Velocity.Name = "Velocity";
-            // 
-            // Heading
-            // 
-            this.Heading.HeaderText = "Heading (degrees)";
-            this.Heading.Name = "Heading";
-            // 
-            // SteeringControlSignal
-            // 
-            this.SteeringControlSignal.HeaderText = "Steering Control Signal";
-            this.SteeringControlSignal.Name = "SteeringControlSignal";
-            // 
-            // ThrottleControlSignal
-            // 
-            this.ThrottleControlSignal.HeaderText = "Throttle control signal";
-            this.ThrottleControlSignal.Name = "ThrottleControlSignal";
             // 
             // mainGUI
             // 
