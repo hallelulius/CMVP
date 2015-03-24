@@ -209,6 +209,13 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
+                {
+                    ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
+                    pl.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(pl);
+                    ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();
+                }
 
                 trafficApplyButton.Enabled = false;
             }
@@ -350,7 +357,14 @@ namespace CMVP
 
         private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
+            controlStrategyTypePanel.Controls.Clear();
             trafficApplyButton.Enabled = true;
+
+            if (controlStrategyControlStrategyDropDown.SelectedIndex != -1)
+            {
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
+                    controlStrategyTypePanel.Controls.Add(new PlatooningControlPanel());
+            }
         }
 
         private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
@@ -392,6 +406,11 @@ namespace CMVP
         private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             trackApplyButton.Enabled = true;
+        }
+
+        private void trackCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

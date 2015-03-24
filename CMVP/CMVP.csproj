@@ -139,6 +139,12 @@
     <Compile Include="GUI\PIControlPanel.Designer.cs">
       <DependentUpon>PIControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\PlatooningControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PlatooningControlPanel.Designer.cs">
+      <DependentUpon>PlatooningControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="PTGreyCamera.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
@@ -311,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PlatooningControlPanel.resx">
+      <DependentUpon>PlatooningControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SeriesControl.resx">
       <DependentUpon>SeriesControl.cs</DependentUpon>

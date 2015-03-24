@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AForge;
+using AForge.Math;
+using AForge.Math.Geometry;
 
 namespace CMVP.ControlStrategies
 {
@@ -28,11 +31,11 @@ namespace CMVP.ControlStrategies
         {
             new_track.Add(followed_car.getPosition());
 
-            if(!following_leader)
+            if(!following_leader)  // decide which reference to follow. The old one or the platooning leaders
             {
                 if(searchDistance * searchDistance >= 
                       ((new_track.First().X - car.getPosition().X) * (new_track.First().X - car.getPosition().X) 
-                    + (new_track.First().Y - car.getPosition().Y) * (new_track.First().Y - car.getPosition().Y)))
+                    + (new_track.First().Y - car.getPosition().Y) * (new_track.First().Y - car.getPosition().Y))) // Search if the leaders track is close to current location 
                 {
                     following_leader = true;
                 }
@@ -50,11 +53,11 @@ namespace CMVP.ControlStrategies
 
                             //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
                             float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                            if (Math.Acos(Math.Abs(scalarProduct)) < Math.PI / 6)
+                            if (Math.Acos(scalarProduct) < Math.PI / 6)
                             {
                                 //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                                float currentLength = ((new AForge.Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
-                                if (currentLength < shortestLength && currentLength > 10)
+                                float currentLength = ((new Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
+                                if (currentLength < shortestLength && currentLength > 50)
                                 {
                                     shortestLength = currentLength;
                                     index = i;
@@ -70,7 +73,7 @@ namespace CMVP.ControlStrategies
                         }
                         else
                         {
-                            setReference(new AForge.IntPoint((int)track.m[0, index], (int)track.m[1, index]), track.m[2, index]);
+                            setReference(new IntPoint((int)track.m[0, index], (int)track.m[1, index]), track.m[2, index]);
                         }
                     }
                 }
@@ -78,30 +81,32 @@ namespace CMVP.ControlStrategies
             else
             {
                 float shortestLength = 2000; //Maximum search distance
-                int index = -1;
+                IntPoint refPoint = new IntPoint();
+                bool pointIsFound = false;
                 if (track != null)
                 {
-                    for (int i = 0; i < track.m.Length / 3; i++)
+                    foreach (IntPoint point in new_track)
                     {
-                        AForge.Point tempPoint = new AForge.Point(track.m[0, i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
+                        AForge.Point tempPoint = new AForge.Point(point.X - car.getPosition().X, point.Y - car.getPosition().Y);
                         float carNorm = car.getDirection().EuclideanNorm();
                         float trackNorm = tempPoint.EuclideanNorm();
 
                         //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
                         float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                        if (Math.Acos(Math.Abs(scalarProduct)) < Math.PI / 6)
+                        if (Math.Acos(scalarProduct) < Math.PI / 6)
                         {
                             //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                            float currentLength = ((new AForge.Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
-                            if (currentLength < shortestLength && currentLength > 10)
+                            float currentLength = ((new Point(point.X, point.Y)) - car.getPosition()).EuclideanNorm();
+                            if (currentLength < shortestLength && currentLength > 50)
                             {
                                 shortestLength = currentLength;
-                                index = i;
+                                refPoint = new IntPoint(point.X, point.Y);
+                                pointIsFound = true;
                             }
                         }
                     }
 
-                    if (index < 0)
+                    if (!pointIsFound)
                     {
                         //setReference(new PointF(0, 0), 0);
                         Console.WriteLine("No points found");
@@ -109,7 +114,7 @@ namespace CMVP.ControlStrategies
                     }
                     else
                     {
-                        setReference(new AForge.IntPoint((int)track.m[0, index], (int)track.m[1, index]), track.m[2, index]);
+                        setReference(new IntPoint(refPoint.X, refPoint.Y), 0.0f);//track.m[2, index]));
                     }
                 }
             }
@@ -117,9 +122,9 @@ namespace CMVP.ControlStrategies
             
         }
 
-        public override Track getTrack()
+        public bool isFollowingLeader
         {
-            return null;
+            get { return following_leader; }
         }
     }
 }

@@ -225,6 +225,7 @@
             this.trackCarIDDropDown.Size = new System.Drawing.Size(42, 21);
             this.trackCarIDDropDown.TabIndex = 5;
             this.trackCarIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
+            this.trackCarIDDropDown.SelectedIndexChanged += new System.EventHandler(this.trackCarIDDropDown_SelectedIndexChanged);
             // 
             // importTrackButton
             // 
@@ -463,7 +464,8 @@
             this.controlStrategyControlStrategyDropDown.FormattingEnabled = true;
             this.controlStrategyControlStrategyDropDown.Items.AddRange(new object[] {
             "Stand still",
-            "Follow track"});
+            "Follow track",
+            "Platooning"});
             this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
