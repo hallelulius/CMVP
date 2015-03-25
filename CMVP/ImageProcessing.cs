@@ -40,10 +40,11 @@ namespace CMVP
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
         private Timer drawTimer;
-        private int tempTime;
         private Graphics g;
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
+        private float deltaTime;
+        private float prevTime;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
@@ -65,7 +66,6 @@ namespace CMVP
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.tempTime=0;
             this.carMap = new Dictionary<int, Car>();
 
             this.cirkels = new List<Blob>();
@@ -77,6 +77,7 @@ namespace CMVP
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
             drawTimer.Start();
+            prevTime = videoStream.getTime();
             System.Console.WriteLine("Image processing OK");
 
         }
@@ -234,6 +235,7 @@ namespace CMVP
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
+            deltaTime = videoStream.getTime()-prevTime;
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
@@ -539,6 +541,11 @@ namespace CMVP
             Blob[] blobs = blobCounter.GetObjectsInformation();
             Console.WriteLine("End BlobFinder: " + System.DateTime.Now.Millisecond);
             return blobs.ToList<Blob>();
+        }
+
+        public float getTime()
+        {
+            return videoStream.getTime();
         }
     }
 }

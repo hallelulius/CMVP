@@ -32,10 +32,10 @@ namespace CMVP
             mainGUI mainFrame = new mainGUI();
             //videoStream = new Camera();
             videoStream = new PTGreyCamera();
-            
-            imageProcess = new ImageProcessing(videoStream, cars);
             videoStream.start();
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(1000);
+            imageProcess = new ImageProcessing(videoStream, cars);
+           
             Application.Run(mainFrame);
    
         }

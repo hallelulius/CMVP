@@ -87,7 +87,6 @@ namespace CMVP
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             Program.imageProcess.stop();
-            //System.Console.WriteLine("Stop simulation");
             //thread.Abort();
             Console.WriteLine("Stoping simulation");
             try

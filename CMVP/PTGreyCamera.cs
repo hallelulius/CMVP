@@ -225,5 +225,17 @@ namespace CMVP
         {
             return image.Size;
         }
+        public float getTime()
+        {
+            if (m_grabImages)
+            {
+                return (float)timestamp.cycleSeconds + (float) Math.Pow(10, -6) * timestamp.microSeconds;
+            }
+            else
+            {
+                return -1;
+            }
+
+        }
     }
 }
