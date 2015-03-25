@@ -38,6 +38,7 @@ namespace CMVP.ControlStrategies
                     + (new_track.First().Y - car.getPosition().Y) * (new_track.First().Y - car.getPosition().Y))) // Search if the leaders track is close to current location 
                 {
                     following_leader = true;
+                    Console.WriteLine("Following leader!");
                 }
                 else
                 {
