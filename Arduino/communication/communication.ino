@@ -32,7 +32,7 @@ const byte dac_on = 0b11111111;  //output = Vref
 
 //Variables used to debug and trim  Vref=3.3V (from Arduino)
 const byte max_throttle = 0b00111001;      //output = 0.74V
-const byte neutral_throttle = 0b01101111;  //output = 1.44V
+const byte neutral_throttle = 0b1100100;  //output = 1.29V
 const byte reverse_throttle = 0b10011101;  //output = 2.03V
 const byte neutral_steering = 0b01110010;  //output = 1.47V
 const byte left_steering = 0b11011010;     //output = 2.82V
@@ -69,11 +69,7 @@ void changeDAC(byte DAC, byte value){
   SPI.transfer(DAC);
   SPI.transfer(value);
   digitalWrite(loadPin,LOW);
-<<<<<<< HEAD
   delay(1);
-=======
-  delay(5);
->>>>>>> 7f39df91e2a704141e4ecdeeff6b77c86e5b6ac0
   digitalWrite(loadPin,HIGH);
 }
 
