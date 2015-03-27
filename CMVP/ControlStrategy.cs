@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using AForge.Imaging.Filters;
+using AForge.Vision.Motion;
+using AForge.Imaging;
+using AForge.Math.Geometry;
+using AForge.Math;
 
 namespace CMVP
 {
@@ -23,11 +31,12 @@ namespace CMVP
 
         public abstract void updateReferencePoint(); // Calculate next point for a car in reference signal
 
-        protected void setReference(PointF refPoint, float speed) // Transform the reference points coordinate and the cars current coordinates to a reference signal (speed and angle) 
+        protected void setReference(IntPoint refPoint, float speed) // Transform the reference points coordinate and the cars current coordinates to a reference signal (speed and angle) 
         {
             float refAngle = (float) Math.Atan2(refPoint.Y-car.getPosition().Y , refPoint.X-car.getPosition().X);
             car.getController().setRefHeading(refAngle); //sets controllers
             car.getController().setRefSpeed(speed);
+            car.getController().setRefPoint(refPoint);
         }
 
         public void setTrack(Track track)

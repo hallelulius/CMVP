@@ -94,11 +94,7 @@ namespace CMVP
                     Debug.WriteLine("Error: " + ex.Message);
                     continue;
                 }
-                catch (NullReferenceException) {
-                    Console.WriteLine("No Camera found");
-                    stop();
-                    break;
-                }
+
                 lock (this)
                 {
                     //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
@@ -216,7 +212,6 @@ namespace CMVP
          public void stop()
         {
             m_grabImages = false;
-            Console.WriteLine("GrabLoop stopped");
         }
         public void pushDestination(Panel panel)
         {
@@ -229,6 +224,18 @@ namespace CMVP
         public Size getSize()
         {
             return image.Size;
+        }
+        public float getTime()
+        {
+            if (m_grabImages)
+            {
+                return (float)timestamp.cycleSeconds + (float) Math.Pow(10, -6) * timestamp.microSeconds;
+            }
+            else
+            {
+                return -1;
+            }
+
         }
     }
 }

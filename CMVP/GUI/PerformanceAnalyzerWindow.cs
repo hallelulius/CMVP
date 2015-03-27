@@ -84,5 +84,52 @@ namespace CMVP
         {
 
         }
+
+        private void exportButton_Click(object sender, EventArgs e)
+        {
+            FileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "Matlab scripts (*.m;*.txt)|*.m;*.txt";
+            dialog.ShowDialog();
+
+            try
+            {
+                System.IO.StreamWriter file = new System.IO.StreamWriter(dialog.FileName);
+
+                file.WriteLine("%% Script exported from MVP");
+                file.WriteLine("hold on;");
+                file.WriteLine("axis on;\n");
+
+                int seriesCount = 0;
+                StringBuilder legend = new StringBuilder();
+                legend.Append("legend(");
+                foreach (Control c in seriesPanel.Controls)
+                {
+                    seriesCount++;
+                    file.WriteLine("% " + c.ToString() + ":");
+
+                    StringBuilder xValues = new StringBuilder();
+                    StringBuilder yValues = new StringBuilder();
+                    foreach (DataPoint p in performanceChart.Series.FindByName(c.ToString()).Points)
+                    {
+                        xValues.Append(" " + p.XValue);
+                        yValues.Append(" " + p.YValues[0]);
+                    }
+
+                    file.WriteLine("X" + seriesCount + " = [" + xValues.ToString().Replace(',', '.') + " ];");
+                    file.WriteLine("Y" + seriesCount + " = [" + yValues.ToString().Replace(',', '.') + " ];");
+                    file.WriteLine("plot(X" + seriesCount + ", Y" + seriesCount + ");\n");
+                    legend.Append("'" + c.ToString() + "', ");
+                }
+                legend.Append("'Location', 'southeast');");
+                file.WriteLine(legend.ToString());
+                file.WriteLine("hold off");
+
+                file.Close();
+            }
+            catch(Exception exception)
+            {
+
+            }
+        }
     }
 }

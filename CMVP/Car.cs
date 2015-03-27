@@ -19,7 +19,9 @@ namespace CMVP
         //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
+        private List<float> angles;//angles
         private List<double> speed; //Velocity of the car.
+        private List<float> deltaTime; //Velocity of the car.
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
@@ -27,6 +29,7 @@ namespace CMVP
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
         private Controller controller = new KeyboardController(); // This cars controller 
+        private float maxSpeed;
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -45,15 +48,19 @@ namespace CMVP
             this.id = id;
             this.direction = new List<AForge.Point>();
             this.position = new List<AForge.IntPoint>();
+            this.angles = new List<float>();
             this.speed = new List<double>();
+            this.deltaTime = new List<float>();
             this.acceleration = new List<double>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
+            this.maxSpeed = 200;
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);
                 this.position.Add(pos);
                 this.speed.Add(1.0);
                 this.acceleration.Add(0);
+                this.angles.Add(0);
             }
         }
         /// <summary>
@@ -62,16 +69,22 @@ namespace CMVP
         public void updateState()
         {
             //Calculate horizontal and vertical movement using the last two elements in the position list.
-            double dx = position.ElementAt(DATA_HISTORY_LENGTH - 2).X - position.ElementAt(DATA_HISTORY_LENGTH - 1).X;
-            double dy = position.ElementAt(DATA_HISTORY_LENGTH - 2).Y - position.ElementAt(DATA_HISTORY_LENGTH - 1).Y;
-            speed.Add(Math.Sqrt((dx * dx) + (dy * dy)));
+            double dx = position.ElementAt(1).X - position.ElementAt(0).X;
+            double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
+            if (dx == 0 || dy == 0)
+                Console.WriteLine("dxdy=0");
+            speed.Insert(0,(Math.Sqrt((dx * dx) + (dy * dy))));
+            
             //Remove oldest element.
-            speed.RemoveAt(0);
+            double xspeed = speed.Last();
+            if (xspeed == null)
+                Console.WriteLine("Null speed");
+            speed.Remove(speed.Last());
 
             //Calculate acceleration
-            acceleration.Add(speed.ElementAt(DATA_HISTORY_LENGTH - 2) - speed.ElementAt(DATA_HISTORY_LENGTH - 1));
+            acceleration.Insert(0,speed.ElementAt(DATA_HISTORY_LENGTH - 2) - speed.ElementAt(DATA_HISTORY_LENGTH - 1));
             //Remove oldest element.
-            acceleration.RemoveAt(0);
+            acceleration.Remove(acceleration.Last());
         }
 
         /// <summary>
@@ -81,19 +94,8 @@ namespace CMVP
         /// <param name="angle"> The new orientation of the car. </param>
         public void setPositionAndOrientation(AForge.IntPoint pos, double angle)
         {
-            //Add the new position to the list and remove the oldest one.
-            position.Add(pos);
-            position.Remove(position.First());
-            //Calculate orientation and add to the list and remove the oldest one.
-            AForge.Point tempPoint = new AForge.Point((float)Math.Cos(angle), (float)Math.Sin(angle));
-            direction.Add(tempPoint);
-            direction.Remove(direction.First());
-
-            //The heading of the car is assuming to be the direction of the vehicle.
-            controller.setHeading((float)angle);
-
-            //Update the cars state.
-            updateState();
+            AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
+            this.setPositionAndOrientation(pos, dir, 0);
         }
 
         /// <summary>
@@ -101,10 +103,28 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="dir"> The new direction of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir)
+        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, float deltaTime)
         {
-            float refAngle = (float)Math.Atan2(pos.Y - this.getPosition().Y, pos.X - this.getPosition().X);
-            this.setPositionAndOrientation(pos, refAngle);
+            position.Insert(0,pos);
+            position.Remove(position.Last());
+            direction.Insert(0,dir);
+            direction.Remove(direction.Last());
+            float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
+            angles.Insert(0,tempAngle);
+            angles.Remove(angles.Last());
+            updateState();
+
+            if (controller != null)
+            {
+                controller.setHeading(tempAngle);
+                controller.setSpeed((float)this.speed.First());
+                
+            }
+                
+        }
+        public float getAngle()
+        {
+            return angles.First();
         }
         /// <summary>
         /// Is true if the car was found by the image processing.

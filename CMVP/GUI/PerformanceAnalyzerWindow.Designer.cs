@@ -28,24 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.performanceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.addSeriesDropDown = new System.Windows.Forms.ComboBox();
             this.addSeriesLabel = new System.Windows.Forms.Label();
             this.seriesPanel = new System.Windows.Forms.Panel();
             this.maxDataPointsLabel = new System.Windows.Forms.Label();
             this.dataPointsNumeric = new System.Windows.Forms.NumericUpDown();
+            this.exportButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.performanceChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataPointsNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // performanceChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.performanceChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.performanceChart.Legends.Add(legend1);
+            chartArea4.Name = "ChartArea1";
+            this.performanceChart.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.performanceChart.Legends.Add(legend4);
             this.performanceChart.Location = new System.Drawing.Point(295, 12);
             this.performanceChart.Name = "performanceChart";
             this.performanceChart.Size = new System.Drawing.Size(643, 535);
@@ -87,9 +88,9 @@
             // 
             // seriesPanel
             // 
-            this.seriesPanel.Location = new System.Drawing.Point(13, 74);
+            this.seriesPanel.Location = new System.Drawing.Point(13, 97);
             this.seriesPanel.Name = "seriesPanel";
-            this.seriesPanel.Size = new System.Drawing.Size(267, 403);
+            this.seriesPanel.Size = new System.Drawing.Size(267, 380);
             this.seriesPanel.TabIndex = 4;
             // 
             // maxDataPointsLabel
@@ -119,11 +120,22 @@
             0});
             this.dataPointsNumeric.ValueChanged += new System.EventHandler(this.dataPointsNumeric_ValueChanged);
             // 
+            // exportButton
+            // 
+            this.exportButton.Location = new System.Drawing.Point(135, 67);
+            this.exportButton.Name = "exportButton";
+            this.exportButton.Size = new System.Drawing.Size(133, 23);
+            this.exportButton.TabIndex = 7;
+            this.exportButton.Text = "Export data as *.m";
+            this.exportButton.UseVisualStyleBackColor = true;
+            this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
+            // 
             // PerformanceAnalyzerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(950, 559);
+            this.Controls.Add(this.exportButton);
             this.Controls.Add(this.dataPointsNumeric);
             this.Controls.Add(this.maxDataPointsLabel);
             this.Controls.Add(this.seriesPanel);
@@ -148,6 +160,7 @@
         private System.Windows.Forms.Panel seriesPanel;
         private System.Windows.Forms.Label maxDataPointsLabel;
         private System.Windows.Forms.NumericUpDown dataPointsNumeric;
+        private System.Windows.Forms.Button exportButton;
 
 
     }

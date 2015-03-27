@@ -74,10 +74,6 @@ namespace CMVP
             imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
 
         }
-        private void checkBoxDrawTrack_CheckedChanged(object sender, EventArgs e)
-        {
-            imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
-        }
 
         private void checkBoxDrawId_CheckedChanged(object sender, EventArgs e)
         {
@@ -87,6 +83,16 @@ namespace CMVP
         private void checkBoxDrawWindows_CheckedChanged(object sender, EventArgs e)
         {
             imgProcess.drawWindowsOnImg = checkBoxDrawWindows.Checked;
+        }
+
+        private void checkBoxDrawRefHeading_CheckedChanged(object sender, EventArgs e)
+        {
+            imgProcess.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
+        }
+
+        private void checkBoxDrawTrack_CheckedChanged_1(object sender, EventArgs e)
+        {
+            imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
         }
 
         private void button1_Click(object sender, EventArgs e)

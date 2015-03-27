@@ -40,10 +40,11 @@ namespace CMVP
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
         private Timer drawTimer;
-        private int tempTime;
         private Graphics g;
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
+        private float deltaTime;
+        private float prevTime;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
@@ -52,21 +53,19 @@ namespace CMVP
         public Boolean drawTrackOnImg;
         public Boolean drawCarIdOnImg;
         public Boolean drawRefHeadingOnImg;
-        private Boolean firstTime;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
         {
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
-            this.imgProcesTimer.Interval=1;
-            this.drawTimer.Interval = 500;
+            this.imgProcesTimer.Interval=10;
+            this.drawTimer.Interval = 100;
             this.imgProcesTimer.Tick += new EventHandler(processImage);
             this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.tempTime=0;
             this.carMap = new Dictionary<int, Car>();
 
             this.cirkels = new List<Blob>();
@@ -77,7 +76,8 @@ namespace CMVP
             this.drawCenterOnImg = false;
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
-            this.firstTime = true;
+            drawTimer.Start();
+            prevTime = videoStream.getTime();
             System.Console.WriteLine("Image processing OK");
 
         }
@@ -106,15 +106,21 @@ namespace CMVP
                 float dir = controller.getRefHeading();
                 if (controlStra != null)
                 {
-                    if (drawTrackOnImg)
+                    if (drawTrackOnImg && controlStra.getTrack()!=null)
                     {
-                        float[,] track = car.getControlStrategy().getTrack().m;
-                        System.Drawing.Point[] pointTrack = new System.Drawing.Point[track.Length / 3];
+                        float[,] track = controlStra.getTrack().m;
+                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
                         for (int i = 0; i < track.Length / 3; i++)
                         {
-                            pointTrack[i] = new System.Drawing.Point((int)track[0, i], (int)track[1, i]);
+                            pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
                         }
                         g.DrawLines(greenPen, pointTrack);
+                    }
+                    else if(drawTrackOnImg)
+                    {
+                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X-100,car.getPosition().Y+100-20);
+                        g.DrawString("This Car has no track",new Font(FontFamily.GenericSansSerif,12.0F,FontStyle.Regular), Brushes.Green,pos);
+                       
                     }
                     if (drawRefHeadingOnImg)
                     {
@@ -122,13 +128,14 @@ namespace CMVP
                         System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X, car.getPosition().Y);
                         System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
                         g.DrawLine(bluePen, pos, pointHeading);
+                        g.DrawEllipse(yellowPen,new Rectangle(controller.getRefPoint().X - 5, controller.getRefPoint().Y - 5, 10, 10));
                     }
                     
                 }
                 if (drawCarIdOnImg)
                 {
                     Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
-                    Brush b = Brushes.Lime;
+                    Brush b = Brushes.Green;
                     System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X-100, car.getPosition().Y-100);
                     g.DrawString(car.ID.ToString(),f, b,idPos);
                 }
@@ -137,11 +144,22 @@ namespace CMVP
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
-                    g.DrawRectangle(redPen, new Rectangle(pos.X-200,pos.Y-200, 200, 200));
+                    //bör ta hänsyn till riktningen för minimera fönstret
+                    int cropX = pos.X - 100;
+                    int cropY = pos.Y - 100;
+                    if (cropX < 0)
+                        cropX = 0;
+                    else if (cropX > img.Width - 200)
+                        cropX = img.Width - 200;
+                    if (cropY < 0)
+                        cropY = 0;
+                    else if (cropY > img.Height - 200)
+                        cropY = img.Height - 200;
+                    g.DrawRectangle(redPen, new Rectangle(cropX,cropY, 200, 200));
                 }
             if (drawCirkelsOnImg)
             {
-                List<Blob> cirkels = getBlobs(4, 13, img);
+                List<Blob> cirkels = getBlobs(1, 13, img);
                 drawCirkels(cirkels);
             }
             for (int k = 0; k < Acenters.Count; k++)
@@ -160,12 +178,12 @@ namespace CMVP
         public void start()
         {
             imgProcesTimer.Start();
-            drawTimer.Start();
         }
         public void initiate()
         {
+            objects.Clear();
             img = videoStream.getImage();
-            List<Blob> cirkels = getBlobs(4, 13,img);
+            List<Blob> cirkels = getBlobs(2, 13,img);
             Acenters = new List<AForge.IntPoint>();
             Adirections = new List<AForge.Point>();
             List<AForge.IntPoint> points = getPoints(cirkels);
@@ -229,17 +247,30 @@ namespace CMVP
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
+            deltaTime = videoStream.getTime()-prevTime;
+            prevTime = videoStream.getTime();
+
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                croppedImg = img.Clone(new Rectangle(pos.X-200,pos.Y-200, 200, 200), img.PixelFormat);
+                int cropX = pos.X - 100;
+                int cropY = pos.Y - 100;
+                if( cropX < 0 )
+                    cropX=0;
+                else if(cropX > img.Width-200)
+                    cropX= img.Width-200;
+                if( cropY < 0 )
+                    cropY=0;
+                else if(cropY>img.Height-200)
+                    cropY=img.Height-200;
+                croppedImg = img.Clone(new Rectangle(cropX,cropY, 200, 200), img.PixelFormat);
 
 
                 Acenters = new List<AForge.IntPoint>();
                 Adirections = new List<AForge.Point>();
 
-                List<Blob> cirkels = getBlobs(4, 13, croppedImg);
+                List<Blob> cirkels = getBlobs(2, 13, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
@@ -516,7 +547,7 @@ namespace CMVP
         {
             Console.WriteLine("Start BlobFinder: " + System.DateTime.Now.Millisecond);
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
+            blobCounter.BackgroundThreshold = new RGB(150, 150, 150).Color;
             blobCounter.MinHeight = minHeight;
             blobCounter.MaxHeight = maxHeight;
             blobCounter.FilterBlobs = true;
@@ -524,6 +555,11 @@ namespace CMVP
             Blob[] blobs = blobCounter.GetObjectsInformation();
             Console.WriteLine("End BlobFinder: " + System.DateTime.Now.Millisecond);
             return blobs.ToList<Blob>();
+        }
+
+        public float getTime()
+        {
+            return videoStream.getTime();
         }
     }
 }

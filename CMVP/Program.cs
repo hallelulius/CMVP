@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 using System.Drawing; // Anvnänds då man skapar en egen bil i Program
-
+using System.Runtime.InteropServices;
 using AForge;
 
 namespace CMVP
@@ -27,16 +27,19 @@ namespace CMVP
         [STAThread]
         public static void Main()
         {
-            //cars.Add(new Car(1, new System.Drawing.Point(0, 0), new PointF(1, 0))); // endast för att testa en imaginär bil 
+            //cars.Add(new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
+            //cars.Add(new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
             //videoStream = new Camera();
             videoStream = new PTGreyCamera();
-            
-            imageProcess = new ImageProcessing(videoStream, cars);
             videoStream.start();
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(1000);
+            imageProcess = new ImageProcessing(videoStream, cars);
+           
             Application.Run(mainFrame);
+   
         }
+       
         public static bool isSimulating()
         {
             return simulating;

@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+
+using AForge;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using AForge.Imaging.Filters;
+using AForge.Vision.Motion;
+using AForge.Imaging;
+using AForge.Math.Geometry;
+using AForge.Math;
 
 namespace CMVP.ControlStrategies
 {
@@ -15,7 +23,7 @@ namespace CMVP.ControlStrategies
 
         public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
-            setReference(new PointF(0, 0), 0);
+            setReference(new IntPoint(0, 0), 0);
         }
     }
 }

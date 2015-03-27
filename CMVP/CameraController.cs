@@ -19,7 +19,6 @@ namespace CMVP
         private List<IntPoint> resolutionList = new List<IntPoint>();
         private int seqetialCameraDelay = 300;//Used while starting ameras to prevent overload of computer
        
-        private IntPoint preferedCameraResolution; //Used in calibration
         private IntPoint resolution;
 
         public CameraController()
@@ -202,7 +201,10 @@ namespace CMVP
         {
             return new Size(0, 0);
         }
-
+        public float getTime()
+        {
+            return 0;
+        }
     }
 
 }
