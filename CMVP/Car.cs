@@ -21,6 +21,7 @@ namespace CMVP
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
         private List<double> speed; //Velocity of the car.
+        private List<float> deltaTime; //Velocity of the car.
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
@@ -48,6 +49,7 @@ namespace CMVP
             this.position = new List<AForge.IntPoint>();
             this.angles = new List<float>();
             this.speed = new List<double>();
+            this.deltaTime = new List<float>();
             this.acceleration = new List<double>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
@@ -85,7 +87,7 @@ namespace CMVP
         public void setPositionAndOrientation(AForge.IntPoint pos, double angle)
         {
             AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
-            this.setPositionAndOrientation(pos, dir);
+            this.setPositionAndOrientation(pos, dir, 0);
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="dir"> The new direction of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir)
+        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, float deltaTime)
         {
             position.Insert(0,pos);
             position.Remove(position.Last());

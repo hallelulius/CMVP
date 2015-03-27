@@ -236,6 +236,8 @@ namespace CMVP
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
             deltaTime = videoStream.getTime()-prevTime;
+            prevTime = videoStream.getTime();
+
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
