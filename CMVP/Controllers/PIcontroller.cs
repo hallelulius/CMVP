@@ -20,13 +20,13 @@ namespace CMVP
         {
             // I-controller constants:
             Ki_steer = 0.1689F;
-            Ki_throttle = 0.1310F;
+            Ki_throttle = 0.2F;
             // Integral time constants:
             Ti_steer = 2.3397F;
             Ti_throttle = 10.5179F;
             // P-controller constants:
             Kp_steer = 1.5f; //Ki_steer / Ti_steer;
-            Kp_throttle = 0.4f; // Ki_throttle / Ti_throttle;
+            Kp_throttle = 0.04f; // Ki_throttle / Ti_throttle;
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
@@ -37,10 +37,17 @@ namespace CMVP
         public override void updateController()      //PI-controller 
         {
             outThrottle = 0;
-            float errorSpeed = refSpeed - speed;
-            outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed;
-            outThrottle += Ki_throttle * throttleIntegratorSum;
+            if (speed <=2 )
+                throttleIntegratorSum += 0.001f;
+            else
+                throttleIntegratorSum -= 0.001f;
+            //outThrottle += refSpeed / 4;
+            outThrottle += throttleIntegratorSum;
+
+            //float errorSpeed = refSpeed - speed/50;
+            //outThrottle += Kp_throttle * errorSpeed;
+            //throttleIntegratorSum += errorSpeed;
+            //outThrottle += Ki_throttle * throttleIntegratorSum;
 
 
 
@@ -51,7 +58,7 @@ namespace CMVP
             steerIntegratorSum += errorHeading;
             //outSteer += -Ki_steer * steerIntegratorSum ;
 
-            if (outThrottle > 1)outThrottle = 0.5f; //Todo
+            if (outThrottle > 0.25)outThrottle = 0.25f; //Todo change to 1
             if (outThrottle < -1) outThrottle = -1;
             if (outSteer > 1) outSteer = 1;
             if (outSteer < -1) outSteer = -1;

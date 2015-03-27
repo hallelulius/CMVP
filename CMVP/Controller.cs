@@ -33,6 +33,10 @@ namespace CMVP
         {
             this.heading = heading;
         }
+        public void setSpeed(float speed)
+        {
+            this.speed = speed;
+        }
         public void setRefHeading(float refHeading)
         {
             this.refHeading = refHeading;

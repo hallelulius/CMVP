@@ -28,6 +28,7 @@ namespace CMVP
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
         private Controller controller = new KeyboardController(); // This cars controller 
+        private float maxSpeed;
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -50,6 +51,7 @@ namespace CMVP
             this.speed = new List<double>();
             this.acceleration = new List<double>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
+            this.maxSpeed = 200;
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);
@@ -65,10 +67,16 @@ namespace CMVP
         public void updateState()
         {
             //Calculate horizontal and vertical movement using the last two elements in the position list.
-            double dx = position.ElementAt(DATA_HISTORY_LENGTH - 2).X - position.ElementAt(DATA_HISTORY_LENGTH - 1).X;
-            double dy = position.ElementAt(DATA_HISTORY_LENGTH - 2).Y - position.ElementAt(DATA_HISTORY_LENGTH - 1).Y;
+            double dx = position.ElementAt(1).X - position.ElementAt(0).X;
+            double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
+            if (dx == 0 || dy == 0)
+                Console.WriteLine("dxdy=0");
             speed.Insert(0,(Math.Sqrt((dx * dx) + (dy * dy))));
+            
             //Remove oldest element.
+            double xspeed = speed.Last();
+            if (xspeed == null)
+                Console.WriteLine("Null speed");
             speed.Remove(speed.Last());
 
             //Calculate acceleration
@@ -102,9 +110,15 @@ namespace CMVP
             float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
             angles.Insert(0,tempAngle);
             angles.Remove(angles.Last());
-            if(controller!=null)
-                controller.setHeading(tempAngle);
             updateState();
+
+            if (controller != null)
+            {
+                controller.setHeading(tempAngle);
+                controller.setSpeed((float)this.speed.First());
+                
+            }
+                
         }
         public float getAngle()
         {

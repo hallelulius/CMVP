@@ -339,8 +339,11 @@ namespace CMVP
 
         private void Initiate_Click(object sender, EventArgs e)
         {
+            if(brainThread.IsAlive)
+                brainThread.Suspend();
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
+            dataGridView.Rows.Clear();
             if (Program.cars.Count > 0)
                 dataGridView.Rows.Add(Program.cars.Count);
         }
