@@ -29,14 +29,21 @@ namespace CMVP
 
         public void addData(string reciever, double x, double y)
         {
-            Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
-            if (s != null)
+            try
             {
-                while (s.Points.Count >= maxValuesStored)
-                    s.Points.Remove(s.Points.First());
-                s.Points.AddXY(x, y);
-                performanceChart.ChartAreas[0].RecalculateAxesScale();
-                //Console.WriteLine("Adding data point: " + y);
+                Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
+                if (s != null)
+                {
+                    while (s.Points.Count >= maxValuesStored)
+                        s.Points.Remove(s.Points.First());
+                    s.Points.AddXY(x, y);
+                    performanceChart.ChartAreas[0].RecalculateAxesScale();
+                    //Console.WriteLine("Adding data point: " + y);
+                }
+            }
+            catch (Exception e)
+            {
+                //todo
             }
         }
 

@@ -367,7 +367,7 @@ namespace CMVP
 
             while(true)
             {
-                Console.WriteLine("Updating data grid...");
+                //Console.WriteLine("Updating data grid...");
                 elapsedTime = timer.ElapsedMilliseconds;
                 foreach(DataGridViewRow row in dataGridView.Rows)
                 {

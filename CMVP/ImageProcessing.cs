@@ -43,8 +43,8 @@ namespace CMVP
         private Graphics g;
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
-        private float deltaTime;
-        private float prevTime;
+        private double deltaTime;
+        private double prevTime;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
@@ -247,8 +247,11 @@ namespace CMVP
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
-            deltaTime = videoStream.getTime()-prevTime;
-            prevTime = videoStream.getTime();
+            double tempTime = videoStream.getTime();
+            deltaTime = tempTime-prevTime;
+            Console.WriteLine("Delta time "+ prevTime);
+            Console.WriteLine("System Time " + System.DateTime.Now.Millisecond);
+            prevTime = tempTime;
 
             foreach (Car car in objects)
             {
@@ -291,7 +294,7 @@ namespace CMVP
                         Acenters.Add(translation+Acenter);
                         Adirections.Add(Adirektion);
                         Console.WriteLine("id: " + car.ID);
-                        car.setPositionAndOrientation(Acenter+translation, Adirektion);
+                        car.setPositionAndOrientation(Acenter+translation, Adirektion,deltaTime);
                     }
                 }
             }
@@ -557,7 +560,7 @@ namespace CMVP
             return blobs.ToList<Blob>();
         }
 
-        public float getTime()
+        public double getTime()
         {
             return videoStream.getTime();
         }

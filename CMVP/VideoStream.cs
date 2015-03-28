@@ -16,7 +16,7 @@ namespace CMVP
         void pushDestination(Panel panel);
         void removeDestination(Panel panel);
         Size getSize();
-        float getTime();
+        double getTime();
     }
 
 }

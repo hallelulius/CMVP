@@ -30,6 +30,7 @@ namespace CMVP
         private Bitmap image;
         private List<Panel> panelsToUpdate;
         private TimeStamp timestamp;
+        private double time;
 
         public PTGreyCamera()
         {
@@ -71,7 +72,7 @@ namespace CMVP
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
         {
  	        image = m_processedImage.bitmap;
-            //timestamp needs to be send somewhere somehow
+   
             foreach (Panel p in panelsToUpdate)
             {
                 p.BackgroundImage = image;
@@ -99,7 +100,9 @@ namespace CMVP
                 {
                     //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
+                    time = (double) System.DateTime.Now.Ticks/10000000D;
                     timestamp = m_rawImage.timeStamp;
+
                 }
   
                 try
@@ -225,11 +228,12 @@ namespace CMVP
         {
             return image.Size;
         }
-        public float getTime()
+        public double getTime()
         {
             if (m_grabImages)
             {
-                return (float)timestamp.cycleSeconds + (float) Math.Pow(10, -6) * timestamp.microSeconds;
+                //return (double)(timestamp.seconds + 0.000001f * timestamp.microSeconds);
+                return  time;
             }
             else
             {

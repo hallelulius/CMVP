@@ -174,7 +174,7 @@ namespace CMVP
 
         }
 
-        public float getTime()
+        public double getTime()
         {
             return 0;
         }

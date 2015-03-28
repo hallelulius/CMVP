@@ -20,8 +20,8 @@ namespace CMVP
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
-        private List<double> speed; //Velocity of the car.
-        private List<float> deltaTime; //Velocity of the car.
+        private List<double> speed; //Velocity of the car in cm/s.
+        private List<double> deltaTime; //delta between updates
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
         private List<bool> found; //Is true if the car is found by the image processing.
 
@@ -30,6 +30,7 @@ namespace CMVP
         private int id; public int ID { get { return id; } } //Identification number of the car.
         private Controller controller = new KeyboardController(); // This cars controller 
         private float maxSpeed;
+        private static float PIXEL_SIZE = 0.2F; // used to get the right unit for the speed
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -50,7 +51,7 @@ namespace CMVP
             this.position = new List<AForge.IntPoint>();
             this.angles = new List<float>();
             this.speed = new List<double>();
-            this.deltaTime = new List<float>();
+            this.deltaTime = new List<double>();
             this.acceleration = new List<double>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
             this.maxSpeed = 200;
@@ -61,6 +62,7 @@ namespace CMVP
                 this.speed.Add(1.0);
                 this.acceleration.Add(0);
                 this.angles.Add(0);
+                this.deltaTime.Add(0.001F);
             }
         }
         /// <summary>
@@ -71,9 +73,14 @@ namespace CMVP
             //Calculate horizontal and vertical movement using the last two elements in the position list.
             double dx = position.ElementAt(1).X - position.ElementAt(0).X;
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
-            if (dx == 0 || dy == 0)
-                Console.WriteLine("dxdy=0");
-            speed.Insert(0,(Math.Sqrt((dx * dx) + (dy * dy))));
+            double tempSpeed = (double) ((Math.Sqrt((dx * dx) + (dy * dy)))/deltaTime.ElementAt(0))*PIXEL_SIZE;
+            
+            double temp = tempSpeed;
+            foreach (double s in speed)
+            {
+                temp += s;
+            }
+            speed.Insert(0, temp/(speed.Count+1));
             
             //Remove oldest element.
             double xspeed = speed.Last();
@@ -82,7 +89,7 @@ namespace CMVP
             speed.Remove(speed.Last());
 
             //Calculate acceleration
-            acceleration.Insert(0,speed.ElementAt(DATA_HISTORY_LENGTH - 2) - speed.ElementAt(DATA_HISTORY_LENGTH - 1));
+            acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
             //Remove oldest element.
             acceleration.Remove(acceleration.Last());
         }
@@ -92,10 +99,10 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="angle"> The new orientation of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, double angle)
+        public void setPositionAndOrientation(AForge.IntPoint pos, double angle,double deltaTime)
         {
             AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
-            this.setPositionAndOrientation(pos, dir, 0);
+            this.setPositionAndOrientation(pos, dir, deltaTime);
         }
 
         /// <summary>
@@ -103,12 +110,14 @@ namespace CMVP
         /// </summary>
         /// <param name="pos"> The new postition of the car. </param>
         /// <param name="dir"> The new direction of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, float deltaTime)
+        public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, double deltaTime)
         {
             position.Insert(0,pos);
             position.Remove(position.Last());
             direction.Insert(0,dir);
             direction.Remove(direction.Last());
+            this.deltaTime.Insert(0, deltaTime);
+            this.deltaTime.Remove(this.deltaTime.Last());
             float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
             angles.Insert(0,tempAngle);
             angles.Remove(angles.Last());

@@ -201,7 +201,7 @@ namespace CMVP
         {
             return new Size(0, 0);
         }
-        public float getTime()
+        public double getTime()
         {
             return 0;
         }
