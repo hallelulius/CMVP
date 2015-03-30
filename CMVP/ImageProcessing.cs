@@ -290,7 +290,8 @@ namespace CMVP
 
                     if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                     {
-                        AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
+                        //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
+                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
                         Acenters.Add(translation+Acenter);
                         Adirections.Add(Adirektion);
                         Console.WriteLine("id: " + car.ID);

@@ -57,7 +57,7 @@ namespace CMVP.ControlStrategies
                         }
                     }
 
-                    float tempQuality = lengthToPoint + 5 * angleToPoint + 0.1f * indexDistance;
+                    float tempQuality = lengthToPoint + 10 * angleToPoint + 0.1f * indexDistance;
                     if(tempQuality < quality && lengthToPoint > 30)
                     {
                         quality = tempQuality;

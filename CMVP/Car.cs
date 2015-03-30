@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+//using System.Drawing;
 
 
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
+using AForge;
 
 //using Math;
 
@@ -18,6 +19,7 @@ namespace CMVP
     {
         //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
+        private IntPoint lastPos = new IntPoint(-1,-1);
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
         private List<double> speed; //Velocity of the car in cm/s.
@@ -75,12 +77,20 @@ namespace CMVP
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
             double tempSpeed = (double) ((Math.Sqrt((dx * dx) + (dy * dy)))/deltaTime.ElementAt(0))*PIXEL_SIZE;
             
-            double temp = tempSpeed;
             foreach (double s in speed)
             {
-                temp += s;
+                tempSpeed += s;
             }
-            speed.Insert(0, temp/(speed.Count+1));
+            double tempSpeed2 = (double)tempSpeed / (speed.Count + 1);
+            if (tempSpeed2 > 0.01F)
+            {
+                speed.Insert(0, tempSpeed2);
+            }
+            else
+            {
+                speed.Insert(0, 0);
+            }
+            
             
             //Remove oldest element.
             double xspeed = speed.Last();
@@ -112,12 +122,41 @@ namespace CMVP
         /// <param name="dir"> The new direction of the car. </param>
         public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, double deltaTime)
         {
-            position.Insert(0,pos);
+            //to prevent flickering between two pixels
+            foreach (IntPoint p in position)
+            {
+                pos += p;
+            }
+
+            position.Insert(0, pos / (position.Count + 1));
             position.Remove(position.Last());
+            /*if (pos != lastPos)
+            {
+                if (pos == position.ElementAt(0))
+                {
+                    position.Insert(0, pos);
+                    position.Remove(position.Last());
+                }
+                else
+                {
+                    lastPos = position.ElementAt(0);
+                    position.Insert(0, pos);
+                    position.Remove(position.Last());
+                }
+            }
+            else
+            {
+                position.Insert(0, position.ElementAt(0));
+                position.Remove(position.Last());
+            }
+            */
             direction.Insert(0,dir);
             direction.Remove(direction.Last());
-            this.deltaTime.Insert(0, deltaTime);
-            this.deltaTime.Remove(this.deltaTime.Last());
+            if (deltaTime > 0)
+            {
+                this.deltaTime.Insert(0, deltaTime);
+                this.deltaTime.Remove(this.deltaTime.Last());
+            }
             float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
             angles.Insert(0,tempAngle);
             angles.Remove(angles.Last());
