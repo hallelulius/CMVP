@@ -76,8 +76,9 @@ namespace CMVP
             double dx = position.ElementAt(1).X - position.ElementAt(0).X;
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
             double tempSpeed = (double) ((Math.Sqrt((dx * dx) + (dy * dy)))/deltaTime.ElementAt(0))*PIXEL_SIZE;
-            
-            foreach (double s in speed)
+
+            List<double> tempSpeedList = new List<double>(speed); //Copy to prevent exceptions in foreach 
+            foreach (double s in tempSpeedList)
             {
                 tempSpeed += s;
             }
@@ -96,12 +97,15 @@ namespace CMVP
             double xspeed = speed.Last();
             if (xspeed == null)
                 Console.WriteLine("Null speed");
-            speed.Remove(speed.Last());
+            //speed.Remove(speed.Last()); se below
+            speed.RemoveAt(speed.Count - 1);
+            
 
             //Calculate acceleration
             acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
             //Remove oldest element.
-            acceleration.Remove(acceleration.Last());
+           // acceleration.Remove(acceleration.Last()); We tried another way to remove last object. Se below
+            acceleration.RemoveAt(acceleration.Count-1);
         }
 
         /// <summary>

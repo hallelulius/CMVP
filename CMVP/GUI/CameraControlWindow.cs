@@ -22,6 +22,14 @@ namespace CMVP
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
             this.imgProcess = (ImageProcessing)Program.imageProcess;
+
+            processedVideoRadioButton.Select();
+            checkBoxDrawTrack.Checked = true;
+            this.checkBoxDrawTrack_CheckedChanged_1(this, new EventArgs());
+            checkBoxDrawWindows.Checked = true;
+            this.checkBoxDrawWindows_CheckedChanged(this, new EventArgs());
+            checkBoxDrawRefHeading.Checked = true;
+            this.checkBoxDrawRefHeading_CheckedChanged(this, new EventArgs());
         }
         private void updatePreview(object sender, EventArgs e)
         {
@@ -62,36 +70,43 @@ namespace CMVP
 
         private void checkBoxDrawCirkels_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawCirkels.Checked");
             imgProcess.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
         }
 
         private void checkBoxDrawCenters_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawCenters.Checked");
             imgProcess.drawCenterOnImg = checkBoxDrawCenters.Checked;
         }
         private void checkBoxDrawDirection_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawDirection.Checked");
             imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
 
         }
 
         private void checkBoxDrawId_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawId.Checked");
             imgProcess.drawCarIdOnImg = checkBoxDrawId.Checked;
         }
 
         private void checkBoxDrawWindows_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawWindows.Checked");
             imgProcess.drawWindowsOnImg = checkBoxDrawWindows.Checked;
         }
 
         private void checkBoxDrawRefHeading_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawRefHeading.Checked");
             imgProcess.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
         }
 
         private void checkBoxDrawTrack_CheckedChanged_1(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawTrack.Checked");
             imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
         }
 
