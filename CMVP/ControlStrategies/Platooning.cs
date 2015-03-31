@@ -15,6 +15,7 @@ namespace CMVP.ControlStrategies
         private List<AForge.IntPoint> new_track = new List<AForge.IntPoint>();
         private bool following_leader = false;
         private int searchDistance = 56;
+        private float desiredDistance = 73.0f;
 
         public Platooning(Car car) : base(car, null, "Platooning")
         {
@@ -115,7 +116,10 @@ namespace CMVP.ControlStrategies
                     }
                     else
                     {
-                        setReference(new IntPoint(refPoint.X, refPoint.Y), 0.0f);//track.m[2, index]));
+                        IntPoint carPos = car.getPosition();
+                        IntPoint leaderPos = followed_car.getPosition();
+                        float distance = (float)Math.Sqrt(Convert.ToDouble((carPos.X - leaderPos.X) ^ 2 + (carPos.Y - leaderPos.Y) ^ 2));
+                        setReference(new IntPoint(refPoint.X, refPoint.Y), desiredDistance - distance);
                     }
                 }
             }
