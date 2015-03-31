@@ -210,9 +210,12 @@ namespace CMVP
             {
                 Console.WriteLine(k);
                 int id = getId(Acenters[k], Adirections[k], cirkels);
-                Console.WriteLine("ID: " + id);
-                Car car = new Car(id, Acenters[k], Adirections[k]);
-                objects.Add(car);
+                if (id != 0)
+                {
+                    Console.WriteLine("ID: " + id);
+                    Car car = new Car(id, Acenters[k], Adirections[k]);
+                    objects.Add(car);
+                }
             }
             List<int> intList = new List<int>();
             foreach(Car car in objects)

@@ -121,7 +121,7 @@ namespace CMVP
             byte id = convertCarID(carID,"Steering");
             sendSteering(id, NEUTRAL_STEERING);
             id = convertCarID(carID,"Throttle");
-            sendThrottle(id,NEUTRAL_THROTTLE);
+            sendThrottle(id,NEUTRAL_THROTTLE-NEUTRAL_THROTTLE/2);
         }
 
          /// <summary>
@@ -243,7 +243,7 @@ namespace CMVP
         /// <param name="carID">The car that should be updated</param>
          /// <param name="mode">If steering or throttle should be updated</param>
          /// <param name="b">Decides which reverse setting that should be used</param>
-         public void reverseSetting(int carID, String mode, bool b)
+        public void reverseSetting(int carID, String mode, bool b)
          {
             if (b && mode.Equals("Throttle"))
             {
@@ -279,6 +279,10 @@ namespace CMVP
         {
             return port.IsOpen;
         }
-
+        public void calibrationMode(int carId)
+        {
+            sendThrottle(convertCarID(carId,"Throttle"),NEUTRAL_THROTTLE);
+            sendSteering(convertCarID(carId, "Steering"), NEUTRAL_STEERING);
+        }
     }
 }

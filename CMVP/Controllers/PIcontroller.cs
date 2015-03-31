@@ -37,7 +37,7 @@ namespace CMVP
         public override void updateController()      //PI-controller 
         {
             outThrottle = 0;
-            if (speed <=2  )
+            if (speed <2  )
                 throttleIntegratorSum += 0.001f;
             else if (speed > 8)
             {

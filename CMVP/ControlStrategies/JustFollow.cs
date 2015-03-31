@@ -19,16 +19,15 @@ namespace CMVP.ControlStrategies
     {
 
         int lastIndex = -1;
+        
         public JustFollow(Car car) : base(car,null, "Follow track")
         {
 
         }
-
         public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
-            float quality = 9999;
             int index = -1;
-
+            float quality = 9999;
             if (track != null)
             {
                 int trackLength = track.m.Length / 3;
@@ -56,8 +55,11 @@ namespace CMVP.ControlStrategies
                             indexDistance = temp2;
                         }
                     }
-
-                    float tempQuality = lengthToPoint + 10 * angleToPoint + 0.1f * indexDistance;
+                    float tempQuality;
+                    if (angleToPoint > Math.PI / 2)
+                        tempQuality = 9999;
+                    else
+                        tempQuality = lengthToPoint + 10 *angleToPoint + 0.1f * indexDistance;
                     if(tempQuality < quality && lengthToPoint > 30)
                     {
                         quality = tempQuality;

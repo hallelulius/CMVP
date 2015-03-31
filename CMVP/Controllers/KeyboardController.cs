@@ -16,11 +16,11 @@ namespace CMVP
         {
             if (NativeKeyboard.IsKeyDown(KeyCode.Up))
             {
-                outThrottle += 3/150F;
+                outThrottle += 3/900F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Down))
             {
-                outThrottle -= 3/150F;
+                outThrottle -= 3/900F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {

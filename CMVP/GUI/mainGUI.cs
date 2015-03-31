@@ -59,6 +59,8 @@ namespace CMVP
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
             Program.imageProcess.start();
+            calibration.Enabled = false;
+            Initiate.Enabled = false;
             //System.Console.WriteLine("Start simulation");
 
             //brain = new Brain();
@@ -87,6 +89,8 @@ namespace CMVP
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             Program.imageProcess.stop();
+            calibration.Enabled = true;
+            Initiate.Enabled = true;
             //thread.Abort();
             Console.WriteLine("Stoping simulation");
             try
@@ -343,6 +347,7 @@ namespace CMVP
                 brainThread.Suspend();
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
+            calibration.Enabled = true;
             dataGridView.Rows.Clear();
             if (Program.cars.Count > 0)
                 dataGridView.Rows.Add(Program.cars.Count);
@@ -389,6 +394,15 @@ namespace CMVP
         private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)
         {
             dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
+        }
+
+        private void calibration_Click(object sender, EventArgs e)
+        {
+            foreach(Car c in Program.cars)
+            {
+                Program.com.calibrationMode(c.ID);
+                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instruktions in the manual chapter 6,4. \n Remember to always simulate the platform with external power source.");
+            }
         }
 
 
