@@ -60,7 +60,7 @@ namespace CMVP
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
             this.imgProcesTimer.Interval=10;
-            this.drawTimer.Interval = 100;
+            this.drawTimer.Interval = 10;
             this.imgProcesTimer.Tick += new EventHandler(processImage);
             this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
@@ -194,13 +194,10 @@ namespace CMVP
             {
                 AForge.IntPoint Acenter;
                 AForge.Point Adirektion;
-                AForge.IntPoint[] Atriangle = new AForge.IntPoint[3];
 
-                Atriangle[0] = new AForge.IntPoint(triangle[0].X, triangle[0].Y);
-                Atriangle[1] = new AForge.IntPoint(triangle[1].X, triangle[1].Y);
-                Atriangle[2] = new AForge.IntPoint(triangle[2].X, triangle[2].Y);
 
-                if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+
+                if (getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                 {
                     Acenters.Add(Acenter);
                     Adirections.Add(Adirektion);
@@ -260,17 +257,27 @@ namespace CMVP
             {
                 AForge.IntPoint pos=car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                int cropX = pos.X - 100;
-                int cropY = pos.Y - 100;
-                if( cropX < 0 )
-                    cropX=0;
-                else if(cropX > img.Width-200)
-                    cropX= img.Width-200;
-                if( cropY < 0 )
-                    cropY=0;
-                else if(cropY>img.Height-200)
-                    cropY=img.Height-200;
-                croppedImg = img.Clone(new Rectangle(cropX,cropY, 200, 200), img.PixelFormat);
+                int cropX,cropY;
+                if (car.found)
+                {
+                    cropX = pos.X - 100;
+                    cropY = pos.Y - 100;
+                    if (cropX < 0)
+                        cropX = 0;
+                    else if (cropX > img.Width - 200)
+                        cropX = img.Width - 200;
+                    if (cropY < 0)
+                        cropY = 0;
+                    else if (cropY > img.Height - 200)
+                        cropY = img.Height - 200;
+                    croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
+                }
+                else
+                {
+                    cropX = 0;  
+                    cropY = 0;
+                    croppedImg = img;
+                }
 
 
                 Acenters = new List<AForge.IntPoint>();
@@ -280,18 +287,13 @@ namespace CMVP
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
-
+                bool carFoundThisTime = false;
                 foreach (AForge.IntPoint[] triangle in triangles)
                 {
                     AForge.IntPoint Acenter;
                     AForge.Point Adirektion;
-                    AForge.IntPoint[] Atriangle = new AForge.IntPoint[3];
 
-                    Atriangle[0] = new AForge.IntPoint(triangle[0].X, triangle[0].Y);
-                    Atriangle[1] = new AForge.IntPoint(triangle[1].X, triangle[1].Y);
-                    Atriangle[2] = new AForge.IntPoint(triangle[2].X, triangle[2].Y);
-
-                    if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                    if (!carFoundThisTime && getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                     {
                         //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
@@ -299,7 +301,14 @@ namespace CMVP
                         Adirections.Add(Adirektion);
                         Console.WriteLine("id: " + car.ID);
                         car.setPositionAndOrientation(Acenter+translation, Adirektion,deltaTime);
+                        car.found = true;
+                        carFoundThisTime = true;
+                        break;
                     }
+                }
+                if(!carFoundThisTime)
+                {
+                    car.found = false;
                 }
             }
            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);

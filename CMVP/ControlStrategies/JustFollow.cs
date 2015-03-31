@@ -55,11 +55,12 @@ namespace CMVP.ControlStrategies
                             indexDistance = temp2;
                         }
                     }
+
                     float tempQuality;
-                    if (angleToPoint > Math.PI / 2)
-                        tempQuality = 9999;
-                    else
-                        tempQuality = lengthToPoint + 10 *angleToPoint + 0.1f * indexDistance;
+                   // if (angleToPoint > Math.PI / 2)
+                    //    tempQuality = 9999;
+                    //else
+                        tempQuality = 0.01f*lengthToPoint +  angleToPoint + indexDistance;
                     if(tempQuality < quality && lengthToPoint > 30)
                     {
                         quality = tempQuality;
