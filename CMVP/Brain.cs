@@ -98,7 +98,7 @@ namespace CMVP
                         }
                         catch (Exception e)
                         {
-
+                            Debug.WriteLine(e);
                         }
                     }
                     else

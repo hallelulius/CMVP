@@ -173,5 +173,10 @@ namespace CMVP
             throw new FormatException("ERROR: Resolution " + resolution.X + " x " + resolution.Y + "is not supported by all included cameras.");
 
         }
+
+        public double getTime()
+        {
+            return 0;
+        }
     }
 }  

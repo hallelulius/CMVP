@@ -23,13 +23,13 @@ namespace CMVP
 
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE 
-        private const byte MAX_THROTTLE = 250; //MAX_THROTTLE = 200;                //output = 0.74V
+        private const byte MAX_THROTTLE = 200;                 //output = 0.74V
         private const byte NEUTRAL_THROTTLE = 90;            //output = 1.44V
         private const byte REVERSE_THROTTLE = 0;             //output = 2.03V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
-        
+
          // change these varaiables to change speed
         private byte voltage_cap_throttle = 160;       //voltage cap to reduce maximum speed
         private byte voltage_cap_steering = 230;     
@@ -118,8 +118,10 @@ namespace CMVP
 
         public void stopCar(int carID)
         {
-            updateSteering(carID, NEUTRAL_STEERING);
-            updateThrottle(carID, NEUTRAL_THROTTLE);
+            byte id = convertCarID(carID,"Steering");
+            sendSteering(id, NEUTRAL_STEERING);
+            id = convertCarID(carID,"Throttle");
+            sendThrottle(id,NEUTRAL_THROTTLE);
         }
 
          /// <summary>
@@ -156,11 +158,11 @@ namespace CMVP
             float val = 0;
             if (value > 0)
             {
-                val = NEUTRAL_STEERING + value * -(RIGHT_STEERING - NEUTRAL_STEERING);
+                val = NEUTRAL_STEERING + value * (RIGHT_STEERING - NEUTRAL_STEERING);
             }
             else if (value < 0)
             {
-                val = NEUTRAL_STEERING + value * (LEFT_STEERING - NEUTRAL_STEERING);
+                val = NEUTRAL_STEERING + value * -(LEFT_STEERING - NEUTRAL_STEERING);
             }
             
             byte id = convertCarID(carID,"Steering");
@@ -199,7 +201,7 @@ namespace CMVP
             }
             if (port != null && carID != ERROR_CODE  )
             {
-                
+
                     byte[] bits = { carID, value };
                     port.Write(bits, 0, 2);
                     //System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);

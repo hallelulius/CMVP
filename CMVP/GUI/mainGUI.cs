@@ -87,7 +87,6 @@ namespace CMVP
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             Program.imageProcess.stop();
-            //System.Console.WriteLine("Stop simulation");
             //thread.Abort();
             Console.WriteLine("Stoping simulation");
             try
@@ -349,8 +348,11 @@ namespace CMVP
 
         private void Initiate_Click(object sender, EventArgs e)
         {
+            if(brainThread.IsAlive)
+                brainThread.Suspend();
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
+            dataGridView.Rows.Clear();
             if (Program.cars.Count > 0)
                 dataGridView.Rows.Add(Program.cars.Count);
         }
@@ -377,9 +379,11 @@ namespace CMVP
             Stopwatch timer = new Stopwatch();
             timer.Start();
             long elapsedTime;
+            Console.WriteLine("Started data grid update thread!");
 
             while(true)
             {
+                //Console.WriteLine("Updating data grid...");
                 elapsedTime = timer.ElapsedMilliseconds;
                 foreach(DataGridViewRow row in dataGridView.Rows)
                 {
@@ -411,6 +415,6 @@ namespace CMVP
         private void trackCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-        }
     }
+}
 }

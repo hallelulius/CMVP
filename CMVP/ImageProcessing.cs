@@ -40,10 +40,11 @@ namespace CMVP
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
         private Timer drawTimer;
-        private int tempTime;
         private Graphics g;
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
+        private double deltaTime;
+        private double prevTime;
 
         public Boolean drawCirkelsOnImg;
         public Boolean drawDirectionOnImg;
@@ -58,14 +59,13 @@ namespace CMVP
         {
             this.imgProcesTimer = new Timer();
             this.drawTimer = new Timer();
-            this.imgProcesTimer.Interval=1;
+            this.imgProcesTimer.Interval=10;
             this.drawTimer.Interval = 100;
             this.imgProcesTimer.Tick += new EventHandler(processImage);
             this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.tempTime=0;
             this.carMap = new Dictionary<int, Car>();
 
             this.cirkels = new List<Blob>();
@@ -77,6 +77,7 @@ namespace CMVP
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
             drawTimer.Start();
+            prevTime = videoStream.getTime();
             System.Console.WriteLine("Image processing OK");
 
         }
@@ -143,11 +144,22 @@ namespace CMVP
                 foreach(Car car in objects)
                 {
                     AForge.IntPoint pos = car.getPosition();
-                    g.DrawRectangle(redPen, new Rectangle(pos.X-100,pos.Y-100, 200, 200));
+                    //bör ta hänsyn till riktningen för minimera fönstret
+                    int cropX = pos.X - 100;
+                    int cropY = pos.Y - 100;
+                    if (cropX < 0)
+                        cropX = 0;
+                    else if (cropX > img.Width - 200)
+                        cropX = img.Width - 200;
+                    if (cropY < 0)
+                        cropY = 0;
+                    else if (cropY > img.Height - 200)
+                        cropY = img.Height - 200;
+                    g.DrawRectangle(redPen, new Rectangle(cropX,cropY, 200, 200));
                 }
             if (drawCirkelsOnImg)
             {
-                List<Blob> cirkels = getBlobs(4, 13, img);
+                List<Blob> cirkels = getBlobs(1, 13, img);
                 drawCirkels(cirkels);
             }
             for (int k = 0; k < Acenters.Count; k++)
@@ -169,8 +181,9 @@ namespace CMVP
         }
         public void initiate()
         {
+            objects.Clear();
             img = videoStream.getImage();
-            List<Blob> cirkels = getBlobs(4, 13,img);
+            List<Blob> cirkels = getBlobs(2, 13,img);
             Acenters = new List<AForge.IntPoint>();
             Adirections = new List<AForge.Point>();
             List<AForge.IntPoint> points = getPoints(cirkels);
@@ -234,6 +247,12 @@ namespace CMVP
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
+            double tempTime = videoStream.getTime();
+            deltaTime = tempTime-prevTime;
+            Console.WriteLine("Delta time "+ prevTime);
+            Console.WriteLine("System Time " + System.DateTime.Now.Millisecond);
+            prevTime = tempTime;
+
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos=car.getPosition();
@@ -254,7 +273,7 @@ namespace CMVP
                 Acenters = new List<AForge.IntPoint>();
                 Adirections = new List<AForge.Point>();
 
-                List<Blob> cirkels = getBlobs(4, 13, croppedImg);
+                List<Blob> cirkels = getBlobs(2, 13, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<AForge.IntPoint[]> triangles = getTriangels(points);
                 triangles = filterDubblets(triangles);
@@ -271,11 +290,12 @@ namespace CMVP
 
                     if (getInformationFromTriangle(Atriangle, 44, 13, 7, 3, out Acenter, out Adirektion))
                     {
-                        AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
+                        //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
+                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
                         Acenters.Add(translation+Acenter);
                         Adirections.Add(Adirektion);
                         Console.WriteLine("id: " + car.ID);
-                        car.setPositionAndOrientation(Acenter+translation, Adirektion);
+                        car.setPositionAndOrientation(Acenter+translation, Adirektion,deltaTime);
                     }
                 }
             }
@@ -531,7 +551,7 @@ namespace CMVP
         {
             Console.WriteLine("Start BlobFinder: " + System.DateTime.Now.Millisecond);
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
+            blobCounter.BackgroundThreshold = new RGB(150, 150, 150).Color;
             blobCounter.MinHeight = minHeight;
             blobCounter.MaxHeight = maxHeight;
             blobCounter.FilterBlobs = true;
@@ -539,6 +559,11 @@ namespace CMVP
             Blob[] blobs = blobCounter.GetObjectsInformation();
             Console.WriteLine("End BlobFinder: " + System.DateTime.Now.Millisecond);
             return blobs.ToList<Blob>();
+        }
+
+        public double getTime()
+        {
+            return videoStream.getTime();
         }
     }
 }
