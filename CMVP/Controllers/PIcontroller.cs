@@ -35,8 +35,8 @@ namespace CMVP
             Kp_steer = 0.6f; //Ki_steer / Ti_steer;
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // D-controller constants:
-            Kd_steer = 0.01f; //Ki_steer / Ti_steer;
-            Kd_throttle = 0.01f; // Ki_throttle / Ti_throttle;
+            Kd_steer = 0.01f; 
+            Kd_throttle = 0.01f; 
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
@@ -55,7 +55,7 @@ namespace CMVP
         {
             
 
-            float maxSpeed = 150;
+            float maxSpeed = 165;
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
@@ -91,7 +91,7 @@ namespace CMVP
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
             //outSteer += -Ki_steer * steerIntegratorSum ;
-            //derivative 
+            //derivative part here, not fully tested but seems to work 
             steerDerivative=0;
             foreach (float err in prevErrorHeading)
             {

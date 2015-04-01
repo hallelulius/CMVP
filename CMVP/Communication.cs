@@ -13,6 +13,8 @@ namespace CMVP
        /// 
      class Communication
      {
+
+        List<byte> lastValues;
         //addresses for the DACs
         // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
@@ -25,7 +27,7 @@ namespace CMVP
         // DO NOT CHANGE! 
         private const byte MAX_THROTTLE = 200;               //output = 2.58V
         private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
-        private const byte REVERSE_THROTTLE = 0;             //output = 0V
+        private const byte MIN_THROTTLE = 0;             //output = 0V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
@@ -42,26 +44,31 @@ namespace CMVP
         /// </summary>
         public Communication()
         {
-            if (getFirstPort() != null)
+            lastValues = new List<byte>();
+            for (int i = 0; i < 20; i++)
             {
-                port = new SerialPort(getFirstPort(), 115200);          //remeber to sync baudrate with arduino sketch
-                portOpen = port.IsOpen;
-                System.Threading.Thread.Sleep(1000);
-                try
-                {
-                    port.Open();
-                    System.Console.WriteLine("Communication OK");
-                }
-                catch (Exception e)
-                {
-                   System.Console.WriteLine("Could not open port");
-                   Console.WriteLine(e.ToString());
-                }
+                lastValues.Add(0);
             }
-            else
-            {
-                System.Console.WriteLine("Connect Arduino");
-            }
+                if (getFirstPort() != null)
+                {
+                    port = new SerialPort(getFirstPort(), 115200);          //remeber to sync baudrate with arduino sketch
+                    portOpen = port.IsOpen;
+                    System.Threading.Thread.Sleep(1000);
+                    try
+                    {
+                        port.Open();
+                        System.Console.WriteLine("Communication OK");
+                    }
+                    catch (Exception e)
+                    {
+                        System.Console.WriteLine("Could not open port");
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+                else
+                {
+                    System.Console.WriteLine("Connect Arduino");
+                }
         }
 
         ~Communication()
@@ -119,7 +126,8 @@ namespace CMVP
             byte id = convertCarIDToDAC(carID,"Steering");
             sendSteering(id, NEUTRAL_STEERING);
             id = convertCarIDToDAC(carID,"Throttle");
-            sendThrottle(id,NEUTRAL_THROTTLE);
+            sendThrottle(id,MIN_THROTTLE);
+            Console.WriteLine("Car " + carID + " stopped" );
         }
 
          /// <summary>
@@ -137,11 +145,13 @@ namespace CMVP
             }
             else if (value < 0)
             {
-                val = NEUTRAL_THROTTLE + value * -(REVERSE_THROTTLE - NEUTRAL_THROTTLE);
+                val = NEUTRAL_THROTTLE + value * -(MIN_THROTTLE - NEUTRAL_THROTTLE);
             }   
 
             byte id = convertCarIDToDAC(carID,"Throttle");
             sendThrottle(id,(byte) val);
+            lastValues.Insert(0, (byte) val);
+            lastValues.Remove(lastValues.Last());    
         }
 
         
@@ -242,28 +252,28 @@ namespace CMVP
             if (b && mode.Equals("Throttle"))
             {
                 sendThrottle(convertCarIDToDAC(carID,mode), MAX_THROTTLE);
-                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press and hold max throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (!b && mode.Equals("Throttle"))
             {
-                sendThrottle(convertCarIDToDAC(carID, mode), REVERSE_THROTTLE);
-                Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
+                sendThrottle(convertCarIDToDAC(carID, mode), MIN_THROTTLE);
+                Console.WriteLine("Press and hold min throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (b && mode.Equals("Steering"))
             {
                 sendSteering(convertCarIDToDAC(carID, mode), LEFT_STEERING);
-                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press and hold left steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (!b && mode.Equals("Throttle"))
             {
                 sendSteering(convertCarIDToDAC(carID, mode), RIGHT_STEERING);
-                Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press and hold right steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }

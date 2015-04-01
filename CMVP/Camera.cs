@@ -20,6 +20,9 @@ using AForge.Math;
 
 namespace CMVP
 {
+    /// <summary>
+    /// Old logitech camera not in use right now
+    /// </summary>
     public partial class Camera : VideoStream
     {
         private static int idCount=0;
