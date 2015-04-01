@@ -38,7 +38,7 @@ namespace CMVP
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // D-controller constants:
             Kd_steer = 0.01f; 
-            Kd_throttle = 0.01f; 
+            Kd_throttle = 0.0001f; 
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
