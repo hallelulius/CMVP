@@ -66,10 +66,6 @@ namespace CMVP
                         Console.WriteLine(e.ToString());
                     }
                 }
-                else
-                {
-                    System.Console.WriteLine("Connect Arduino");
-                }
         }
 
         ~Communication()
@@ -77,7 +73,7 @@ namespace CMVP
 
             if (port != null)
             {
-                if (port.IsOpen)
+                if (isActive())
                 {
                     port.Close();
                 }
@@ -138,7 +134,6 @@ namespace CMVP
          /// <param name="value">Throttle value</param>
         public void updateThrottle(int carID, float value)
         {
-            //Console.WriteLine("Updating Throttle...");
             float val = 0;
             if (value > 0)
             {
@@ -163,7 +158,6 @@ namespace CMVP
          /// <param name="value">Steering value</param>
          public void updateSteering(int carID, float value)
         {
-            //Console.WriteLine("Updating Steering...");
             float val = 0;
             if (value > 0)
             {
@@ -177,7 +171,6 @@ namespace CMVP
             byte id = convertCarIDToDAC(carID,"Steering");
             sendSteering(id, (byte) val);
 
-            
         }
          /// <summary>
          /// Sends the steering value of a car to the arduino
@@ -206,7 +199,6 @@ namespace CMVP
             {
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
-
                     byte[] bits = { DAC, value };
                     port.Write(bits, 0, 2);
                     //System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
