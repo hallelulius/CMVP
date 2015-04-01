@@ -29,7 +29,6 @@ namespace CMVP
         private BackgroundWorker m_grabThread;
         private Bitmap image;
         private List<Panel> panelsToUpdate;
-        private TimeStamp timestamp;
         private double time;
 
         public PTGreyCamera()
@@ -95,14 +94,19 @@ namespace CMVP
                     Debug.WriteLine("Error: " + ex.Message);
                     continue;
                 }
+                catch (NullReferenceException ex)
+                {
+                    Debug.WriteLine("Error_ " + ex.Message);
+                    Console.WriteLine("No camera found: GrabLoop stopped");
+                    stop();
+                    continue;
+                }
 
                 lock (this)
                 {
-                    //m_rawImage.Convert(PixelFormat.PixelFormatMono8, m_processedImage);
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
-                    time = (double) System.DateTime.Now.Ticks/10000000D;
-                    timestamp = m_rawImage.timeStamp;
-
+                    //time = (double) System.DateTime.Now.Ticks/10000000D;
+                    time = (double) System.DateTime.Now.Ticks*Math.Pow(10,-7);
                 }
   
                 try
@@ -232,7 +236,6 @@ namespace CMVP
         {
             if (m_grabImages)
             {
-                //return (double)(timestamp.seconds + 0.000001f * timestamp.microSeconds);
                 return  time;
             }
             else

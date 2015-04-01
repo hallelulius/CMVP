@@ -21,26 +21,25 @@ namespace CMVP
 {
     class ImageProcessing : VideoStream
     {
+        //used for drawing
         static private Pen redPen=new Pen(Color.Red, 2);
         static private Pen bluePen = new Pen(Color.LightSkyBlue,2);
         static private Pen greenPen = new Pen(Color.Green, 2);
         static private Pen yellowPen = new Pen(Color.Yellow, 2);
-
+        private Graphics g;
 
         List<Car> objects;
         private VideoStream videoStream;
         private Bitmap img;
-        private Bitmap processedImage;
         private Bitmap croppedImg;
         private Bitmap canvas;
-        //Temporary variable until the physical filter is in use.
-       // private Bitmap filteredImg;
+
         private List<AForge.IntPoint> Acenters;
         private List<AForge.Point> Adirections;
         private List<Panel> panelsToUpdate;
         private Timer imgProcesTimer;
         private Timer drawTimer;
-        private Graphics g;
+        
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
         private double deltaTime;
@@ -222,27 +221,6 @@ namespace CMVP
             MessageBox.Show("The following cars where found: " + String.Join(",",intList.ToArray()));
         }
 
-        public void stop()
-        {
-            imgProcesTimer.Stop();
-            drawTimer.Stop();
-        }
-        public void pushDestination(Panel panel)
-        {
-            panelsToUpdate.Add(panel);
-        }
-        public void removeDestination(Panel panel)
-        {
-            panelsToUpdate.Remove(panel);
-        }
-        public Size getSize()
-        {
-            return videoStream.getSize();
-        }
-        public Bitmap getImage()
-        {
-            return img;
-        }
         private void processImage(object sender, EventArgs e)
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
@@ -549,7 +527,6 @@ namespace CMVP
         }
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
-            Console.WriteLine("Start BlobFinder: " + System.DateTime.Now.Millisecond);
             BlobCounter blobCounter = new BlobCounter();
             blobCounter.BackgroundThreshold = new RGB(150, 150, 150).Color;
             blobCounter.MinHeight = minHeight;
@@ -557,10 +534,29 @@ namespace CMVP
             blobCounter.FilterBlobs = true;
             blobCounter.ProcessImage(img);
             Blob[] blobs = blobCounter.GetObjectsInformation();
-            Console.WriteLine("End BlobFinder: " + System.DateTime.Now.Millisecond);
             return blobs.ToList<Blob>();
         }
-
+        public void stop()
+        {
+            imgProcesTimer.Stop();
+            drawTimer.Stop();
+        }
+        public void pushDestination(Panel panel)
+        {
+            panelsToUpdate.Add(panel);
+        }
+        public void removeDestination(Panel panel)
+        {
+            panelsToUpdate.Remove(panel);
+        }
+        public Size getSize()
+        {
+            return videoStream.getSize();
+        }
+        public Bitmap getImage()
+        {
+            return img;
+        }
         public double getTime()
         {
             return videoStream.getTime();

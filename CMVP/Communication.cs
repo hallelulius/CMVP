@@ -14,7 +14,7 @@ namespace CMVP
      class Communication
      {
         //addresses for the DACs
-        // DO NOT CHANGE
+        // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
         private const byte throttleB = 2;    // DAC B gain 1
         private const byte steeringA = 4;    // DAC C gain 1
@@ -22,17 +22,15 @@ namespace CMVP
         private const byte ERROR_CODE = 230;
 
         //Constants used to debug and trim  Vref=3.3V 
-        // DO NOT CHANGE 
-        private const byte MAX_THROTTLE = 200;                 //output = 0.74V
-        private const byte NEUTRAL_THROTTLE = 90;            //output = 1.44V
-        private const byte REVERSE_THROTTLE = 0;             //output = 2.03V
+        // DO NOT CHANGE! 
+        private const byte MAX_THROTTLE = 200;               //output = 2.58V
+        private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
+        private const byte REVERSE_THROTTLE = 0;             //output = 0V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
-
-         // change these varaiables to change speed
-        private byte voltage_cap_throttle = 160;       //voltage cap to reduce maximum speed
-        private byte voltage_cap_steering = 230;     
+        private const byte VOLTAGE_CAP = 230;               //to prevent high voltages to the controller
+        
 
         private SerialPort port;
         private bool portOpen = false;
@@ -88,7 +86,7 @@ namespace CMVP
          /// <param name="id">The ID of the Car that is used</param>
          /// <param name="mode">If it should find DAC address for throttle or steering</param>
          /// <returns>The correspnding DAC address for the id and the mode</returns>
-        private byte convertCarID(int id, String mode)
+        private byte convertCarIDToDAC(int id, String mode)
         {
             byte DAC;
             if (id == 1 && mode.Equals("Throttle") )
@@ -118,9 +116,9 @@ namespace CMVP
 
         public void stopCar(int carID)
         {
-            byte id = convertCarID(carID,"Steering");
+            byte id = convertCarIDToDAC(carID,"Steering");
             sendSteering(id, NEUTRAL_STEERING);
-            id = convertCarID(carID,"Throttle");
+            id = convertCarIDToDAC(carID,"Throttle");
             sendThrottle(id,NEUTRAL_THROTTLE);
         }
 
@@ -142,7 +140,7 @@ namespace CMVP
                 val = NEUTRAL_THROTTLE + value * -(REVERSE_THROTTLE - NEUTRAL_THROTTLE);
             }   
 
-            byte id = convertCarID(carID,"Throttle");
+            byte id = convertCarIDToDAC(carID,"Throttle");
             sendThrottle(id,(byte) val);
         }
 
@@ -165,7 +163,7 @@ namespace CMVP
                 val = NEUTRAL_STEERING + value * -(LEFT_STEERING - NEUTRAL_STEERING);
             }
             
-            byte id = convertCarID(carID,"Steering");
+            byte id = convertCarIDToDAC(carID,"Steering");
             sendSteering(id, (byte) val);
 
             
@@ -175,11 +173,11 @@ namespace CMVP
          /// </summary>
          /// <param name="carID">The car that should be updated</param>
          /// <param name="value">Steering value</param>
-        private void sendSteering(byte carID, byte value)
+        private void sendSteering(byte DAC, byte value)
         {
-            if (port != null && carID != ERROR_CODE && value < voltage_cap_steering ) 
+            if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP ) 
             {
-                byte[] bits = {carID, value };
+                byte[] bits = {DAC, value };
                 port.Write(bits, 0, 2);
                 //System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
             }
@@ -193,16 +191,12 @@ namespace CMVP
          /// </summary>
         /// <param name="carID">The car that should be updated</param>
          /// <param name="value">throttleValue</param>
-        private void sendThrottle(byte carID, byte value)
+        private void sendThrottle(byte DAC, byte value)
         {
-            if (value > voltage_cap_throttle)
-            {
-                value = voltage_cap_throttle;
-            }
-            if (port != null && carID != ERROR_CODE  )
+            if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
 
-                    byte[] bits = { carID, value };
+                    byte[] bits = { DAC, value };
                     port.Write(bits, 0, 2);
                     //System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
             }
@@ -247,28 +241,28 @@ namespace CMVP
          {
             if (b && mode.Equals("Throttle"))
             {
-                sendThrottle(convertCarID(carID,mode), MAX_THROTTLE);
+                sendThrottle(convertCarIDToDAC(carID,mode), MAX_THROTTLE);
                 Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (!b && mode.Equals("Throttle"))
             {
-                sendThrottle(convertCarID(carID, mode), REVERSE_THROTTLE);
+                sendThrottle(convertCarIDToDAC(carID, mode), REVERSE_THROTTLE);
                 Console.WriteLine("Press and hold throttle trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (b && mode.Equals("Steering"))
             {
-                sendSteering(convertCarID(carID, mode), LEFT_STEERING);
+                sendSteering(convertCarIDToDAC(carID, mode), LEFT_STEERING);
                 Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
             else if (!b && mode.Equals("Throttle"))
             {
-                sendSteering(convertCarID(carID, mode), RIGHT_STEERING);
+                sendSteering(convertCarIDToDAC(carID, mode), RIGHT_STEERING);
                 Console.WriteLine("Press and hold steering trim. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
