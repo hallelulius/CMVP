@@ -91,6 +91,7 @@ namespace CMVP
             Program.imageProcess.stop();
             calibration.Enabled = true;
             Initiate.Enabled = true;
+
             //thread.Abort();
             Console.WriteLine("Stoping simulation");
             try
@@ -98,6 +99,7 @@ namespace CMVP
                 foreach(Car car in Program.cars)
                 {
                     Program.com.stopCar(car.ID);
+                    car.getController().resetController();
                 }
                 brainThread.Suspend();
             }

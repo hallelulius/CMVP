@@ -105,7 +105,6 @@ namespace CMVP
                 lock (this)
                 {
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
-                    //time = (double) System.DateTime.Now.Ticks/10000000D;
                     time = (double) System.DateTime.Now.Ticks*Math.Pow(10,-7);
                 }
   

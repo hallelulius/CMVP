@@ -28,7 +28,15 @@ namespace CMVP
         static private Pen yellowPen = new Pen(Color.Yellow, 2);
         private Graphics g;
 
-        List<Car> objects;
+        public Boolean drawCirkelsOnImg;
+        public Boolean drawDirectionOnImg;
+        public Boolean drawWindowsOnImg;
+        public Boolean drawCenterOnImg;
+        public Boolean drawTrackOnImg;
+        public Boolean drawCarIdOnImg;
+        public Boolean drawRefHeadingOnImg;
+
+        
         private VideoStream videoStream;
         private Bitmap img;
         private Bitmap croppedImg;
@@ -42,16 +50,17 @@ namespace CMVP
         
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
+        List<Car> objects;
+        
+        //variables used for calculating time difference between updates
         private double deltaTime;
         private double prevTime;
 
-        public Boolean drawCirkelsOnImg;
-        public Boolean drawDirectionOnImg;
-        public Boolean drawWindowsOnImg;
-        public Boolean drawCenterOnImg;
-        public Boolean drawTrackOnImg;
-        public Boolean drawCarIdOnImg;
-        public Boolean drawRefHeadingOnImg;
+        //sets ideal triangle base and height
+        private double idealHeight = 44; // 44 on table 33 on floor
+        private double idealBase = 13;  //  13 on table 10 on floor
+        private double heightError = 7;
+        private double baseError = 3;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
@@ -150,7 +159,7 @@ namespace CMVP
                         AForge.IntPoint Acenter;
                         AForge.Point Adirektion;
 
-                        if (getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                        if (getInformationFromTriangle(triangle, idealHeight, idealBase, heightError, baseError, out Acenter, out Adirektion))
                         {
                             System.Drawing.Point p1 = new System.Drawing.Point(triangle[1].X, triangle[1].Y);
                             System.Drawing.Point p2 = new System.Drawing.Point(triangle[2].X, triangle[2].Y);
@@ -219,7 +228,7 @@ namespace CMVP
 
 
 
-                if (getInformationFromTriangle(triangle, 33, 10, 7, 3, out Acenter, out Adirektion))
+                if (getInformationFromTriangle(triangle, idealHeight, idealBase, heightError, baseError, out Acenter, out Adirektion))
                 {
                     Acenters.Add(Acenter);
                     Adirections.Add(Adirektion);
@@ -294,7 +303,7 @@ namespace CMVP
                     AForge.IntPoint Acenter;
                     AForge.Point Adirektion;
 
-                    if (!carFoundThisTime && getInformationFromTriangle(triangle, 33, 10, 7, 3, out Acenter, out Adirektion))
+                    if (!carFoundThisTime && getInformationFromTriangle(triangle, idealHeight, idealBase, heightError, baseError, out Acenter, out Adirektion))
                     {
                         //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
@@ -375,7 +384,7 @@ namespace CMVP
                     {
                         if (a != b && a != c && b != c)
                         {
-                            //We need to check a that there doesn't excist any duplicates
+                            //We need to check a that there doesn't exist any duplicates
                             AForge.IntPoint[] locations = new AForge.IntPoint[3];
 
                             locations[0] = a;
@@ -449,6 +458,8 @@ namespace CMVP
             direction = new AForge.Point(0, 0);
             return false;
         }
+       
+        /* NOT USED?
         List<System.Drawing.Point[]> filterTriangels(List<System.Drawing.Point[]> triangles, double idealHight, double idealBase, double errorHight, double errorBase, Boolean b)
         {
             List<System.Drawing.Point[]> passedTriangels = new List<System.Drawing.Point[]>();
@@ -495,6 +506,12 @@ namespace CMVP
             }
             return passedTriangels;
         }
+          */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="triangles"></param>
+        /// <returns></returns>
         private List<AForge.IntPoint[]> filterDubblets(List<AForge.IntPoint[]> triangles)
         {
             List<AForge.IntPoint[]> filteredTriangles = new List<AForge.IntPoint[]>();
@@ -530,11 +547,13 @@ namespace CMVP
 
             return filteredTriangles;
         }
+
         private int getId(AForge.Point center, AForge.DoublePoint direction, List<Blob> rectangles)
         {
             List<Blob> idRectangles = filterOutIdRectangles(rectangles,center);
             return idRectangles.Count;
         }
+
         private List<Blob> getRectangularBlobs(int minWidth, int maxWidth, int minHight, int maxHight)
         {
             BlobCounter blobCounter = new BlobCounter();

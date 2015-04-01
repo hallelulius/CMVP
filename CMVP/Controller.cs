@@ -77,5 +77,9 @@ namespace CMVP
         {
             return refPoint;
         }
+        public void resetController()
+        {
+
+        }
     }
 }

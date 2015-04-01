@@ -275,8 +275,8 @@ namespace CMVP
         }
         public void calibrationMode(int carId)
         {
-            sendThrottle(convertCarID(carId,"Throttle"),NEUTRAL_THROTTLE);
-            sendSteering(convertCarID(carId, "Steering"), NEUTRAL_STEERING);
+            sendThrottle(convertCarIDToDAC(carId,"Throttle"),NEUTRAL_THROTTLE);
+            sendSteering(convertCarIDToDAC(carId, "Steering"), NEUTRAL_STEERING);
         }
     }
 }

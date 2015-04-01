@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CMVP
 {
@@ -12,9 +14,14 @@ namespace CMVP
         private float Ti_throttle;
         private float Kp_steer;
         private float Kp_throttle;
+        private float Kd_steer;
+        private float Kd_throttle;
         // Controller variables 
         private float throttleIntegratorSum;
         private float steerIntegratorSum;
+        private float steerDerivative;
+        private List<float> prevErrorHeading; //delta between updates
+        private const int DATA_HISTORY_LENGTH = 5;
 
         public PIController() : base ()
         {
@@ -25,13 +32,23 @@ namespace CMVP
             Ti_steer = 2.3397F;
             Ti_throttle = 10.5179F;
             // P-controller constants:
-            Kp_steer = 1.0f; //Ki_steer / Ti_steer;
+            Kp_steer = 0.6f; //Ki_steer / Ti_steer;
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
+            // D-controller constants:
+            Kd_steer = 0.01f; //Ki_steer / Ti_steer;
+            Kd_throttle = 0.01f; // Ki_throttle / Ti_throttle;
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PI";
+
+            prevErrorHeading = new List<float>();
+            for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
+            {
+                this.prevErrorHeading.Add(0);
+            }
+
         }
 
         public override void updateController()      //PI-controller 
@@ -74,6 +91,16 @@ namespace CMVP
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
             //outSteer += -Ki_steer * steerIntegratorSum ;
+            //derivative 
+            steerDerivative=0;
+            foreach (float err in prevErrorHeading)
+            {
+                steerDerivative += err;
+            }
+            steerDerivative /= (float) prevErrorHeading.Count;
+            outSteer += Kd_steer * (errorHeading-steerDerivative);
+            prevErrorHeading.Insert(0, errorHeading);
+            prevErrorHeading.Remove(prevErrorHeading.Last());
 
             if (outThrottle > 1)outThrottle = 1; 
             if (outThrottle < -1) outThrottle = -1;
@@ -115,6 +142,12 @@ namespace CMVP
         {
             get { return Ti_throttle; }
             set { Ti_throttle = value; }
+        }
+
+        public void resetController()
+        {
+            throttleIntegratorSum = 0;
+            steerIntegratorSum = 0;
         }
     }
 }

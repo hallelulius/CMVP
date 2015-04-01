@@ -32,7 +32,7 @@ namespace CMVP
         public bool found;
         private Controller controller = new KeyboardController(); // This cars controller 
         private float maxSpeed;
-        private static float PIXEL_SIZE = 0.2F; // used to get the right unit for the speed
+        private static float PIXEL_SIZE = 0.18F; // used to get the right unit for the speed
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
         private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -100,15 +100,14 @@ namespace CMVP
             double xspeed = speed.ElementAt(speed.Count-1);
             if (xspeed == null)
                 Console.WriteLine("Null speed");
-            //speed.Remove(speed.Last()); se below
-            speed.RemoveAt(speed.Count - 1);
-            
+            speed.Remove(speed.Last()); 
+            //speed.RemoveAt(speed.Count - 1);
 
             //Calculate acceleration
             acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
             //Remove oldest element.
-           // acceleration.Remove(acceleration.Last()); We tried another way to remove last object. Se below
-            acceleration.RemoveAt(acceleration.Count-1);
+           acceleration.Remove(acceleration.Last()); //We tried another way to remove last object. Se below
+            //acceleration.RemoveAt(acceleration.Count-1);
         }
 
         /// <summary>
@@ -182,7 +181,7 @@ namespace CMVP
             float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
             angles.Insert(0,tempAngle);
             angles.Remove(angles.Last());
-            updateState();
+            //updateState();
 
             if (controller != null)
             {
@@ -195,6 +194,40 @@ namespace CMVP
         public float getAngle()
         {
             return angles.First();
+        }
+
+        public void send()
+        {
+            Program.com.updateThrottle(id, controller.getThrottle());
+            Program.com.updateSteering(id, controller.getSteer());
+        }
+        public AForge.IntPoint getPosition() // Return the cars current position 
+        {
+            return position.First();
+        }
+        public Controller getController() // Return the cars controller
+        {
+            return controller;
+        }
+        public AForge.Point getDirection()
+        {
+            return direction.First();
+        }
+        public ControlStrategy getControlStrategy()
+        {
+            return controlStrategy;
+        }
+        public void setControlStrategy(ControlStrategy cs)
+        {
+            controlStrategy = cs;
+        }
+        public void setController(Controller c)
+        {
+            controller = c;
+        }
+        public double getSpeed()
+        {
+            return speed.First();
         }
 
         /*/// <summary>
@@ -235,43 +268,5 @@ namespace CMVP
             else 
                 steer = s;
         }*/
-
-        public void send()
-        {
-            Program.com.updateThrottle(id, controller.getThrottle());
-            Program.com.updateSteering(id, controller.getSteer());
-        }
-
-        public AForge.IntPoint getPosition() // Return the cars current position 
-        {
-            return position.First();
-        }
-        public Controller getController() // Return the cars controller
-        {
-            return controller;
-        }
-        public AForge.Point getDirection()
-        {
-            return direction.First();
-        }
-        public ControlStrategy getControlStrategy()
-        {
-            return controlStrategy;
-        }
-
-        public void setControlStrategy(ControlStrategy cs)
-        {
-            controlStrategy = cs;
-        }
-
-        public void setController(Controller c)
-        {
-            controller = c;
-        }
-
-        public double getSpeed()
-        {
-            return speed.First();
-        }
     }
 }
