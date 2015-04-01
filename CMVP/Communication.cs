@@ -30,7 +30,7 @@ namespace CMVP
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
         private const byte VOLTAGE_CAP = 230;               //to prevent high voltages to the controller
-        
+
 
         private SerialPort port;
         private bool portOpen = false;
@@ -192,7 +192,7 @@ namespace CMVP
         /// <param name="carID">The car that should be updated</param>
          /// <param name="value">throttleValue</param>
         private void sendThrottle(byte DAC, byte value)
-        {
+            {
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
 
@@ -273,6 +273,10 @@ namespace CMVP
         {
             return port.IsOpen;
         }
-
+        public void calibrationMode(int carId)
+        {
+            sendThrottle(convertCarID(carId,"Throttle"),NEUTRAL_THROTTLE);
+            sendSteering(convertCarID(carId, "Steering"), NEUTRAL_STEERING);
+        }
     }
 }

@@ -19,17 +19,17 @@ namespace CMVP
     {
         //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
-        private IntPoint lastPos = new IntPoint(-1,-1);
+        private List<IntPoint> lastPositions; //A list to prevent flickering.
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
         private List<double> speed; //Velocity of the car in cm/s.
         private List<double> deltaTime; //delta between updates
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
-        private List<bool> found; //Is true if the car is found by the image processing.
 
         
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
+        public bool found;
         private Controller controller = new KeyboardController(); // This cars controller 
         private float maxSpeed;
         private static float PIXEL_SIZE = 0.2F; // used to get the right unit for the speed
@@ -55,6 +55,7 @@ namespace CMVP
             this.speed = new List<double>();
             this.deltaTime = new List<double>();
             this.acceleration = new List<double>();
+            this.lastPositions = new List<IntPoint>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
             this.maxSpeed = 200;
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
@@ -65,7 +66,9 @@ namespace CMVP
                 this.acceleration.Add(0);
                 this.angles.Add(0);
                 this.deltaTime.Add(0.001F);
+                this.lastPositions.Add(pos);
             }
+            found=true;
         }
         /// <summary>
         /// Update the state of the car. Only call this once for every car in each program loop.
@@ -76,8 +79,9 @@ namespace CMVP
             double dx = position.ElementAt(1).X - position.ElementAt(0).X;
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
             double tempSpeed = (double) ((Math.Sqrt((dx * dx) + (dy * dy)))/deltaTime.ElementAt(0))*PIXEL_SIZE;
-            
-            foreach (double s in speed)
+
+            List<double> tempSpeedList = new List<double>(speed); //Copy to prevent exceptions in foreach 
+            foreach (double s in tempSpeedList)
             {
                 tempSpeed += s;
             }
@@ -93,15 +97,18 @@ namespace CMVP
             
             
             //Remove oldest element.
-            double xspeed = speed.Last();
+            double xspeed = speed.ElementAt(speed.Count-1);
             if (xspeed == null)
                 Console.WriteLine("Null speed");
-            speed.Remove(speed.Last());
+            //speed.Remove(speed.Last()); se below
+            speed.RemoveAt(speed.Count - 1);
+            
 
             //Calculate acceleration
             acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
             //Remove oldest element.
-            acceleration.Remove(acceleration.Last());
+           // acceleration.Remove(acceleration.Last()); We tried another way to remove last object. Se below
+            acceleration.RemoveAt(acceleration.Count-1);
         }
 
         /// <summary>
@@ -123,13 +130,28 @@ namespace CMVP
         public void setPositionAndOrientation(AForge.IntPoint pos, AForge.Point dir, double deltaTime)
         {
             //to prevent flickering between two pixels
-            foreach (IntPoint p in position)
+            if(lastPositions.TrueForAll(x => !(x.Equals(pos))))
             {
-                pos += p;
+                if (pos == position.ElementAt(0))
+                {
+                    position.Insert(0, pos);
+                    position.Remove(position.Last());
+                }
+                else
+                {
+                    lastPositions.Insert(0, position.ElementAt(0));
+                    lastPositions.RemoveAt(lastPositions.Count - 1);
+                    position.Insert(0, pos);
+                    position.Remove(position.Last());
+
+                }
+            }
+            else
+            {
+                position.Insert(0, position.ElementAt(0));
+                position.Remove(position.Last());
             }
 
-            position.Insert(0, pos / (position.Count + 1));
-            position.Remove(position.Last());
             /*if (pos != lastPos)
             {
                 if (pos == position.ElementAt(0))
@@ -173,13 +195,6 @@ namespace CMVP
         public float getAngle()
         {
             return angles.First();
-        }
-        /// <summary>
-        /// Is true if the car was found by the image processing.
-        /// </summary>
-        public bool isFound()
-        {
-            return found.ElementAt(DATA_HISTORY_LENGTH);
         }
 
         /*/// <summary>

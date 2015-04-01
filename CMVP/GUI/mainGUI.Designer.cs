@@ -77,6 +77,7 @@
             this.Initiate = new System.Windows.Forms.Button();
             this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.calibration = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -588,11 +589,27 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "Data grid update time (ms):";
             // 
+            // calibration
+            // 
+            this.calibration.BackColor = System.Drawing.Color.DodgerBlue;
+            this.calibration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.calibration.Enabled = false;
+            this.calibration.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.calibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.calibration.Location = new System.Drawing.Point(435, 12);
+            this.calibration.Name = "calibration";
+            this.calibration.Size = new System.Drawing.Size(135, 38);
+            this.calibration.TabIndex = 11;
+            this.calibration.Text = "Calibration";
+            this.calibration.UseVisualStyleBackColor = false;
+            this.calibration.Click += new System.EventHandler(this.calibration_Click);
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 584);
+            this.Controls.Add(this.calibration);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridTimeNumeric);
             this.Controls.Add(this.Initiate);
@@ -680,5 +697,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Heading;
         private System.Windows.Forms.DataGridViewTextBoxColumn SteeringControlSignal;
         private System.Windows.Forms.DataGridViewTextBoxColumn ThrottleControlSignal;
+        private System.Windows.Forms.Button calibration;
     }
 }
