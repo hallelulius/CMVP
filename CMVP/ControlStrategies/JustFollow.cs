@@ -61,7 +61,7 @@ namespace CMVP.ControlStrategies
                     //    tempQuality = 9999;
                     //else
                         tempQuality = 0.01f*lengthToPoint +  angleToPoint + indexDistance;
-                    if(tempQuality < quality && lengthToPoint > 30)
+                    if(tempQuality < quality && lengthToPoint > 45)
                     {
                         quality = tempQuality;
                         index = i;

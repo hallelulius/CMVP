@@ -25,7 +25,7 @@ namespace CMVP
             Ti_steer = 2.3397F;
             Ti_throttle = 10.5179F;
             // P-controller constants:
-            Kp_steer = 2.0f; //Ki_steer / Ti_steer;
+            Kp_steer = 1.0f; //Ki_steer / Ti_steer;
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // Set variables 
             throttleIntegratorSum = 0;
@@ -38,7 +38,7 @@ namespace CMVP
         {
             
 
-            float maxSpeed = 200;
+            float maxSpeed = 150;
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;

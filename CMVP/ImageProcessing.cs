@@ -139,6 +139,29 @@ namespace CMVP
                     System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X-100, car.getPosition().Y-100);
                     g.DrawString(car.ID.ToString(),f, b,idPos);
                 }
+                if (drawCenterOnImg)
+                {
+                    // Only for testing triangles
+                    List<Blob> cirkels = getBlobs(2, 13, croppedImg);
+                    List<AForge.IntPoint> points = getPoints(cirkels);
+                    List<AForge.IntPoint[]> triangles = getTriangels(points);
+                    triangles = filterDubblets(triangles);
+                    foreach (AForge.IntPoint[] triangle in triangles)
+                    {
+                        AForge.IntPoint Acenter;
+                        AForge.Point Adirektion;
+
+                        if (getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                        {
+                            System.Drawing.Point p1 = new System.Drawing.Point(triangle[1].X, triangle[1].Y);
+                            System.Drawing.Point p2 = new System.Drawing.Point(triangle[2].X, triangle[2].Y);
+                            System.Drawing.Point p3 = new System.Drawing.Point(triangle[0].X, triangle[0].Y);
+                            g.DrawLine(yellowPen, p1, p2);
+                            g.DrawLine(yellowPen, p2, p3);
+                            g.DrawLine(yellowPen, p3, p1);
+                        }
+                    }
+                }
             }
             if(drawWindowsOnImg)
                 foreach(Car car in objects)
@@ -159,7 +182,7 @@ namespace CMVP
                 }
             if (drawCirkelsOnImg)
             {
-                List<Blob> cirkels = getBlobs(1, 13, img);
+                List<Blob> cirkels = getBlobs(2, 13, img);
                 drawCirkels(cirkels);
             }
             for (int k = 0; k < Acenters.Count; k++)
@@ -197,7 +220,7 @@ namespace CMVP
 
 
 
-                if (getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                if (getInformationFromTriangle(triangle, 33, 10, 7, 3, out Acenter, out Adirektion))
                 {
                     Acenters.Add(Acenter);
                     Adirections.Add(Adirektion);
@@ -293,17 +316,21 @@ namespace CMVP
                     AForge.IntPoint Acenter;
                     AForge.Point Adirektion;
 
-                    if (!carFoundThisTime && getInformationFromTriangle(triangle, 44, 13, 7, 3, out Acenter, out Adirektion))
+                    if (!carFoundThisTime && getInformationFromTriangle(triangle, 33, 10, 7, 3, out Acenter, out Adirektion))
                     {
                         //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
                         Acenters.Add(translation+Acenter);
                         Adirections.Add(Adirektion);
+                        int triangleId = getId(Acenter, Adirektion, cirkels);
                         Console.WriteLine("id: " + car.ID);
-                        car.setPositionAndOrientation(Acenter+translation, Adirektion,deltaTime);
-                        car.found = true;
-                        carFoundThisTime = true;
-                        break;
+                        if (car.ID == triangleId)
+                        {
+                            car.setPositionAndOrientation(Acenter + translation, Adirektion, deltaTime);
+                            car.found = true;
+                            carFoundThisTime = true;
+                            break;
+                        }
                     }
                 }
                 if(!carFoundThisTime)
@@ -391,44 +418,53 @@ namespace CMVP
             double d2 = points[1].DistanceTo(points[0]);
 
 
-            AForge.Point top, base1, base2;
+            AForge.IntPoint top, base1, base2;
 
             if(d0 < d1 && d0 < d2)
                 {
-                //Console.WriteLine("d0 base");
-                top=points[0];
-                base1=points[1];
-                base2=points[2];
-
-
+                    //Console.WriteLine("d0 base");
+                    top=points[0];
+                    base1=points[1];
+                    base2=points[2];
                 }
             else if (d1 < d0 && d1 < d2)
                 {
                     //Console.WriteLine("d1 base");
-                top = points[1];
-                base1 = points[0];
-                base2 = points[2];
+                    top = points[1];
+                    base1 = points[0];
+                    base2 = points[2];
                 }
                 else
                 {
                     //Console.WriteLine("d2 base");
-                top = points[2];
-                base1 = points[1];
-                base2 = points[0];
+                    top = points[2];
+                    base1 = points[1];
+                    base2 = points[0];
                 }
+            AForge.IntPoint leg1 = new AForge.IntPoint(top.X - base1.X , top.Y - base1.Y);
+            AForge.IntPoint leg2 = new AForge.IntPoint(top.X - base2.X , top.Y - base2.Y);
+            AForge.IntPoint baseV = new AForge.IntPoint(base1.X - base2.X, base1.Y - base2.Y);
+            double scalarProduct1 = (baseV.X * leg1.X + baseV.Y * leg1.Y) / (baseV.EuclideanNorm() * leg1.EuclideanNorm());
+            double baseAngle1 = Math.Acos(scalarProduct1);
+            double scalarProduct2 = (baseV.X * leg2.X + baseV.Y * leg2.Y) / (baseV.EuclideanNorm() * leg2.EuclideanNorm());
+            double baseAngle2 = Math.Acos(scalarProduct2);
             double baseLength = base1.DistanceTo(base2);
             double height = Math.Sqrt(top.DistanceTo(base1) * top.DistanceTo(base1) - (baseLength / 2) * (baseLength / 2));
-            //System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
-            //System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
+            double diffBaseAngle = Math.Abs(baseAngle1-baseAngle2);
+            System.Console.WriteLine("TriangleBase: " + baseLength + " Ideal: " + idealBase);
+            System.Console.WriteLine("TriangleHight: " + height + "Ideal: " + idealHeight);
             if (height > (idealHeight - heightError) && height < idealHeight + heightError)
                 {
                 if (baseLength > (idealBase - baseError) && baseLength < idealBase + baseError)
                 {
-
-                    center = new AForge.IntPoint((int)(top.X / 2 + (base1.X + base2.X) / 4),(int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
-                    direction = top-center;
-                    direction = new AForge.Point(direction.X / direction.EuclideanNorm(), direction.Y / direction.EuclideanNorm());
-                    return true;
+                    if (diffBaseAngle < 0.35)
+                    {
+                        Console.WriteLine(diffBaseAngle);
+                        center = new AForge.IntPoint((int)(top.X / 2 + (base1.X + base2.X) / 4), (int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
+                        direction = top - center;
+                        direction = new AForge.Point(direction.X / direction.EuclideanNorm(), direction.Y / direction.EuclideanNorm());
+                        return true;
+                    }
                 }
             }
             center = new AForge.IntPoint(0, 0);
