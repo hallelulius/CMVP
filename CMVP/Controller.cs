@@ -26,6 +26,14 @@ namespace CMVP
         protected float outSteer;
         protected String controllerName;
         protected IntPoint refPoint;
+        protected float maxSpeed;
+        protected Car car;
+
+        public Controller(Car car)
+        {
+            this.car = car;
+            maxSpeed = car.getMaxSpeed();
+        }
 
         public abstract void updateController();
 
@@ -80,6 +88,10 @@ namespace CMVP
         public void resetController()
         {
 
+        }
+        public void setMaxSpeed(float maxSpeed)
+        {
+            this.maxSpeed = maxSpeed;
         }
     }
 }

@@ -416,7 +416,6 @@
             // trafficMaxSpeedNumeric
             // 
             this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
-            this.trafficMaxSpeedNumeric.Enabled = false;
             this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
             this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
             10000,

@@ -25,13 +25,12 @@ namespace CMVP
         private List<double> speed; //Velocity of the car in cm/s.
         private List<double> deltaTime; //delta between updates
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
-
+        private float maxSpeed = 150;
         
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
         public bool found;
-        private Controller controller = new KeyboardController(); // This cars controller 
-        private float maxSpeed;
+        private Controller controller; // This cars controller 
         private static float PIXEL_SIZE = 0.18F; // used to get the right unit for the speed
         
         private double throttle; //A number between 0 and 1, deciding the speed of the car.
@@ -48,6 +47,7 @@ namespace CMVP
         /// <param name="pos"> The starting position of the car. </param>
         public Car(int id, AForge.IntPoint pos, AForge.Point dir)
         {
+            controller = new KeyboardController(this);
             this.id = id;
             this.direction = new List<AForge.Point>();
             this.position = new List<AForge.IntPoint>();
@@ -57,7 +57,7 @@ namespace CMVP
             this.acceleration = new List<double>();
             this.lastPositions = new List<IntPoint>();
             this.controlStrategy = new ControlStrategies.StandStill(this);
-            this.maxSpeed = 200;
+            setMaxSpeed(150F);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);
@@ -229,7 +229,15 @@ namespace CMVP
         {
             return speed.First();
         }
-
+        public float getMaxSpeed()
+        {
+            return maxSpeed;
+        }
+        public void setMaxSpeed(float maxSpeed)
+        {
+            this.maxSpeed = maxSpeed;
+            controller.setMaxSpeed(maxSpeed);
+        }
         /*/// <summary>
         /// Used to set the "found" value.
         /// </summary>

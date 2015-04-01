@@ -8,7 +8,7 @@ namespace CMVP
 {
     class KeyboardController : Controller
     {
-        public KeyboardController () : base()
+        public KeyboardController (Car car) : base(car)
         {
             controllerName = "Manual keyboard";
         }

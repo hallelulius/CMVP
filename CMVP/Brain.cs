@@ -68,7 +68,7 @@ namespace CMVP
                         {
                             string s = "Car " + car.ID + " ";
                             sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
-                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed());
+                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
                             sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
                             sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle());
                             // Add more sendDataThreadSafe calls here.

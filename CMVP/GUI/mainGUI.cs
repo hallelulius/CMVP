@@ -214,7 +214,7 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
-
+                tempCar.setMaxSpeed((float) trafficMaxSpeedNumeric.Value);
                 trafficApplyButton.Enabled = false;
             }
         }
@@ -243,7 +243,7 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
                 {
-                    PIController controller = new PIController();
+                    PIController controller = new PIController(tempCar);
                     foreach (Control ctrl in controllerTypePanel.Controls)
                     {
                         //controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
@@ -261,7 +261,7 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
                 {
-                    tempCar.setController(new KeyboardController());
+                    tempCar.setController(new KeyboardController(tempCar));
                 }
             }
         }
@@ -292,7 +292,6 @@ namespace CMVP
             {
                 int tempID = (int)trackCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
                 if(tracksDropDown.SelectedIndex != -1)
                     tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
             }
@@ -304,7 +303,7 @@ namespace CMVP
             {
                 int tempID = (int)trafficCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
+                trafficMaxSpeedNumeric.Value = (decimal)tempCar.getMaxSpeed();
                 controlStrategyControlStrategyDropDown.SelectedItem = tempCar.getControlStrategy().getStrategyName();
             }
         }
@@ -403,7 +402,7 @@ namespace CMVP
             foreach(Car c in Program.cars)
             {
                 Program.com.calibrationMode(c.ID);
-                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instruktions in the manual chapter 6,4. \n Remember to always simulate the platform with external power source.");
+                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instructions in the manual chapter 6,4. \n Remember to always simulate the platform with external power source.");
             }
         }
 

@@ -23,7 +23,7 @@ namespace CMVP
         private List<float> prevErrorHeading; //delta between updates
         private const int DATA_HISTORY_LENGTH = 5;
 
-        public PIController() : base ()
+        public PIController(Car car) : base (car)
         {
             // I-controller constants:
             Ki_steer = 0.1689F;
@@ -42,7 +42,6 @@ namespace CMVP
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PI";
-
             prevErrorHeading = new List<float>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
@@ -53,9 +52,6 @@ namespace CMVP
 
         public override void updateController()      //PI-controller 
         {
-            
-
-            float maxSpeed = 165;
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
@@ -143,7 +139,7 @@ namespace CMVP
             get { return Ti_throttle; }
             set { Ti_throttle = value; }
         }
-
+        
         public void resetController()
         {
             throttleIntegratorSum = 0;
