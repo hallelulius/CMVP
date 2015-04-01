@@ -36,7 +36,32 @@ namespace CMVP
         }
 
         public abstract void updateController();
-
+        public virtual void resetController()
+        {
+           //Nothing to do here
+        }
+        /// <summary>
+        /// Ensures that the signal is between -1 to 1.
+        /// </summary>
+        /// <param name="outThrottle">The value calculated by the controller</param>
+        /// <returns>A value that is between -1 to 1</returns>
+        protected float capThrottleOutput(float outThrottle)
+        {
+            if (outThrottle > 1) outThrottle = 1;
+            if (outThrottle < -1) outThrottle = -1;
+            return outThrottle;
+        }
+        /// <summary>
+        /// Ensures that the signal is between -1 to 1.
+        /// </summary>
+        /// <param name="outSteer">The value calculated by the controller</param>
+        /// <returns>A value that is between -1 to 1</returns>
+        protected float capSteerOutput(float outSteer)
+        {
+            if (outSteer > 1) outSteer = 1;
+            if (outSteer < -1) outSteer = -1;
+            return outSteer;
+        }
         public void setHeading(float heading)
         {
             this.heading = heading;
@@ -85,10 +110,7 @@ namespace CMVP
         {
             return refPoint;
         }
-        public void resetController()
-        {
-
-        }
+        
         public void setMaxSpeed(float maxSpeed)
         {
             this.maxSpeed = maxSpeed;

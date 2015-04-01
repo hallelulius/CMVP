@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CMVP
 {
@@ -234,6 +235,7 @@ namespace CMVP
             catch (System.ArgumentOutOfRangeException e)        
             {
                 System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC.");
+                Debug.WriteLine(e.Message);
                 return null;
             }
         }

@@ -19,8 +19,8 @@ namespace CMVP
         public static Communication com = new Communication();
         public static List<Car> cars = new List<Car>();
         //Simulation variables
-        public static float sampleTime = 1/150F;             // Iteration time, equal 1/(updating frequency)
-        private static bool simulating = false;
+        //public static float sampleTime = 1/150F;             // Iteration time, equal 1/(updating frequency)
+        //private static bool simulating = false;
         public static PTGreyCamera videoStream;
         public static ImageProcessing imageProcess;
 
@@ -30,7 +30,6 @@ namespace CMVP
             //cars.Add(new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
             //cars.Add(new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
-            //videoStream = new Camera();
             videoStream = new PTGreyCamera();
             videoStream.start();
             System.Threading.Thread.Sleep(1000);
@@ -39,9 +38,11 @@ namespace CMVP
    
         }
        
+        /*
         public static bool isSimulating()
         {
             return simulating;
         }
+         */
     }
 }

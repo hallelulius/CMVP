@@ -9,12 +9,15 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
+    /// <summary>
+    /// This class updates all cars with the current states, sets the new reference point and send new values to the DAC according to the control strategy
+    /// Also handles the performance analyzer
+    /// </summary>
     class Brain
     {
         
         private List<Car> cars;   
         public PerformanceAnalyzerWindow analyzer;
-        int i = 0;
 
         public void run()
         {
@@ -42,13 +45,6 @@ namespace CMVP
                 foreach (Car car in cars)
                 {
                     car.getController().updateController();
-                    if (i >= 25)
-                    {
-                        Console.WriteLine(car.getPosition());
-                        Console.WriteLine(car.getSpeed());
-                        i=0;
-                    }
-                    i++;
                 }
                 foreach (Car car in cars)
                 {
@@ -83,6 +79,7 @@ namespace CMVP
                 Thread.Sleep(3);
             }
         }
+
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {

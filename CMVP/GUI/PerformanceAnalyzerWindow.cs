@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -15,7 +16,6 @@ namespace CMVP
     {
         public delegate void sendDataDelegate(string text, double x, double y);
         public sendDataDelegate myDelegate;
-        private float uppdateTime = 1; // Time between uppdates.
         private int maxValuesStored = 300;
 
         public PerformanceAnalyzerWindow()
@@ -29,8 +29,6 @@ namespace CMVP
 
         public void addData(string reciever, double x, double y)
         {
-            try
-            {
                 Series s = performanceChart.Series.FindByName(reciever); // Att lägga till i Brain: en lista med strings, där varjer string motsvarar en serie. Listan uppdateras löpande.
                 if (s != null)
                 {
@@ -40,11 +38,6 @@ namespace CMVP
                     performanceChart.ChartAreas[0].RecalculateAxesScale();
                     //Console.WriteLine("Adding data point: " + y);
                 }
-            }
-            catch (Exception e)
-            {
-                //todo
-            }
         }
 
         private void addSeriesDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -133,9 +126,9 @@ namespace CMVP
 
                 file.Close();
             }
-            catch(Exception exception)
+            catch(Exception ex)
             {
-
+                Debug.WriteLine(ex.Message);
             }
         }
     }

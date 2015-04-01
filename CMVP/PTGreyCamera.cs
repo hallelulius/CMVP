@@ -6,8 +6,6 @@ using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-
-
 using System.Diagnostics;
 
 using FlyCapture2Managed;
@@ -198,11 +196,11 @@ namespace CMVP
             }
             catch (FC2Exception ex)
             {
-                // Nothing to do here
+                Debug.WriteLine(ex.Message);
             }
             catch (NullReferenceException ex)
             {
-                // Nothing to do here
+                Debug.WriteLine(ex.Message);
             }
         }
     

@@ -19,8 +19,10 @@ namespace CMVP
         // Controller variables 
         private float throttleIntegratorSum;
         private float steerIntegratorSum;
-        private float steerDerivative;
-        private List<float> prevErrorHeading; //delta between updates
+        private float prevSpeedErrorAvg;
+        private float prevHeadingErrorAvg;
+        private List<float> prevSpeedError;
+        private List<float> prevHeadingError;
         private const int DATA_HISTORY_LENGTH = 5;
 
         public PIController(Car car) : base (car)
@@ -42,10 +44,12 @@ namespace CMVP
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PI";
-            prevErrorHeading = new List<float>();
+            prevHeadingError = new List<float>();
+            prevSpeedError = new List<float>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
-                this.prevErrorHeading.Add(0);
+                this.prevHeadingError.Add(0);
+                this.prevHeadingError.Add(0);
             }
 
         }
@@ -57,7 +61,19 @@ namespace CMVP
             outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed;
             outThrottle += throttleIntegratorSum * Ki_throttle;
-             
+
+            //derivative part here, not fully tested but seems to work 
+            prevSpeedErrorAvg = 0;
+            foreach (float err in prevHeadingError)
+            {
+                prevSpeedErrorAvg += err;
+            }
+            prevSpeedErrorAvg /= (float)prevSpeedError.Count;
+            outThrottle += Kd_throttle * (errorSpeed - prevSpeedErrorAvg);
+            prevSpeedError.Insert(0, errorSpeed);
+            prevSpeedError.Remove(prevSpeedError.Last());
+
+
             /*
             outThrottle = 0.13f;
             if (speed <2  )
@@ -88,20 +104,18 @@ namespace CMVP
             steerIntegratorSum += errorHeading;
             //outSteer += -Ki_steer * steerIntegratorSum ;
             //derivative part here, not fully tested but seems to work 
-            steerDerivative=0;
-            foreach (float err in prevErrorHeading)
+            prevHeadingErrorAvg=0;
+            foreach (float err in prevHeadingError)
             {
-                steerDerivative += err;
+                prevHeadingErrorAvg += err;
             }
-            steerDerivative /= (float) prevErrorHeading.Count;
-            outSteer += Kd_steer * (errorHeading-steerDerivative);
-            prevErrorHeading.Insert(0, errorHeading);
-            prevErrorHeading.Remove(prevErrorHeading.Last());
+            prevHeadingErrorAvg /= (float) prevHeadingError.Count;
+            outSteer += Kd_steer * (errorHeading-prevHeadingErrorAvg);
+            prevHeadingError.Insert(0, errorHeading);
+            prevHeadingError.Remove(prevHeadingError.Last());
 
-            if (outThrottle > 1)outThrottle = 1; 
-            if (outThrottle < -1) outThrottle = -1;
-            if (outSteer > 1) outSteer = 1;
-            if (outSteer < -1) outSteer = -1;
+            outThrottle = capThrottleOutput(outThrottle);
+            outSteer = capSteerOutput(outSteer);
         }
 
         public float KiSteer
@@ -140,7 +154,7 @@ namespace CMVP
             set { Ti_throttle = value; }
         }
         
-        public void resetController()
+        public override void resetController()
         {
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;

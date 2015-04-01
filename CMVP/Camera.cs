@@ -21,14 +21,14 @@ using AForge.Math;
 namespace CMVP
 {
     /// <summary>
-    /// Old logitech camera not in use right now
+    /// Old logitech camera 
+    /// Not in use right now
     /// </summary>
     public partial class Camera : VideoStream
     {
         private static int idCount=0;
         private int id;
         private Bitmap img;
-        private Bitmap imgCatch;
         private VideoCaptureDevice videoSource = null;
         private System.Drawing.Point offset;
         private Boolean imgLock;
@@ -68,6 +68,11 @@ namespace CMVP
                 this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
             img = new Bitmap(100, 100);
             imgLock = false;
+            if (imgLock)
+            {
+                //Todo
+            }
+                ;
         }
         public System.Drawing.Point getOffset()
         {

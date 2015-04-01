@@ -21,7 +21,7 @@ namespace CMVP
         private Thread brainThread, dataGridThread;
         private List<Track> tracks = new List<Track>();
         private int dataGridUpdateTime = 1000;
-        public event FormClosingEventHandler FormClosing;
+        //public event FormClosingEventHandler FormClosing;
 
         public mainGUI()
         {
@@ -51,9 +51,10 @@ namespace CMVP
                     tracks.Add(track);
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Couldn't locate the 'Tracks' folder. The program will not load tracks automatically. To fix this add the folder to the applications directory (" + currentFolder + ").");
+                Debug.WriteLine(ex.Message);
             }
         }
         private void startSimulationButton_Click(object sender, EventArgs e)
@@ -103,9 +104,9 @@ namespace CMVP
                 }
                 brainThread.Suspend();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -156,10 +157,11 @@ namespace CMVP
                     {
                         File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
                     }
-                    catch (DirectoryNotFoundException exception)
+                    catch (DirectoryNotFoundException ex)
                     {
                         Directory.CreateDirectory(currentFolder + @"\Tracks\");
                         File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                        Debug.WriteLine(ex.Message);
                     }
 
                 }
