@@ -47,7 +47,7 @@ namespace CMVP
         /// <param name="pos"> The starting position of the car. </param>
         public Car(int id, AForge.IntPoint pos, AForge.Point dir)
         {
-            controller = new KeyboardController(this);
+            controller = new PIController(this);
             this.id = id;
             this.direction = new List<AForge.Point>();
             this.position = new List<AForge.IntPoint>();
@@ -56,7 +56,7 @@ namespace CMVP
             this.deltaTime = new List<double>();
             this.acceleration = new List<double>();
             this.lastPositions = new List<IntPoint>();
-            this.controlStrategy = new ControlStrategies.StandStill(this);
+            this.controlStrategy = new ControlStrategies.JustFollow(this);
             setMaxSpeed(150F);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
@@ -78,28 +78,17 @@ namespace CMVP
             //Calculate horizontal and vertical movement using the last two elements in the position list.
             double dx = position.ElementAt(1).X - position.ElementAt(0).X;
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
-            double tempSpeed = (double) ((Math.Sqrt((dx * dx) + (dy * dy)))/deltaTime.ElementAt(0))*PIXEL_SIZE;
+            lock (this)
+            {
+                double tempSpeed = (double)((Math.Sqrt((dx * dx) + (dy * dy))) / deltaTime.ElementAt(0)) * PIXEL_SIZE;
+                speed.Insert(0, tempSpeed);
 
-            List<double> tempSpeedList = new List<double>(speed); //Copy to prevent exceptions in foreach 
-            foreach (double s in tempSpeedList)
-            {
-                tempSpeed += s;
-            }
-            double tempSpeed2 = (double)tempSpeed / (speed.Count + 1);
-            if (tempSpeed2 > 0.01F)
-            {
-                speed.Insert(0, tempSpeed2);
-            }
-            else
-            {
-                speed.Insert(0, 0);
+                //Remove oldest element.
+                //double xspeed = speed.ElementAt(speed.Count-1);
+                //speed.Remove(speed.Last());
+                speed.RemoveAt(speed.Count-1); 
             }
             
-            
-            //Remove oldest element.
-            double xspeed = speed.ElementAt(speed.Count-1);
-            speed.Remove(speed.Last()); 
-            //speed.RemoveAt(speed.Count - 1);
 
             //Calculate acceleration
             acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
@@ -225,7 +214,26 @@ namespace CMVP
         }
         public double getSpeed()
         {
-            return speed.First();
+            double tempSpeed = 0;
+            lock (this)
+            {
+                List<double> tempSpeedList = new List<double>(speed); //Copy to prevent exceptions in foreach 
+
+                foreach (double s in tempSpeedList)
+                {
+                    tempSpeed += s;
+                }
+                double tempSpeed2 = (double)tempSpeed / (tempSpeedList.Count);
+
+                if (tempSpeed2 > 0.01F)
+                {
+                    return tempSpeed2;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
         public float getMaxSpeed()
         {

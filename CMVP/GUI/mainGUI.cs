@@ -216,6 +216,12 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
+                {
+                    ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
+                    ot.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ot);
+                }
                 tempCar.setMaxSpeed((float) trafficMaxSpeedNumeric.Value);
                 trafficApplyButton.Enabled = false;
             }

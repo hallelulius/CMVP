@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Timers;
 
 using AForge;
 using AForge.Video;
@@ -45,8 +46,9 @@ namespace CMVP
         private List<AForge.IntPoint> Acenters;
         private List<AForge.Point> Adirections;
         private List<Panel> panelsToUpdate;
-        private Timer imgProcesTimer;
-        private Timer drawTimer;
+        //private System.Timers.Timer imgProcesTimer;
+        private System.Windows.Forms.Timer imgProcesTimer;
+        private System.Windows.Forms.Timer drawTimer;
         
         List<Blob> cirkels;
         Dictionary<int, Car> carMap;
@@ -65,10 +67,12 @@ namespace CMVP
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
         {
-            this.imgProcesTimer = new Timer();
-            this.drawTimer = new Timer();
-            this.imgProcesTimer.Interval=10;
-            this.drawTimer.Interval = 10;
+            //this.imgProcesTimer = new System.Timers.Timer();
+            this.imgProcesTimer = new System.Windows.Forms.Timer();
+            this.drawTimer = new System.Windows.Forms.Timer();
+            this.imgProcesTimer.Interval=7;
+            this.drawTimer.Interval = 50;
+            //this.imgProcesTimer.Elapsed += processImage;
             this.imgProcesTimer.Tick += new EventHandler(processImage);
             this.drawTimer.Tick += new EventHandler(updatePanels);
             this.objects = objects;
@@ -116,11 +120,11 @@ namespace CMVP
                 {
                     if (drawTrackOnImg && controlStra.getTrack()!=null)
                     {
-                        float[,] track = controlStra.getTrack().m;
-                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
-                        for (int i = 0; i < track.Length / 3; i++)
+                        List<IntPoint> track = controlStra.getTrack().getPoints();
+                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Count];
+                        for (int i = 0; i < track.Count; i++)
                         {
-                            pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
+                            pointTrack[i] = new System.Drawing.PointF((float)track.ElementAt(i).X, (float)track.ElementAt(i).Y);
                         }
                         g.DrawLines(greenPen, pointTrack);
                     }

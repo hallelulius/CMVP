@@ -120,6 +120,7 @@
     <Compile Include="Car.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
+    <Compile Include="ControlStrategies\Overtaking.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
     <Compile Include="ControlStrategy.cs" />

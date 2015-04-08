@@ -38,7 +38,7 @@ namespace CMVP
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // D-controller constants:
             Kd_steer = 0.01f; 
-            Kd_throttle = 0.0001f; 
+            Kd_throttle = 0.0f; 
             // Set variables 
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
@@ -63,16 +63,18 @@ namespace CMVP
             outThrottle += throttleIntegratorSum * Ki_throttle;
 
             //derivative part here, not fully tested but seems to work 
+            /*
             prevSpeedErrorAvg = 0;
-            foreach (float err in prevHeadingError)
+            foreach (float err in prevSpeedError)
             {
                 prevSpeedErrorAvg += err;
             }
+            
             prevSpeedErrorAvg /= (float)prevSpeedError.Count;
             outThrottle += Kd_throttle * (errorSpeed - prevSpeedErrorAvg);
             prevSpeedError.Insert(0, errorSpeed);
             prevSpeedError.Remove(prevSpeedError.Last());
-
+            */
 
             /*
             outThrottle = 0.13f;

@@ -24,16 +24,17 @@ namespace CMVP.ControlStrategies
         {
 
         }
+
         public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
             int index = -1;
             float quality = 9999;
             if (track != null)
             {
-                int trackLength = track.m.Length / 3;
+                int trackLength = track.getPoints().Count;
                 for (int i = 0; i < trackLength; i++)
                 {
-                    Point point = new AForge.Point(track.m[0,i], track.m[1, i]);
+                    Point point = track.getPoints().ElementAt(i);
 
                     float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
 
@@ -78,48 +79,10 @@ namespace CMVP.ControlStrategies
             }
             else
             {
-                setReference(new IntPoint((int)track.m[0, index], (int)track.m[1, index]), track.m[2, index]);
+                setReference(track.getPoints().ElementAt(index), track.getSpeeds().ElementAt(index));
                 lastIndex = index;
 
             }
-
-
-            /*
-            float shortestLength = 2000; //Maximum search distance
-            int index = -1;
-            if (track != null)
-            {
-                for (int i = 0; i < track.m.Length/3; i++)
-                {
-                    AForge.Point tempPoint = new AForge.Point(track.m[0,i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
-                    float carNorm = car.getDirection().EuclideanNorm();
-                    float trackNorm = tempPoint.EuclideanNorm();
-
-                    //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
-                    float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                    if (Math.Acos(scalarProduct) < Math.PI / 3)
-                    {
-                        //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                        float currentLength = ((new Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
-                        if (currentLength < shortestLength && currentLength > 50)
-                        {
-                            shortestLength = currentLength;
-                            index = i;
-                        }
-                    }
-                }
-
-                if (index < 0)
-                {
-                    //setReference(new PointF(0, 0), 0);
-                    Console.WriteLine("No points found");
-                    return;
-                }
-                else
-                {
-                    setReference(new IntPoint((int)track.m[0,index], (int)track.m[1, index]), track.m[2, index]);
-                }
-            }*/
         }
     }
 }
