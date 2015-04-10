@@ -28,13 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawVideoRadioButton = new System.Windows.Forms.RadioButton();
-            this.processedVideoRadioButton = new System.Windows.Forms.RadioButton();
             this.checkBoxDrawTrack = new System.Windows.Forms.CheckBox();
             this.videoStreamPanel = new System.Windows.Forms.Panel();
             this.checkBoxDrawId = new System.Windows.Forms.CheckBox();
             this.o = new System.ComponentModel.BackgroundWorker();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cameraSettings = new System.Windows.Forms.Button();
             this.checkBoxDrawRefHeading = new System.Windows.Forms.CheckBox();
@@ -42,32 +39,8 @@
             this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // drawVideoRadioButton
-            // 
-            this.drawVideoRadioButton.AutoSize = true;
-            this.drawVideoRadioButton.Checked = true;
-            this.drawVideoRadioButton.Location = new System.Drawing.Point(6, 19);
-            this.drawVideoRadioButton.Name = "drawVideoRadioButton";
-            this.drawVideoRadioButton.Size = new System.Drawing.Size(76, 17);
-            this.drawVideoRadioButton.TabIndex = 0;
-            this.drawVideoRadioButton.TabStop = true;
-            this.drawVideoRadioButton.Text = "Raw video";
-            this.drawVideoRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // processedVideoRadioButton
-            // 
-            this.processedVideoRadioButton.AutoSize = true;
-            this.processedVideoRadioButton.Location = new System.Drawing.Point(6, 42);
-            this.processedVideoRadioButton.Name = "processedVideoRadioButton";
-            this.processedVideoRadioButton.Size = new System.Drawing.Size(104, 17);
-            this.processedVideoRadioButton.TabIndex = 1;
-            this.processedVideoRadioButton.Text = "Processed video";
-            this.processedVideoRadioButton.UseVisualStyleBackColor = true;
-            this.processedVideoRadioButton.CheckedChanged += new System.EventHandler(this.processedVideoRadioButton_CheckedChanged);
             // 
             // checkBoxDrawTrack
             // 
@@ -99,18 +72,6 @@
             this.checkBoxDrawId.UseVisualStyleBackColor = true;
             this.checkBoxDrawId.CheckedChanged += new System.EventHandler(this.checkBoxDrawId_CheckedChanged);
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.drawVideoRadioButton);
-            this.groupBox1.Controls.Add(this.processedVideoRadioButton);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(196, 68);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Source";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.cameraSettings);
@@ -121,9 +82,9 @@
             this.groupBox2.Controls.Add(this.checkBoxDrawCirkels);
             this.groupBox2.Controls.Add(this.checkBoxDrawId);
             this.groupBox2.Controls.Add(this.checkBoxDrawTrack);
-            this.groupBox2.Location = new System.Drawing.Point(12, 87);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(196, 291);
+            this.groupBox2.Size = new System.Drawing.Size(196, 366);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
@@ -199,13 +160,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 389);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.videoStreamPanel);
             this.Name = "CameraControlWindow";
             this.Text = "CMVP - Camera Control";
             this.Load += new System.EventHandler(this.CameraControlWindow_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
@@ -214,12 +172,9 @@
 
         #endregion
 
-        private System.Windows.Forms.RadioButton drawVideoRadioButton;
-        private System.Windows.Forms.RadioButton processedVideoRadioButton;
         private System.Windows.Forms.CheckBox checkBoxDrawTrack;
         private System.Windows.Forms.Panel videoStreamPanel;
         private System.Windows.Forms.CheckBox checkBoxDrawId;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.ComponentModel.BackgroundWorker o;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBoxDrawCirkels;

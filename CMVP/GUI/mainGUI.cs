@@ -59,7 +59,6 @@ namespace CMVP
         }
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.start();
             calibration.Enabled = false;
             Initiate.Enabled = false;
             //System.Console.WriteLine("Start simulation");
@@ -89,7 +88,6 @@ namespace CMVP
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.stop();
             calibration.Enabled = true;
             Initiate.Enabled = true;
 

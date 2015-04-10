@@ -46,12 +46,12 @@ namespace CMVP
         private List<AForge.IntPoint> Acenters;
         private List<AForge.Point> Adirections;
         private List<Panel> panelsToUpdate;
+        public Panel panelToUpdate;
         //private System.Timers.Timer imgProcesTimer;
         private System.Windows.Forms.Timer imgProcesTimer;
         private System.Windows.Forms.Timer drawTimer;
         
         List<Blob> cirkels;
-        Dictionary<int, Car> carMap;
         List<Car> objects;
         
         //variables used for calculating time difference between updates
@@ -78,7 +78,6 @@ namespace CMVP
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.carMap = new Dictionary<int, Car>();
 
             this.cirkels = new List<Blob>();
             this.Acenters = new List<AForge.IntPoint>();
@@ -88,18 +87,24 @@ namespace CMVP
             this.drawCenterOnImg = false;
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
-            drawTimer.Start();
             prevTime = videoStream.getTime();
+            this.start();
             System.Console.WriteLine("Image processing OK");
 
         }
         void updatePanels(object sender, EventArgs e)
         {
-            Bitmap panelImage = drawFeaturesOnImg();
-            foreach (Panel panel in panelsToUpdate)
+            if (panelsToUpdate.Count == 0)
+                Console.WriteLine("No Panel to update");
+            else
             {
-                panel.BackgroundImage = panelImage;
+                Bitmap panelImage = drawFeaturesOnImg();
+                foreach (Panel p in panelsToUpdate)
+                {
+                    p.BackgroundImage = panelImage;
+                }
             }
+
         }
         Bitmap drawFeaturesOnImg()
         {
@@ -213,6 +218,7 @@ namespace CMVP
         public void start()
         {
             imgProcesTimer.Start();
+            drawTimer.Start();
         }
         public void initiate()
         {
