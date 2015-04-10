@@ -29,6 +29,8 @@ namespace CMVP
             this.checkBoxDrawWindows_CheckedChanged(this, new EventArgs());
             checkBoxDrawRefHeading.Checked = true;
             this.checkBoxDrawRefHeading_CheckedChanged(this, new EventArgs());
+            checkBoxDrawTails.Checked = true;
+            this.checkBoxDrawTails_CheckedChanged(this, new EventArgs());
         }
         private void CameraControlWindow_Load(object sender, EventArgs e)
         {
@@ -89,6 +91,12 @@ namespace CMVP
         private void button1_Click(object sender, EventArgs e)
         {
             Program.videoStream.showCameraSettings();
+        }
+
+        private void checkBoxDrawTails_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("checkBoxDrawTails.Checked");
+            imgProcess.drawTailsOnImg= checkBoxDrawTails.Checked;
         }
 
     }

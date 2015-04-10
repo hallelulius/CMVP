@@ -37,7 +37,7 @@ namespace CMVP
         //private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
 
         //Const settings:
-        private const int DATA_HISTORY_LENGTH = 5; //Decides how many elements will be stored in the position, direction, speed, acceleration and found lists.
+        private const int DATA_HISTORY_LENGTH = 50; //Decides how many elements will be stored in the position, direction, speed, acceleration and found lists.
 
 
         /// <summary>
@@ -243,6 +243,10 @@ namespace CMVP
         {
             this.maxSpeed = maxSpeed;
             controller.setMaxSpeed(maxSpeed);
+        }
+        public List<AForge.IntPoint> getPositionHistory()
+        {
+            return new List<IntPoint>(lastPositions);
         }
         /*/// <summary>
         /// Used to set the "found" value.

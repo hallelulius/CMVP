@@ -85,7 +85,6 @@ namespace CMVP
                     break;
             }
         }
-
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             calibration.Enabled = true;

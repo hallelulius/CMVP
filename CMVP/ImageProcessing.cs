@@ -27,6 +27,7 @@ namespace CMVP
         static private Pen bluePen = new Pen(Color.LightSkyBlue,2);
         static private Pen greenPen = new Pen(Color.Green, 2);
         static private Pen yellowPen = new Pen(Color.Yellow, 2);
+        static private Pen turkosPen = new Pen(Color.Turquoise, 2);
         private Graphics g;
 
         public Boolean drawCirkelsOnImg;
@@ -36,6 +37,7 @@ namespace CMVP
         public Boolean drawTrackOnImg;
         public Boolean drawCarIdOnImg;
         public Boolean drawRefHeadingOnImg;
+        public Boolean drawTailsOnImg;
 
         
         private VideoStream videoStream;
@@ -87,6 +89,7 @@ namespace CMVP
             this.drawCenterOnImg = false;
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
+            this.drawTailsOnImg = false;
             prevTime = videoStream.getTime();
             this.start();
             System.Console.WriteLine("Image processing OK");
@@ -117,6 +120,13 @@ namespace CMVP
 
             foreach(Car car in objects)
             {
+                List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
+                foreach(AForge.IntPoint p in car.getPositionHistory())
+                {
+                    positionHistory.Add(new System.Drawing.Point(p.X,p.Y));
+                }
+                g.DrawLines(turkosPen,positionHistory.ToArray());
+
 
                 Controller controller = car.getController();
                 ControlStrategy controlStra = car.getControlStrategy();

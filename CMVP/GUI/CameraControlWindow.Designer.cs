@@ -39,6 +39,7 @@
             this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
+            this.checkBoxDrawTails = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +75,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxDrawTails);
             this.groupBox2.Controls.Add(this.cameraSettings);
             this.groupBox2.Controls.Add(this.checkBoxDrawRefHeading);
             this.groupBox2.Controls.Add(this.checkBoxDrawDirection);
@@ -154,6 +156,17 @@
             this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
             this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 
+            // checkBoxDrawTails
+            // 
+            this.checkBoxDrawTails.AutoSize = true;
+            this.checkBoxDrawTails.Location = new System.Drawing.Point(6, 180);
+            this.checkBoxDrawTails.Name = "checkBoxDrawTails";
+            this.checkBoxDrawTails.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxDrawTails.TabIndex = 11;
+            this.checkBoxDrawTails.Text = "Draw tails";
+            this.checkBoxDrawTails.UseVisualStyleBackColor = true;
+            this.checkBoxDrawTails.CheckedChanged += new System.EventHandler(this.checkBoxDrawTails_CheckedChanged);
+            // 
             // CameraControlWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -183,5 +196,6 @@
         private System.Windows.Forms.CheckBox checkBoxDrawCenters;
         private System.Windows.Forms.Button cameraSettings;
         private System.Windows.Forms.CheckBox checkBoxDrawRefHeading;
+        private System.Windows.Forms.CheckBox checkBoxDrawTails;
     }
 }
