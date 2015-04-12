@@ -46,8 +46,6 @@ namespace CMVP
         private Bitmap croppedImg;
         private Bitmap canvas;
 
-        private List<AForge.IntPoint> Acenters;
-        private List<AForge.Point> Adirections;
         private List<Panel> panelsToUpdate;
         public Panel panelToUpdate;
         //private System.Timers.Timer imgProcesTimer;
@@ -56,7 +54,7 @@ namespace CMVP
         
         List<Blob> cirkels;
         List<Car> objects;
-        List<AForge.IntPoint[]> squares;
+        List<Quadrilateral> squares;
         
         //variables used for calculating time difference between updates
         private double deltaTime;
@@ -85,8 +83,6 @@ namespace CMVP
             this.videoStream = videoStream;
 
             this.cirkels = new List<Blob>();
-            this.Acenters = new List<AForge.IntPoint>();
-            this.Adirections = new List<AForge.Point>();
 
             this.drawCirkelsOnImg = false;
             this.drawCenterOnImg = false;
@@ -114,11 +110,20 @@ namespace CMVP
         }
         Bitmap drawFeaturesOnImg()
         {
+
             if (img != null)
                 canvas = (Bitmap)img.Clone();
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(canvas);
+
+            int k = 0;
+            foreach (Quadrilateral q in squares)
+            {
+                g.DrawLines(penArray[k%4], q.getDrawingPoints());
+                k++;
+            }
+
 
             foreach(Car car in objects)
             {
@@ -174,12 +179,12 @@ namespace CMVP
                     List<Blob> cirkels = getBlobs(2, 13, croppedImg);
                     List<AForge.IntPoint> points = getPoints(cirkels);
                     List<Triangle> triangles = getTriangles(points);
-                    triangles = filterDubblets(triangles);
+                    triangles = filterTriangleDubblets(triangles);
                     foreach (Triangle triangle in triangles)
                     {
                         if (triangle.compare(idealTriangle,heightError,baseError))
                         {
-                            g.DrawLines(yellowPen, triangle.drawTrianglePoints());
+                            g.DrawLines(yellowPen, triangle.getDrawingPoints());
                         }
                     }
                 }
@@ -206,16 +211,12 @@ namespace CMVP
                 List<Blob> cirkels = getBlobs(2, 13, img);
                 drawCirkels(cirkels);
             }
-            for (int k = 0; k < Acenters.Count; k++)
+            foreach(Car car in objects)
             {
-                if (drawCenterOnImg)
-                {
-                    g.DrawEllipse(bluePen, new Rectangle((int)Acenters[k].X - 2, (int)Acenters[k].Y - 2, 2, 2));
-                }
-                if (drawDirectionOnImg)
-                {
-                    g.DrawLine(yellowPen, new System.Drawing.Point((int)Acenters[k].X, (int)Acenters[k].Y), new System.Drawing.Point((int)(Acenters[k].X + Adirections[k].X * 40), (int)(Acenters[k].Y + Adirections[k].Y * 40)));
-                }
+                if(drawCenterOnImg)
+                    g.DrawEllipse(bluePen, new Rectangle((int)car.getPosition().X - 2, (int)car.getPosition().Y - 2, 2, 2));
+                if(drawDirectionOnImg)
+                    g.DrawLine(yellowPen, new System.Drawing.Point(car.getPosition().X, car.getPosition().Y), new System.Drawing.Point(car.getPosition().X + (int)car.getDirection().X * 40, car.getPosition().Y + (int)car.getDirection().Y * 40));
             }
             return canvas;
         }
@@ -226,17 +227,23 @@ namespace CMVP
         }
         public void initiate()
         {
-
-
             objects.Clear();
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(2, 13,img);
-            Acenters = new List<AForge.IntPoint>();
-            Adirections = new List<AForge.Point>();
             List<AForge.IntPoint> points = getPoints(cirkels);
-            List<Triangle> triangles = getTriangles(points);
 
-            triangles = filterDubblets(triangles);
+            List<Triangle> triangles = getTriangles(points);
+            triangles = filterTriangleDubblets(triangles);
+
+            List<Quadrilateral> tempSquares = getQuadrilaterals(points);
+            tempSquares = filterQuadrilateralDubblets(tempSquares);
+            squares = new List<Quadrilateral>();
+            foreach(Quadrilateral q in tempSquares)
+            {
+                if (q.square(0.07))
+                    squares.Add(q);
+            }
+            
             List<Triangle> carTriangles = new List<Triangle>();
             foreach (Triangle triangle in triangles)
             {
@@ -299,14 +306,10 @@ namespace CMVP
                     croppedImg = img;
                 }
 
-
-                Acenters = new List<AForge.IntPoint>();
-                Adirections = new List<AForge.Point>();
-
                 List<Blob> cirkels = getBlobs(2, 13, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<Triangle> triangles = getTriangles(points);
-                triangles = filterDubblets(triangles);
+                triangles = filterTriangleDubblets(triangles);
                 bool carFoundThisTime = false;
                 foreach (Triangle triangle in triangles)
                 {
@@ -314,8 +317,6 @@ namespace CMVP
                     {
                         //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        Acenters.Add(translation+triangle.CENTER);
-                        Adirections.Add(triangle.DIRECTION);
                         int triangleId = getId(triangle.CENTER, triangle.DIRECTION, cirkels);
                         Console.WriteLine("id: " + car.ID);
                         if (car.ID == triangleId)
@@ -375,44 +376,77 @@ namespace CMVP
             }
             return triangles;
         }
-        private List<Triangle> filterDubblets(List<Triangle> triangles)
+        private List<Quadrilateral> getQuadrilaterals(List<AForge.IntPoint> points)
+        {
+            List<Quadrilateral> quadrilaterals = new List<Quadrilateral>();
+            foreach (AForge.IntPoint a in points)
+            {
+                foreach (AForge.IntPoint b in points)
+                {
+                    foreach (AForge.IntPoint c in points)
+                    {
+                        foreach (AForge.IntPoint d in points)
+                        {
+                            if (a != b && a != c && a != d && b != c && b != d && c != d)
+                            {
+                                AForge.IntPoint[] locations = new AForge.IntPoint[4];
+
+                                locations[0] = a;
+                                locations[1] = b;
+                                locations[2] = c;
+                                locations[3] = d;
+
+                                quadrilaterals.Add(new Quadrilateral(locations));
+                            }
+                        }
+                    }
+                }
+            }
+            return quadrilaterals;
+        }
+        private List<Triangle> filterTriangleDubblets(List<Triangle> triangles)
         {
             List<Triangle> filteredTriangles = new List<Triangle>();
-            filteredTriangles.Add(triangles.First());
-            triangles.RemoveAt(0);
-
-            foreach(Triangle t in triangles)
+            if (triangles.Count > 0)
             {
-                Boolean add = true;
-                foreach(Triangle ft in filteredTriangles)
+                filteredTriangles.Add(triangles.First());
+                foreach (Triangle t in triangles)
                 {
-                    if (t.Equals(ft))
-                        add = false;
-                }
-                if(add)
-                {
-                    filteredTriangles.Add(t);
+                    Boolean add = true;
+                    foreach (Triangle ft in filteredTriangles)
+                    {
+                        if (t.Equals(ft))
+                            add = false;
+                    }
+                    if (add)
+                    {
+                        filteredTriangles.Add(t);
+                    }
                 }
             }
-            /*
-            if(triangles.Count>0)
-                filteredTriangles.Add(triangles[0]);
-            foreach (AForge.IntPoint[] t1 in triangles)
-            {
-                Boolean add = true;
-                foreach (AForge.IntPoint[] t2 in filteredTriangles)
-                {
-                    if (t1[0].Equals(t2[0]) && t1[1].Equals(t2[1]) && t1[2].Equals(t2[2]))
-                        add = false;
-                        
-                }
-                if(add)
-                {
-                    filteredTriangles.Add(t1);
-                }
-            }
-            */
             return filteredTriangles;
+        }
+        private List<Quadrilateral> filterQuadrilateralDubblets(List<Quadrilateral> quadrilaterals)
+        {
+            List<Quadrilateral> filteredQuadrilaterals = new List<Quadrilateral>();
+            if (quadrilaterals.Count > 0)
+            {
+                filteredQuadrilaterals.Add(quadrilaterals.First());
+                foreach (Quadrilateral t in quadrilaterals)
+                {
+                    Boolean add = true;
+                    foreach (Quadrilateral ft in filteredQuadrilaterals)
+                    {
+                        if (t.Equals(ft))
+                            add = false;
+                    }
+                    if (add)
+                    {
+                        filteredQuadrilaterals.Add(t);
+                    }
+                }
+            }
+            return filteredQuadrilaterals;
         }
         private int getId(AForge.Point center, AForge.DoublePoint direction, List<Blob> rectangles)
         {

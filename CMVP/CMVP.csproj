@@ -147,6 +147,7 @@
     <Compile Include="GUI\SeriesControl.Designer.cs">
       <DependentUpon>SeriesControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Quadrilateral.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="Triangle.cs" />
     <Compile Include="VideoStream.cs" />

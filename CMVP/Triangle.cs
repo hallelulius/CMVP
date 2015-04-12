@@ -50,7 +50,7 @@ namespace CMVP
         {
             return new AForge.IntPoint[]{top,base1,base2};
         }
-        public System.Drawing.Point[] drawTrianglePoints()
+        public System.Drawing.Point[] getDrawingPoints()
         {
 
             return new System.Drawing.Point[]{convert(top),convert(base1),convert(base2),convert(top)};
