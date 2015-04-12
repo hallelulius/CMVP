@@ -15,8 +15,9 @@ using AForge;
 
 namespace CMVP
 {
-    public class Car
+    public  partial class Car : Item
     {
+        
         //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<IntPoint> lastPositions; //A list to prevent flickering.
@@ -45,7 +46,7 @@ namespace CMVP
         /// </summary>
         /// <param name="id"> Identification number of the car. </param>
         /// <param name="pos"> The starting position of the car. </param>
-        public Car(int id, AForge.IntPoint pos, AForge.Point dir)
+        public Car(int id, AForge.IntPoint pos, AForge.Point dir,int size) : base(pos,size)
         {
             controller = new PIController(this);
             this.id = id;
