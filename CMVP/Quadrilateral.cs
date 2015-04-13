@@ -20,9 +20,13 @@ namespace CMVP
     
     class Quadrilateral
     {
-        private AForge.IntPoint[] corners = new AForge.IntPoint[4]; AForge.IntPoint[] CORNERS {get{ return corners;}}
-        private double[] lengths = new double[4]; double[] LENGTHS { get { return lengths;}}
-        private double[] angles = new double[4]; double[] ANGLES { get { return angles; }}
+        private AForge.IntPoint[] corners = new AForge.IntPoint[4]; public AForge.IntPoint[] CORNERS {get{ return corners; } }
+        private double[] lengths = new double[4]; public double[] LENGTHS { get { return lengths;} }
+        private double[] angles = new double[4]; public double[] ANGLES { get { return angles; } }
+        private AForge.IntPoint center; public AForge.IntPoint CENTER { get { return center; } }
+        private double size; public double SIZE { get { return size; } }
+
+
 
         public Quadrilateral(AForge.IntPoint[] corners) 
         {
@@ -56,7 +60,7 @@ namespace CMVP
             corners.Remove(this.corners[2]);
             this.corners[3] = corners[0];
         }
-        AForge.IntPoint shortestPath(AForge.IntPoint p, List<AForge.IntPoint> goals)
+        private AForge.IntPoint shortestPath(AForge.IntPoint p, List<AForge.IntPoint> goals)
         {
             AForge.IntPoint shortestSoFar = goals[0];
             double shortestDistanceSoFar = p.DistanceTo(shortestSoFar);
@@ -72,16 +76,31 @@ namespace CMVP
         }
         private void initiateValues()
         {
+            angles[0] = angle(corners[3] - corners[0], corners[1] - corners[0]);
+
+            //This is to prevent a bowtie
+            if(angles[0]< Math.PI/4)
+            {
+                AForge.IntPoint swapVar = corners[2];
+                corners[2] = corners[3];
+                corners[3] = swapVar;
+                angles[0] = angle(corners[3] - corners[0], corners[1] - corners[0]);
+            }
+            angles[1] = angle(corners[0] - corners[1], corners[2] - corners[1]);
+            angles[2] = angle(corners[1] - corners[2], corners[3] - corners[2]);
+            angles[3] = angle(corners[2] - corners[3], corners[0] - corners[3]);
+
             lengths[0] = corners[0].DistanceTo(corners[1]);
             lengths[1] = corners[1].DistanceTo(corners[2]);
             lengths[2] = corners[2].DistanceTo(corners[3]);
             lengths[3] = corners[3].DistanceTo(corners[0]);
 
-            angles[0] = angle(corners[3] - corners[0], corners[1] - corners[0]);
-            angles[1] = angle(corners[0] - corners[1], corners[2] - corners[1]);
-            angles[2] = angle(corners[1] - corners[2], corners[3] - corners[2]);
-            angles[3] = angle(corners[2] - corners[3], corners[0] - corners[3]);
+            center = corners[0] + corners[1] + corners[2] + corners[3];
+            center = new AForge.IntPoint(center.X / 4, center.Y / 4);
+            size = corners[0].DistanceTo(corners[2]);
         }
+
+
         public bool Equals(Quadrilateral q)
         {
             for(int k=0; k < q.CORNERS.Length;k++)
@@ -116,17 +135,27 @@ namespace CMVP
         {
             return new System.Drawing.Point[] { convert(corners[0]),convert(corners[1]),convert(corners[2]),convert(corners[3]),convert(corners[0])};
         }
+        public AForge.IntPoint[] getSize()
+        {
+            return corners;
+        }
+        public double getArea()
+        {
+            return crossProduct(corners[3]-corners[0],corners[1]-corners[0]);
+        }
         private System.Drawing.Point convert(AForge.IntPoint p)
         {
             return new System.Drawing.Point(p.X,p.Y);
         } 
         private double angle(AForge.IntPoint a, AForge.IntPoint b)
         {
-           // Point tempPoint = point - car.getPosition();
-           // float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-          //  float angleToPoint = (float) Math.Acos(scalarProduct);
             double scalarProduct = (a.X * b.X + a.Y * b.Y)/a.EuclideanNorm() / b.EuclideanNorm();
             return Math.Acos(scalarProduct);
         }
+        private double crossProduct(AForge.IntPoint a, AForge.IntPoint b)
+        {
+            return Math.Abs(a.X * b.Y - a.Y * b.X);
+        }
+        
     }
 }

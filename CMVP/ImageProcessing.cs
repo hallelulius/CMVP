@@ -54,7 +54,7 @@ namespace CMVP
         
         List<Blob> cirkels;
         List<Car> objects;
-        List<Quadrilateral> squares;
+        List<Quadrilateral> squares = new List<Quadrilateral>();
         
         //variables used for calculating time difference between updates
         private double deltaTime;
@@ -62,9 +62,11 @@ namespace CMVP
 
         //sets ideal triangle base and height
         static private double idealHeight = 44; // 44 on table 33 on floor
-        static private double idealBase = 13;  //  13 on table 10 on floor
+        static private double idealBase = 18;  //  18 on table value on the floor uknown.
         static private double heightError = 7;
-        static private double baseError = 3;
+        static private double baseError = 4;
+        static private int blobMin = 4;
+        static private int blobMax = 13;
         static private Triangle idealTriangle = new Triangle(idealHeight, idealBase);
         
 
@@ -176,7 +178,7 @@ namespace CMVP
                 if (drawCenterOnImg)
                 {
                     // Only for testing triangles
-                    List<Blob> cirkels = getBlobs(2, 13, croppedImg);
+                    List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
                     List<AForge.IntPoint> points = getPoints(cirkels);
                     List<Triangle> triangles = getTriangles(points);
                     triangles = filterTriangleDubblets(triangles);
@@ -208,7 +210,7 @@ namespace CMVP
                 }
             if (drawCirkelsOnImg)
             {
-                List<Blob> cirkels = getBlobs(2, 13, img);
+                List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
                 drawCirkels(cirkels);
             }
             foreach(Car car in objects)
@@ -229,7 +231,7 @@ namespace CMVP
         {
             
             img = videoStream.getImage();
-            List<Blob> cirkels = getBlobs(2, 13,img);
+            List<Blob> cirkels = getBlobs(blobMin,blobMax,img);
             List<AForge.IntPoint> points = getPoints(cirkels);
             initiateCars(points);
             initiateBlocks(points);
@@ -256,18 +258,22 @@ namespace CMVP
             }
             foreach (Triangle triangle in carTriangles)
             {
-                int id = getId(triangle.CENTER, triangle.DIRECTION, points);
+                List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                int id = idPoints.Count;
                 if (id != 0)
                 {
+                    //Remove used points
+                    foreach (AForge.IntPoint p in triangle.getPoints())
+                        points.Remove(p);
+                    foreach (AForge.IntPoint p in idPoints)
+                       points.Remove(p);
                     Console.WriteLine("ID: " + id);
                     //Size need to be calculated implement later.
                     Car car = new Car(id, triangle.CENTER, triangle.DIRECTION, 50);
                     objects.Add(car);
                 }
 
-                //Removing used points
-                foreach (AForge.IntPoint p in triangle.getPoints())
-                    points.Remove(p);
+
             }
         }
         private void initiateBlocks(List<AForge.IntPoint> points)
@@ -278,7 +284,10 @@ namespace CMVP
             foreach (Quadrilateral q in tempSquares)
             {
                 if (q.square(0.07))
+                {
                     squares.Add(q);
+                    Program.obstacle.Add(new Item(q.CENTER, (int)Math.Round(q.SIZE)));
+                }
             }
         }
         private void processImage(object sender, EventArgs e)
@@ -287,8 +296,8 @@ namespace CMVP
             img = videoStream.getImage();
             double tempTime = videoStream.getTime();
             deltaTime = tempTime-prevTime;
-            Console.WriteLine("Delta time "+ prevTime);
-            Console.WriteLine("System Time " + System.DateTime.Now.Millisecond);
+            //Console.WriteLine("Delta time "+ prevTime);
+            //Console.WriteLine("System Time " + System.DateTime.Now.Millisecond);
             prevTime = tempTime;
 
             foreach (Car car in objects)
@@ -317,7 +326,7 @@ namespace CMVP
                     croppedImg = img;
                 }
 
-                List<Blob> cirkels = getBlobs(2, 13, croppedImg);
+                List<Blob> cirkels = getBlobs(blobMin,blobMax, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<Triangle> triangles = getTriangles(points);
                 triangles = filterTriangleDubblets(triangles);
@@ -326,12 +335,17 @@ namespace CMVP
                 {
                     if (!carFoundThisTime && triangle.compare(idealTriangle,heightError,baseError))
                     {
-                        //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
+
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        int triangleId = getId(triangle.CENTER, triangle.DIRECTION, points);
-                        Console.WriteLine("id: " + car.ID);
+                        List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                        int triangleId = idPoints.Count;
                         if (car.ID == triangleId)
                         {
+                            //Remove used points
+                            foreach (AForge.IntPoint p in triangle.getPoints())
+                                points.Remove(p);
+                            foreach(AForge.IntPoint p in idPoints)
+                                points.Remove(p);
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
@@ -459,16 +473,46 @@ namespace CMVP
             }
             return filteredQuadrilaterals;
         }
-        private int getId(AForge.Point center, AForge.DoublePoint direction, List<AForge.IntPoint> points)
+        private List<AForge.IntPoint> getIdPoints(Triangle triangle, List<AForge.IntPoint> points)
         {
-            int count = 0;
+            List<AForge.IntPoint> idPoints = new List<AForge.IntPoint>();
+            Quadrilateral boundarySquare = triangle.getRectangle();
+            if (squares.Count == 0) 
+                squares.Add(boundarySquare);
+            AForge.IntPoint[] boundary = boundarySquare.CORNERS;
+            double bArea = boundarySquare.getArea();
             foreach(AForge.IntPoint p in points)
             {
-                if (center.DistanceTo(p) < 20)
-                    count++;
+
+                Triangle t1 = new Triangle(new AForge.IntPoint[] { p, boundary[0], boundary[1] });
+                Triangle t2 = new Triangle(new AForge.IntPoint[] { p, boundary[1], boundary[2] });
+                Triangle t3 = new Triangle(new AForge.IntPoint[] { p, boundary[2], boundary[3] });
+                Triangle t4 = new Triangle(new AForge.IntPoint[] { p, boundary[3], boundary[0] });
+
+                double totalArea = t1.getArea() + t2.getArea() + t3.getArea() + t4.getArea();
+
+                double tempDiff = totalArea - bArea;
+                double diff = Math.Abs(tempDiff);
+                
+                double error = diff/bArea;
+                if (error < 0.01)
+                {
+                    Boolean add = true;
+                    foreach(AForge.IntPoint c in triangle.getPoints())
+                    {
+                        if(c.Equals(p))
+                        {
+                            add = false;
+                            break;
+                        }
+                            
+                    }
+                    if(add)
+                        idPoints.Add(p);
+                }
             }
-            return count;
-        }       
+            return idPoints;
+        }
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
@@ -523,6 +567,35 @@ namespace CMVP
             return idTag;
         }
          * 
+         * 
+         * 
+         *  private int getId(Triangle triangle, List<AForge.IntPoint> points)
+        {
+            int count = 0;
+            Quadrilateral boundarySquare = triangle.getRectangle();
+            if (squares.Count == 0) 
+                squares.Add(boundarySquare);
+            AForge.IntPoint[] boundary = boundarySquare.CORNERS;
+            double bArea = boundarySquare.getArea();
+            foreach(AForge.IntPoint p in points)
+            {
+
+                Triangle t1 = new Triangle(new AForge.IntPoint[] { p, boundary[0], boundary[1] });
+                Triangle t2 = new Triangle(new AForge.IntPoint[] { p, boundary[1], boundary[2] });
+                Triangle t3 = new Triangle(new AForge.IntPoint[] { p, boundary[2], boundary[3] });
+                Triangle t4 = new Triangle(new AForge.IntPoint[] { p, boundary[3], boundary[0] });
+
+                double totalArea = t1.getArea() + t2.getArea() + t3.getArea() + t4.getArea();
+
+                double tempDiff = totalArea - bArea;
+                double diff = Math.Abs(tempDiff);
+                
+                double error = diff/bArea;
+                if (error < 0.03)
+                    count++;
+            }
+            return count;
+        }       
          * 
          * 
         private List<Blob> getCircularBlobs(int minRadius, int maxRadius)
