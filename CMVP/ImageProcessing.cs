@@ -227,48 +227,59 @@ namespace CMVP
         }
         public void initiate()
         {
-            objects.Clear();
+            
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(2, 13,img);
             List<AForge.IntPoint> points = getPoints(cirkels);
-
-            List<Triangle> triangles = getTriangles(points);
-            triangles = filterTriangleDubblets(triangles);
-
-            List<Quadrilateral> tempSquares = getQuadrilaterals(points);
-            tempSquares = filterQuadrilateralDubblets(tempSquares);
-            squares = new List<Quadrilateral>();
-            foreach(Quadrilateral q in tempSquares)
-            {
-                if (q.square(0.07))
-                    squares.Add(q);
-            }
+            initiateCars(points);
+            initiateBlocks(points);
             
-            List<Triangle> carTriangles = new List<Triangle>();
-            foreach (Triangle triangle in triangles)
-            {
-                if (triangle.compare(idealTriangle,heightError,baseError))
-                {
-                    carTriangles.Add(triangle);
-                }
-            }
-            foreach(Triangle triangle in carTriangles)
-            {
-                int id = getId(triangle.CENTER, triangle.DIRECTION, cirkels);
-                if( id != 0)
-                {
-                    Console.WriteLine("ID: " + id);
-                    //Size need to be calculated implement later.
-                    Car car = new Car(id, triangle.CENTER, triangle.DIRECTION, 50);
-                    objects.Add(car);
-                }
-            }
             List<int> intList = new List<int>();
             foreach(Car car in objects)
             {
                 intList.Add(car.ID);
             }
             MessageBox.Show("The following cars where found: " + String.Join(",",intList.ToArray()) + " \n " + Program.obstacle.Count + " obstecles was found");
+        }
+        private void initiateCars(List<AForge.IntPoint> points)
+        {
+            objects.Clear();
+            List<Triangle> triangles = getTriangles(points);
+            triangles = filterTriangleDubblets(triangles);
+            List<Triangle> carTriangles = new List<Triangle>();
+            foreach (Triangle triangle in triangles)
+            {
+                if (triangle.compare(idealTriangle, heightError, baseError))
+                {
+                    carTriangles.Add(triangle);
+                }
+            }
+            foreach (Triangle triangle in carTriangles)
+            {
+                int id = getId(triangle.CENTER, triangle.DIRECTION, points);
+                if (id != 0)
+                {
+                    Console.WriteLine("ID: " + id);
+                    //Size need to be calculated implement later.
+                    Car car = new Car(id, triangle.CENTER, triangle.DIRECTION, 50);
+                    objects.Add(car);
+                }
+
+                //Removing used points
+                foreach (AForge.IntPoint p in triangle.getPoints())
+                    points.Remove(p);
+            }
+        }
+        private void initiateBlocks(List<AForge.IntPoint> points)
+        {
+            List<Quadrilateral> tempSquares = getQuadrilaterals(points);
+            tempSquares = filterQuadrilateralDubblets(tempSquares);
+            squares = new List<Quadrilateral>();
+            foreach (Quadrilateral q in tempSquares)
+            {
+                if (q.square(0.07))
+                    squares.Add(q);
+            }
         }
         private void processImage(object sender, EventArgs e)
         {
@@ -317,7 +328,7 @@ namespace CMVP
                     {
                         //AForge.IntPoint translation = pos - new AForge.IntPoint(100, 100);
                         AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        int triangleId = getId(triangle.CENTER, triangle.DIRECTION, cirkels);
+                        int triangleId = getId(triangle.CENTER, triangle.DIRECTION, points);
                         Console.WriteLine("id: " + car.ID);
                         if (car.ID == triangleId)
                         {
@@ -448,23 +459,16 @@ namespace CMVP
             }
             return filteredQuadrilaterals;
         }
-        private int getId(AForge.Point center, AForge.DoublePoint direction, List<Blob> rectangles)
+        private int getId(AForge.Point center, AForge.DoublePoint direction, List<AForge.IntPoint> points)
         {
-            List<Blob> idRectangles = filterOutIdRectangles(rectangles,center);
-            return idRectangles.Count;
-        }       
-        private List<Blob> filterOutIdRectangles(List<Blob> rectangles, AForge.Point p)
-        {
-            List<Blob> idTag = new List<Blob>();
-            foreach(Blob b in rectangles)
+            int count = 0;
+            foreach(AForge.IntPoint p in points)
             {
-                if(b.CenterOfGravity.DistanceTo(p)<14)
-                {
-                    idTag.Add(b);
-                }
+                if (center.DistanceTo(p) < 20)
+                    count++;
             }
-            return idTag;
-        }
+            return count;
+        }       
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
@@ -506,7 +510,18 @@ namespace CMVP
 
         /* Methods that could be used in the future for insperation.
          * 
-         * 
+         * private List<Blob> filterOutIdRectangles(List<Blob> rectangles, AForge.Point p)
+        {
+            List<Blob> idTag = new List<Blob>();
+            foreach(Blob b in rectangles)
+            {
+                if(b.CenterOfGravity.DistanceTo(p)<14)
+                {
+                    idTag.Add(b);
+                }
+            }
+            return idTag;
+        }
          * 
          * 
          * 
