@@ -61,13 +61,14 @@ namespace CMVP
         private double prevTime;
 
         //sets ideal triangle base and height
-        static private double idealHeight = 44; // 44 on table 33 on floor
-        static private double idealBase = 18;  //  18 on table value on the floor uknown.
-        static private double heightError = 7;
+        static private double idealHeight = 35; // 44 on table 35 on floor
+        static private double idealBase = 12;  //  18 on table 12 on the floor.
+        static private double heightError = 4;
         static private double baseError = 4;
-        static private int blobMin = 4;
-        static private int blobMax = 13;
+        static private int blobMin = 2;
+        static private int blobMax = 6;
         static private Triangle idealTriangle = new Triangle(idealHeight, idealBase);
+        static private double worstAccepted = 0;
         
 
         public ImageProcessing(VideoStream videoStream,List<Car> objects)
@@ -184,7 +185,7 @@ namespace CMVP
                     triangles = filterTriangleDubblets(triangles);
                     foreach (Triangle triangle in triangles)
                     {
-                        if (triangle.compare(idealTriangle,heightError,baseError))
+                        if (triangle.compare(idealTriangle))
                         {
                             g.DrawLines(yellowPen, triangle.getDrawingPoints());
                         }
@@ -251,7 +252,7 @@ namespace CMVP
             List<Triangle> carTriangles = new List<Triangle>();
             foreach (Triangle triangle in triangles)
             {
-                if (triangle.compare(idealTriangle, heightError, baseError))
+                if (triangle.compare(idealTriangle))
                 {
                     carTriangles.Add(triangle);
                 }
@@ -302,9 +303,9 @@ namespace CMVP
 
             foreach (Car car in objects)
             {
-                AForge.IntPoint pos=car.getPosition();
+                AForge.IntPoint pos = car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                int cropX,cropY;
+                int cropX, cropY;
                 if (car.found)
                 {
                     cropX = pos.X - 100;
@@ -321,30 +322,40 @@ namespace CMVP
                 }
                 else
                 {
-                    cropX = 0;  
+                    cropX = 0;
                     cropY = 0;
                     croppedImg = img;
                 }
 
-                List<Blob> cirkels = getBlobs(blobMin,blobMax, croppedImg);
+                List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
                 List<Triangle> triangles = getTriangles(points);
                 triangles = filterTriangleDubblets(triangles);
-                bool carFoundThisTime = false;
-                foreach (Triangle triangle in triangles)
-                {
-                    if (!carFoundThisTime && triangle.compare(idealTriangle,heightError,baseError))
-                    {
 
-                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                
+                triangles.Sort(delegate(Triangle t1, Triangle t2)
+                {
+                    return (t1.compareTo(idealTriangle).CompareTo(t2.compareTo(idealTriangle)));
+                });
+                List<double> d = new List<double>();
+                foreach(Triangle t in triangles)
+                {
+                    d.Add(t.compareTo(idealTriangle));
+                }
+                bool carFoundThisTime = false;
+                foreach(Triangle triangle in triangles)
+                {
+                    if (triangle.compareTo(idealTriangle) < 100)
+                    {
+                        AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
+                        List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
                         int triangleId = idPoints.Count;
                         if (car.ID == triangleId)
                         {
                             //Remove used points
                             foreach (AForge.IntPoint p in triangle.getPoints())
                                 points.Remove(p);
-                            foreach(AForge.IntPoint p in idPoints)
+                            foreach (AForge.IntPoint p in idPoints)
                                 points.Remove(p);
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
@@ -353,10 +364,39 @@ namespace CMVP
                         }
                     }
                 }
-                if(!carFoundThisTime)
-                {
+                if (!carFoundThisTime)
                     car.found = false;
-                }
+
+                    /*
+                    foreach (Triangle triangle in triangles)
+                    {
+
+                        if (!carFoundThisTime && triangle.compare(idealTriangle))
+                        {
+
+                            AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
+                            List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                            int triangleId = idPoints.Count;
+                            if (car.ID == triangleId)
+                            {
+                                //Remove used points
+                                foreach (AForge.IntPoint p in triangle.getPoints())
+                                    points.Remove(p);
+                                foreach(AForge.IntPoint p in idPoints)
+                                    points.Remove(p);
+                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
+                                car.found = true;
+                                carFoundThisTime = true;
+                                break;
+                            }
+                        }
+                    }
+                
+                    if(!carFoundThisTime)
+                    {
+                        car.found = false;
+                    }
+                    */
             }
            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
@@ -495,7 +535,7 @@ namespace CMVP
                 double diff = Math.Abs(tempDiff);
                 
                 double error = diff/bArea;
-                if (error < 0.01)
+                if (error < 0.3)
                 {
                     Boolean add = true;
                     foreach(AForge.IntPoint c in triangle.getPoints())
@@ -516,7 +556,7 @@ namespace CMVP
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(150, 150, 150).Color;
+            blobCounter.BackgroundThreshold = new RGB(90, 90, 90).Color;
             blobCounter.MinHeight = minHeight;
             blobCounter.MaxHeight = maxHeight;
             blobCounter.FilterBlobs = true;

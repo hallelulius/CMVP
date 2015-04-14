@@ -29,6 +29,7 @@ namespace CMVP
         private double baseAngle2; public double BASE_ANGLE_2 { get { return baseAngle2; } }
         private double[] sides = new double[3]; public double[] SIDES { get { return sides; } }
 
+
         //This is the hight and base only if it is a isosceles triangle.
         private double height; public double HEIGHT {get {return height;}}
         private double length; public double LENGTH {get {return length;}}
@@ -46,10 +47,33 @@ namespace CMVP
         }
         public Triangle(double height, double length)
         {
-            base1 = new AForge.IntPoint(0, 0);
-            base2 = new AForge.IntPoint((int)length,0);
-            top = new AForge.IntPoint((int)Math.Round(length/2),(int)Math.Round(height));
+            AForge.IntPoint[] points = new AForge.IntPoint[3];
+            points[0] = new AForge.IntPoint(0, 0);  //base
+            points[1] = new AForge.IntPoint((int)length,0); //base
+            points[2] = new AForge.IntPoint((int)Math.Round(length/2),(int)Math.Round(height)); //top
+
+            sortPoints(points);
             initiateValues();
+        }
+        public Triangle(AForge.IntPoint position, AForge.Point direction, double height, double length)
+        {
+            AForge.IntPoint[] points = new AForge.IntPoint[3];
+            //top point
+            AForge.IntPoint tran = new AForge.IntPoint((int)Math.Round(direction.X*height/2),(int)Math.Round(direction.Y*height/2));
+            points[0] = position + tran;
+            top = points[0];
+            
+            AForge.IntPoint middlePointBase = position - new AForge.IntPoint((int)Math.Round(direction.X * height / 2), (int)Math.Round(direction.Y * height / 2));
+            //Basepoints
+            AForge.Point orthogonolDirection = giveOrthogonol(direction);
+            points[1] = middlePointBase + new AForge.IntPoint(-(int)Math.Round(orthogonolDirection.X * length / 2), (int)Math.Round(orthogonolDirection.Y * length / 2));
+            base1 = points[1];
+            points[2] = middlePointBase - new AForge.IntPoint(-(int)Math.Round(orthogonolDirection.X * length / 2), (int)Math.Round(orthogonolDirection.Y * length / 2));
+            base2 = points[2];
+            //sortPoints(points);
+            initiateValues();
+
+
         }
         public double getArea()
         {
@@ -78,11 +102,48 @@ namespace CMVP
         {
             return top.Equals(t.TOP) && base1.Equals(t.BASE1) && base2.Equals(t.BASE2);
         }
-        public bool compare( Triangle ideal, double heightError, double lengthError)
+        public bool compare( Triangle ideal)
         {
 
             double diffHeight = Math.Abs(this.HEIGHT - ideal.HEIGHT);
             double diffLength = Math.Abs(this.LENGTH - ideal.LENGTH);
+
+            double topAngleDiff = Math.Abs(this.TOP_ANGLE - ideal.TOP_ANGLE);
+            double baseAngleDiff1 = Math.Abs(this.baseAngle1 - ideal.baseAngle1);
+            double baseAngleDiff2 = Math.Abs(this.baseAngle1 - ideal.baseAngle2);
+
+
+            double sideDiff0 = Math.Abs(this.SIDES[0] - ideal.SIDES[0]);
+            double sideDiff1 = Math.Abs(this.SIDES[1] - ideal.SIDES[1]);
+            double sideDiff2 = Math.Abs(this.SIDES[2] - ideal.SIDES[2]);
+
+            double errorHeight = diffHeight / ideal.HEIGHT;
+            double errorLength = diffLength / ideal.LENGTH;
+
+            double errorTopAngle = topAngleDiff / ideal.TOP_ANGLE;
+            double errorBaseAngle1 = baseAngleDiff1 / ideal.baseAngle1;
+            double errorBaseAngle2 = baseAngleDiff2 / ideal.baseAngle2;
+
+            double errorSide0 = sideDiff0 / ideal.SIDES[0];
+            double errorSide1 = sideDiff1 / ideal.SIDES[1];
+            double errorSide2 = sideDiff2 / ideal.SIDES[2];
+
+
+            if (errorHeight < 0.1 && errorLength < 0.1 && errorTopAngle < 1 && errorBaseAngle1 < 0.1 && errorBaseAngle2 < 0.1 && errorSide0 < 0.17 && errorSide1 < 0.17 && errorSide2 < 0.17)
+            {
+                return true;
+            }
+            return false;
+        }
+        //Old compare
+        /*
+        public double compareTo(Triangle ideal)
+        {
+            double diffHeight = Math.Abs(this.HEIGHT - ideal.HEIGHT);
+            double diffLength = Math.Abs(this.LENGTH - ideal.LENGTH);
+
+            double errorHeight = diffHeight / ideal.HEIGHT;
+            double errorLength = diffLength / ideal.LENGTH;
 
             double topAngleDiff = Math.Abs(this.TOP_ANGLE - ideal.TOP_ANGLE);
             double baseAngleDiff1 = Math.Abs(this.baseAngle1 - ideal.baseAngle1);
@@ -100,15 +161,20 @@ namespace CMVP
             double errorSide1 = sideDiff1 / ideal.SIDES[1];
             double errorSide2 = sideDiff2 / ideal.SIDES[2];
 
-
-            if (diffHeight < heightError && diffLength < lengthError && errorTopAngle < 0.40 && errorBaseAngle1 < 0.05 && errorBaseAngle2 < 0.05 && errorSide0 < 0.17 && errorSide1 < 0.17 && errorSide2 < 0.17)
-            {
-                return true;
-            }
-            return false;
+            return errorHeight*10 + errorLength*10 + errorTopAngle + errorBaseAngle1 + errorBaseAngle2 + errorSide0 + errorSide1 + errorSide2;
         }
-        
-        
+        */
+        //New compare
+        public double compareTo(Triangle t)
+        {
+            Triangle mold = new Triangle(this.CENTER,this.DIRECTION, t.HEIGHT, t.LENGTH);
+            AForge.IntPoint[] moldPoints = mold.getPoints();
+            AForge.IntPoint[] thisPoints = this.getPoints();
+            return thisPoints[0].DistanceTo(moldPoints[0]) +
+                    thisPoints[1].DistanceTo(moldPoints[1]) +
+                    thisPoints[2].DistanceTo(moldPoints[2]);
+            
+        }
         private void sortPoints(AForge.IntPoint[] points)
         {
             double d0 = points[1].DistanceTo(points[2]);
@@ -181,6 +247,10 @@ namespace CMVP
         {
             double scalarProduct = (a.X * b.X + a.Y * b.Y) / a.EuclideanNorm() / b.EuclideanNorm();
             return Math.Acos(scalarProduct);
+        }
+        private AForge.Point giveOrthogonol(AForge.Point p)
+        {
+            return new AForge.Point(-p.Y, p.X);
         }
     }
 }
