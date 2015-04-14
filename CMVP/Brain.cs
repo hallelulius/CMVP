@@ -16,11 +16,13 @@ namespace CMVP
     class Brain
     {
         
-        private List<Car> cars;   
+        private List<Car> cars;
+        private EventWaitHandle wh = new AutoResetEvent(true);
         public PerformanceAnalyzerWindow analyzer;
 
         public void run()
         {
+            wh.WaitOne();
             cars = Program.cars;
             Stopwatch time = new Stopwatch();
             long dt = 0;
@@ -80,6 +82,14 @@ namespace CMVP
             }
         }
 
+        public void StartWorking()
+        {
+            wh.Set();
+        }
+        public void StopWorking()
+        {
+            wh.Reset();
+        }
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {

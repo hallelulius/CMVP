@@ -47,7 +47,7 @@ namespace CMVP
         /// <param name="pos"> The starting position of the car. </param>
         public Car(int id, AForge.IntPoint pos, AForge.Point dir)
         {
-            controller = new PIController(this);
+            controller = new PIDController(this);
             this.id = id;
             this.direction = new List<AForge.Point>();
             this.position = new List<AForge.IntPoint>();
@@ -138,26 +138,6 @@ namespace CMVP
                 position.Remove(position.Last());
             }
 
-            /*if (pos != lastPos)
-            {
-                if (pos == position.ElementAt(0))
-                {
-                    position.Insert(0, pos);
-                    position.Remove(position.Last());
-                }
-                else
-                {
-                    lastPos = position.ElementAt(0);
-                    position.Insert(0, pos);
-                    position.Remove(position.Last());
-                }
-            }
-            else
-            {
-                position.Insert(0, position.ElementAt(0));
-                position.Remove(position.Last());
-            }
-            */
             direction.Insert(0,dir);
             direction.Remove(direction.Last());
             if (deltaTime > 0)
@@ -168,7 +148,6 @@ namespace CMVP
             float tempAngle = (float)Math.Atan2(dir.Y, dir.X);
             angles.Insert(0,tempAngle);
             angles.Remove(angles.Last());
-            //updateState();
 
             if (controller != null)
             {
@@ -244,43 +223,5 @@ namespace CMVP
             this.maxSpeed = maxSpeed;
             controller.setMaxSpeed(maxSpeed);
         }
-        /*/// <summary>
-        /// Used to set the "found" value.
-        /// </summary>
-        /// <param name="found"> Set this to true when car is found. Else, set it to false. </param>
-        public void setFound(bool found)
-        {
-            this.found.Add(found);
-            this.found.RemoveAt(0);
-        }
-
-        /// <summary>
-        /// Use this function to set the throttle value of the car. The value should be set between 0 and 1. Values outside of this range is set to the closest value within the range.
-        /// </summary>
-        /// <param name="t"> Only use values between 0 and 1. </param>
-        public void setThrottle(double t)
-        {
-            //Check if t is in the specified range and act accordingly.
-            if (t > 1)
-                throttle = 1;
-            else if (t < 0)
-                throttle = 0;
-            else
-                throttle = t;
-        }
-
-        /// <summary>
-        /// Use this function to set the steering of the car. The values should be set between -1 and 1. Values outside of this range will be clipped to this range. -1 is max steering to the left and 1 is max steering to the right.
-        /// </summary>
-        /// <param name="s"> Should be set between -1 and 1. </param>
-        public void setSteering(double s)
-        {
-            if (s < -1)
-                steer = -1;
-            else if (s > 1)
-                steer = 1;
-            else 
-                steer = s;
-        }*/
     }
 }

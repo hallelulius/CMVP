@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CMVP
 {
-    public partial class PIController : Controller
+    public partial class PIDController : Controller
     {
         // Controller parameters 
         private float Ki_steer;
@@ -25,7 +25,7 @@ namespace CMVP
         private List<float> prevHeadingError;
         private const int DATA_HISTORY_LENGTH = 5;
 
-        public PIController(Car car) : base (car)
+        public PIDController(Car car) : base (car)
         {
             // I-controller constants:
             Ki_steer = 0.1689F;
@@ -43,7 +43,7 @@ namespace CMVP
             throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
             // Set controler name:
-            controllerName = "PI";
+            controllerName = "PID";
             prevHeadingError = new List<float>();
             prevSpeedError = new List<float>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
@@ -155,7 +155,17 @@ namespace CMVP
             get { return Ti_throttle; }
             set { Ti_throttle = value; }
         }
-        
+        public float KdSteer
+        {
+            get { return Kd_steer; }
+            set { Kd_steer = value; }
+        }
+
+        public float KdThrottle
+        {
+            get { return Kd_throttle; }
+            set { Kd_throttle = value; }
+        }
         public override void resetController()
         {
             throttleIntegratorSum = 0;

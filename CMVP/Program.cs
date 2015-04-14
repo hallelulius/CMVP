@@ -27,7 +27,7 @@ namespace CMVP
         [STAThread]
         public static void Main()
         {
-            //cars.Add(new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
+            cars.Add(new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
             //cars.Add(new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
             mainGUI mainFrame = new mainGUI();
             videoStream = new PTGreyCamera();

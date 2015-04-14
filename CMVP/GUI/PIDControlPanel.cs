@@ -14,7 +14,7 @@ namespace CMVP
     {
         public PIDControlPanel()
         {
-            InitializeComponent();
+            InitializeComponent(); 
         }
 
         private void numericValueChanged(object sender, EventArgs e)

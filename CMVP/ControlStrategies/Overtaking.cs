@@ -19,7 +19,7 @@ namespace CMVP.ControlStrategies
     {
         int lastIndex = -1;
 
-        float smalRadius = 100;
+        float smallRadius = 100;
         float bigRadius = 200;
 
         public Overtaking(Car car) : base(car, null, "Overtaking")
@@ -168,11 +168,11 @@ namespace CMVP.ControlStrategies
                 //Find midpoint
                 Point normal = closestPoint - obj.getPosition();
                 normal = normal / normal.EuclideanNorm();
-                IntPoint midPoint = (obj.getPosition() + (normal * smalRadius)).Round();
+                IntPoint midPoint = (obj.getPosition() + (normal * smallRadius)).Round();
 
                 //Add points closeby
-                IntPoint point1 = (midPoint + (new Point(normal.Y, -normal.X)) * smalRadius / 2).Round();
-                IntPoint point2 = (midPoint + (new Point(-normal.Y, normal.X)) * smalRadius / 2).Round();
+                IntPoint point1 = (midPoint + (new Point(normal.Y, -normal.X)) * smallRadius / 2).Round();
+                IntPoint point2 = (midPoint + (new Point(-normal.Y, normal.X)) * smallRadius / 2).Round();
 
                 //Find index of outer points, oterIndex1 > outerIndex2
                 float distance1 = 9999;

@@ -34,7 +34,10 @@ namespace CMVP
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
         {
             foreach (Car car in Program.cars)
+            {
                 Program.com.stopCar(car.ID);
+            }
+            Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
@@ -69,7 +72,7 @@ namespace CMVP
             //thread.Start();
             
             //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-            switch (brainThread.ThreadState)
+           /* switch (brainThread.ThreadState)
             {
                 case System.Threading.ThreadState.Unstarted:
                     brainThread.Start();
@@ -83,7 +86,10 @@ namespace CMVP
 
                 default:
                     Console.WriteLine("Simulation already running...");
-                    break;
+                    break;*
+            */
+            brain.StartWorking();
+            Console.WriteLine("Starting simulation...");
             }
         }
 
@@ -102,7 +108,7 @@ namespace CMVP
                     Program.com.stopCar(car.ID);
                     car.getController().resetController();
                 }
-                brainThread.Suspend();
+                brain.StopWorking();
             }
             catch (Exception ex)
             {
@@ -251,18 +257,20 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
                 {
-                    PIController controller = new PIController(tempCar);
-                    foreach (Control ctrl in controllerTypePanel.Controls)
+                    PIDController controller = new PIDController(tempCar);
+
+                    /*foreach (Control ctrl in controllerTypePanel.Controls)
                     {
-                        //controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-                      //  controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-                      //  controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-                      //  controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                      //  controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-                      //  controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                      controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                      controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                      controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                      controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                      controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
+                      controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
+                     */
                     this.controllerApplyButton.Enabled = false;
 
                 }
@@ -322,9 +330,9 @@ namespace CMVP
             {
                 int tempID = (int)controllerCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
                 controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
                 updateControllerParametersGUI(tempCar);
+                controllerApplyButton.Enabled = true;
             }
         }
 
@@ -334,12 +342,14 @@ namespace CMVP
             {
                 if (car.getController().getName() == "PID")
                 {
-                    ((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdThrottle);
                 }
             }
         }
