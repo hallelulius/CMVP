@@ -87,10 +87,11 @@ namespace CMVP
                 default:
                     Console.WriteLine("Simulation already running...");
                     break;*
+            }
             */
             brain.StartWorking();
             Console.WriteLine("Starting simulation...");
-            }
+            
         }
 
         private void stopSimulationButton_Click(object sender, EventArgs e)
@@ -99,7 +100,6 @@ namespace CMVP
             calibration.Enabled = true;
             Initiate.Enabled = true;
 
-            //thread.Abort();
             Console.WriteLine("Stoping simulation");
             try
             {
@@ -259,7 +259,7 @@ namespace CMVP
                 {
                     PIDController controller = new PIDController(tempCar);
 
-                    /*foreach (Control ctrl in controllerTypePanel.Controls)
+                    foreach (Control ctrl in controllerTypePanel.Controls)
                     {
                       controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
                       controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
@@ -270,7 +270,6 @@ namespace CMVP
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
-                     */
                     this.controllerApplyButton.Enabled = false;
 
                 }
@@ -362,8 +361,7 @@ namespace CMVP
 
         private void Initiate_Click(object sender, EventArgs e)
         {
-            if(brainThread.IsAlive)
-                brainThread.Suspend();
+            brain.StopWorking();
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
             calibration.Enabled = true;

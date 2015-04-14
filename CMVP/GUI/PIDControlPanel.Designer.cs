@@ -282,6 +282,7 @@
             this.Controls.Add(this.kpSteerLabel);
             this.Name = "PIDControlPanel";
             this.Size = new System.Drawing.Size(200, 159);
+            this.Load += new System.EventHandler(this.PIDControlPanel_Load);
             ((System.ComponentModel.ISupportInitialize)(this.kpSteerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kiSteerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdSteerNumeric)).EndInit();

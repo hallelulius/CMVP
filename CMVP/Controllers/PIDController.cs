@@ -48,7 +48,7 @@ namespace CMVP
             prevSpeedError = new List<float>();
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
-                this.prevHeadingError.Add(0);
+                this.prevSpeedError.Add(0);
                 this.prevHeadingError.Add(0);
             }
 
@@ -56,6 +56,7 @@ namespace CMVP
 
         public override void updateController()      //PI-controller 
         {
+            //Throttle part
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
@@ -63,39 +64,18 @@ namespace CMVP
             outThrottle += throttleIntegratorSum * Ki_throttle;
 
             //derivative part here, not fully tested but seems to work 
-            /*
             prevSpeedErrorAvg = 0;
             foreach (float err in prevSpeedError)
             {
                 prevSpeedErrorAvg += err;
             }
-            
             prevSpeedErrorAvg /= (float)prevSpeedError.Count;
             outThrottle += Kd_throttle * (errorSpeed - prevSpeedErrorAvg);
             prevSpeedError.Insert(0, errorSpeed);
             prevSpeedError.Remove(prevSpeedError.Last());
-            */
-
-            /*
-            outThrottle = 0.13f;
-            if (speed <2  )
-                throttleIntegratorSum += 0.00005f;
-            else if (speed > 8)
-            {
-                throttleIntegratorSum -= 0.00005f;
-            }
-            outThrottle += refSpeed / 4;
-            outThrottle += throttleIntegratorSum;
-            */
-
-            //float errorSpeed = refSpeed - speed/50;
-            //outThrottle += Kp_throttle * errorSpeed;
-            //throttleIntegratorSum += errorSpeed;
-            //outThrottle += Ki_throttle * throttleIntegratorSum;
 
 
-
-
+            //Steering part
            outSteer = 0;
             float errorHeading = refHeading - heading;
             if (errorHeading > Math.PI)
@@ -105,6 +85,7 @@ namespace CMVP
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
             //outSteer += -Ki_steer * steerIntegratorSum ;
+
             //derivative part here, not fully tested but seems to work 
             prevHeadingErrorAvg=0;
             foreach (float err in prevHeadingError)
