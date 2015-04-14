@@ -59,8 +59,8 @@ namespace CMVP
         private double prevTime;
 
         //sets ideal triangle base and height
-        private double idealHeight = 44; // 44 on table 33 on floor
-        private double idealBase = 13;  //  13 on table 10 on floor
+        private double idealHeight = 33; // 44 on table 33 on floor
+        private double idealBase = 12;  //  uknownn on table 12 on floor
         private double heightError = 7;
         private double baseError = 3;
         
@@ -448,7 +448,7 @@ namespace CMVP
                 {
                 if (baseLength > (idealBase - baseError) && baseLength < idealBase + baseError)
                 {
-                    if (diffBaseAngle < 0.35)
+                    if (diffBaseAngle < 0.40)
                     {
                         Console.WriteLine(diffBaseAngle);
                         center = new AForge.IntPoint((int)(top.X / 2 + (base1.X + base2.X) / 4), (int)(top.Y / 2 + (base1.Y + base2.Y) / 4));
