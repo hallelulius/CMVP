@@ -55,6 +55,7 @@ namespace CMVP
         List<Blob> cirkels;
         List<Car> objects;
         List<Quadrilateral> squares = new List<Quadrilateral>();
+        Dictionary<Car, Triangle> prevTriangles = new Dictionary<Car,Triangle>();
         
         //variables used for calculating time difference between updates
         private double deltaTime;
@@ -126,7 +127,12 @@ namespace CMVP
                 g.DrawLines(penArray[k%4], q.getDrawingPoints());
                 k++;
             }
-
+            System.Drawing.Point[] dp = idealTriangle.getDrawingPoints();
+            dp[0].Offset(600,600);
+            dp[1].Offset(600,600);
+            dp[2].Offset(600,600);
+            dp[3].Offset(600, 600);
+            g.DrawLines(yellowPen,dp);
 
             foreach(Car car in objects)
             {
@@ -272,6 +278,7 @@ namespace CMVP
                     //Size need to be calculated implement later.
                     Car car = new Car(id, triangle.CENTER, triangle.DIRECTION, 50);
                     objects.Add(car);
+                    prevTriangles.Add(car, triangle);
                 }
 
 
@@ -332,20 +339,23 @@ namespace CMVP
                 List<Triangle> triangles = getTriangles(points);
                 triangles = filterTriangleDubblets(triangles);
 
+                Triangle prevTriangle = null;
+                prevTriangles.TryGetValue(car, out prevTriangle);
 
                 triangles.Sort(delegate(Triangle t1, Triangle t2)
                 {
-                    return (t1.compareTo(idealTriangle).CompareTo(t2.compareTo(idealTriangle)));
+
+                    return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
                 });
                 List<double> d = new List<double>();
                 foreach(Triangle t in triangles)
                 {
-                    d.Add(t.compareTo(idealTriangle));
+                    d.Add(t.compareTo(prevTriangle));
                 }
                 bool carFoundThisTime = false;
                 foreach(Triangle triangle in triangles)
                 {
-                    if (triangle.compareTo(idealTriangle) < 100)
+                    if (triangle.compareTo(prevTriangle) < 25)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
                         List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
@@ -535,7 +545,7 @@ namespace CMVP
                 double diff = Math.Abs(tempDiff);
 
                 double error = diff/bArea;
-                if (error < 0.3)
+                if (error == 0)
                 {
                     Boolean add = true;
                     foreach(AForge.IntPoint c in triangle.getPoints())

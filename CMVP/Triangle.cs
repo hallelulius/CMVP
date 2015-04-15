@@ -61,16 +61,16 @@ namespace CMVP
             //top point
             AForge.IntPoint tran = new AForge.IntPoint((int)Math.Round(direction.X*height/2),(int)Math.Round(direction.Y*height/2));
             points[0] = position + tran;
-            top = points[0];
+            //top = points[0];
             
             AForge.IntPoint middlePointBase = position - new AForge.IntPoint((int)Math.Round(direction.X * height / 2), (int)Math.Round(direction.Y * height / 2));
             //Basepoints
             AForge.Point orthogonolDirection = giveOrthogonol(direction);
             points[1] = middlePointBase + new AForge.IntPoint(-(int)Math.Round(orthogonolDirection.X * length / 2), (int)Math.Round(orthogonolDirection.Y * length / 2));
-            base1 = points[1];
+            //base1 = points[1];
             points[2] = middlePointBase - new AForge.IntPoint(-(int)Math.Round(orthogonolDirection.X * length / 2), (int)Math.Round(orthogonolDirection.Y * length / 2));
-            base2 = points[2];
-            //sortPoints(points);
+            //base2 = points[2];
+            sortPoints(points);
             initiateValues();
 
 
@@ -170,9 +170,16 @@ namespace CMVP
             Triangle mold = new Triangle(this.CENTER,this.DIRECTION, t.HEIGHT, t.LENGTH);
             AForge.IntPoint[] moldPoints = mold.getPoints();
             AForge.IntPoint[] thisPoints = this.getPoints();
-            return thisPoints[0].DistanceTo(moldPoints[0]) +
+
+            double sideDiff0 = Math.Abs(this.SIDES[0] - mold.SIDES[0]);
+            double sideDiff1 = Math.Abs(this.SIDES[1] - mold.SIDES[1]);
+            double sideDiff2 = Math.Abs(this.SIDES[2] - mold.SIDES[2]);
+
+            double error = thisPoints[0].DistanceTo(moldPoints[0]) +
                     thisPoints[1].DistanceTo(moldPoints[1]) +
-                    thisPoints[2].DistanceTo(moldPoints[2]);
+                    thisPoints[2].DistanceTo(moldPoints[2]) +
+                    sideDiff0 + sideDiff1 + sideDiff2;
+            return error;
             
         }
         private void sortPoints(AForge.IntPoint[] points)
