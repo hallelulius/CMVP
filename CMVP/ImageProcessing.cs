@@ -266,17 +266,18 @@ namespace CMVP
             foreach (Triangle triangle in carTriangles)
             {
                 List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
-                int id = idPoints.Count;
-                if (id != 0)
+
+                int triangleId =  idPoints.Count;
+                if (triangleId != 0)
                 {
                     //Remove used points
                     foreach (AForge.IntPoint p in triangle.getPoints())
                         points.Remove(p);
                     foreach (AForge.IntPoint p in idPoints)
                        points.Remove(p);
-                    Console.WriteLine("ID: " + id);
+                    Console.WriteLine("ID: " + triangleId);
                     //Size need to be calculated implement later.
-                    Car car = new Car(id, triangle.CENTER, triangle.DIRECTION, 50);
+                    Car car = new Car(triangleId, triangle.CENTER, triangle.DIRECTION, 50);
                     objects.Add(car);
                     prevTriangles.Add(car, triangle);
                 }
@@ -336,6 +337,9 @@ namespace CMVP
 
                 List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
                 List<AForge.IntPoint> points = getPoints(cirkels);
+
+                points = filterPointsThatBelongsToOtherCars(points, car);
+
                 List<Triangle> triangles = getTriangles(points);
                 triangles = filterTriangleDubblets(triangles);
 
@@ -357,6 +361,7 @@ namespace CMVP
                 bool carFoundThisTime = false;
                 foreach(Triangle triangle in triangles)
                 {
+                    //Unknown if comparing to idealTriangle is nescesarry.
                     if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 25000)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
@@ -375,8 +380,9 @@ namespace CMVP
                             car.found = true;
                             carFoundThisTime = true;
                             prevTriangles.Remove(car);
+                            triangle.offset(translation);
                             prevTriangles.Add(car, triangle);
-                            break;
+                            break;      
                         }
                     }
                 }
@@ -415,6 +421,48 @@ namespace CMVP
                     */
             }
            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
+        }
+
+        //TestPhase
+        private Boolean pointInTriangle(AForge.IntPoint p, Triangle t,double errorMargin)
+        {
+            Quadrilateral boundarySquare = t.getRectangle();
+            AForge.IntPoint[] boundary = boundarySquare.CORNERS;
+            double bArea = boundarySquare.getArea();
+
+            Triangle t1 = new Triangle(new AForge.IntPoint[] { p, boundary[0], boundary[1] });
+            Triangle t2 = new Triangle(new AForge.IntPoint[] { p, boundary[1], boundary[2] });
+            Triangle t3 = new Triangle(new AForge.IntPoint[] { p, boundary[2], boundary[3] });
+            Triangle t4 = new Triangle(new AForge.IntPoint[] { p, boundary[3], boundary[0] });
+
+            double totalArea = t1.getArea() + t2.getArea() + t3.getArea() + t4.getArea();
+
+            double tempDiff = totalArea - bArea;
+            double diff = Math.Abs(tempDiff);
+
+            double error = diff/bArea;
+            return error < errorMargin;
+        }
+        private List<AForge.IntPoint> filterPointsThatBelongsToOtherCars(List<AForge.IntPoint> points, Car car)
+        {
+            List<AForge.IntPoint> filteredPoints = new List<AForge.IntPoint>(points);
+            foreach(Car c in objects)
+            {
+                if (c != car)
+                {
+                    Triangle carTriangle;
+                    if (prevTriangles.TryGetValue(c, out carTriangle))
+                    {
+                        foreach (AForge.IntPoint p in points)
+                        {
+                            if (pointInTriangle(p, carTriangle, 0.01))
+                                filteredPoints.Remove(p);
+                        }
+                    }
+                }
+                    
+            }
+            return filteredPoints;
         }
         private void drawCirkels(List<Blob> cirkels)
         {
@@ -538,7 +586,7 @@ namespace CMVP
             AForge.IntPoint[] boundary = boundarySquare.CORNERS;
             double bArea = boundarySquare.getArea();
             foreach(AForge.IntPoint p in points)
-        {
+            {
 
                 Triangle t1 = new Triangle(new AForge.IntPoint[] { p, boundary[0], boundary[1] });
                 Triangle t2 = new Triangle(new AForge.IntPoint[] { p, boundary[1], boundary[2] });
@@ -572,7 +620,7 @@ namespace CMVP
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(90, 90, 90).Color;
+            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
             blobCounter.MinHeight = minHeight;
             blobCounter.MaxHeight = maxHeight;
             blobCounter.FilterBlobs = true;

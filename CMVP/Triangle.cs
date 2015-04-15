@@ -135,6 +135,14 @@ namespace CMVP
             }
             return false;
         }
+        public void offset(AForge.IntPoint translation)
+        {
+            top += translation;
+            base1 += translation;
+            base2 += translation;
+            center += translation;
+        }
+
         //Old compare 1
         /*
         public double compareTo(Triangle ideal)
@@ -209,6 +217,7 @@ namespace CMVP
 
             return error;
         }
+
         private void sortPoints(AForge.IntPoint[] points)
         {
             double d0 = points[1].DistanceTo(points[2]);
