@@ -135,7 +135,7 @@ namespace CMVP
             }
             return false;
         }
-        //Old compare
+        //Old compare 1
         /*
         public double compareTo(Triangle ideal)
         {
@@ -164,7 +164,8 @@ namespace CMVP
             return errorHeight*10 + errorLength*10 + errorTopAngle + errorBaseAngle1 + errorBaseAngle2 + errorSide0 + errorSide1 + errorSide2;
         }
         */
-        //New compare
+        //Old compare 2
+        /*
         public double compareTo(Triangle t)
         {
             Triangle mold = new Triangle(this.CENTER,this.DIRECTION, t.HEIGHT, t.LENGTH);
@@ -181,6 +182,32 @@ namespace CMVP
                     sideDiff0 + sideDiff1 + sideDiff2;
             return error;
             
+        }
+         */
+        public double compareTo(Triangle t)
+        {
+            Triangle mold = new Triangle(t.HEIGHT , t.LENGTH);
+            Triangle thisTriangle = new Triangle(this.HEIGHT , this.LENGTH);
+            
+            AForge.IntPoint[] moldPoints = mold.getPoints();
+            AForge.IntPoint[] thisPoints = thisTriangle.getPoints();
+
+            double sideDiff0 = Math.Abs(this.SIDES[0] - mold.SIDES[0]);
+            double sideDiff1 = Math.Abs(this.SIDES[1] - mold.SIDES[1]);
+            double sideDiff2 = Math.Abs(this.SIDES[2] - mold.SIDES[2]);
+
+             
+
+            double error = Math.Exp(thisPoints[0].DistanceTo(moldPoints[0])) +
+                    Math.Exp(thisPoints[1].DistanceTo(moldPoints[1])) +
+                    Math.Exp(thisPoints[2].DistanceTo(moldPoints[2])) +
+                    Math.Exp(thisTriangle.CENTER.DistanceTo(mold.CENTER)) +
+                    Math.Exp(Math.Abs(thisTriangle.HEIGHT - mold.HEIGHT)) +
+                    Math.Exp(sideDiff0) +
+                    Math.Exp(sideDiff1) +
+                    Math.Exp(sideDiff2);
+
+            return error;
         }
         private void sortPoints(AForge.IntPoint[] points)
         {

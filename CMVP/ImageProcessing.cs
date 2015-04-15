@@ -348,20 +348,24 @@ namespace CMVP
                     return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
                 });
                 List<double> d = new List<double>();
+                List<int> i = new List<int>();
                 foreach(Triangle t in triangles)
                 {
-                    d.Add(t.compareTo(prevTriangle));
+                    d.Add(t.compareTo(prevTriangle)+t.compareTo(idealTriangle));
+                    i.Add(getIdPoints(t, points).Count);
                 }
                 bool carFoundThisTime = false;
                 foreach(Triangle triangle in triangles)
                 {
-                    if (triangle.compareTo(prevTriangle) < 25)
+                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 25000)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
                         List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
                         int triangleId = idPoints.Count;
                         if (car.ID == triangleId)
                         {
+                            if (worstAccepted < d[1])
+                                worstAccepted = d[1];
                             //Remove used points
                             foreach (AForge.IntPoint p in triangle.getPoints())
                                 points.Remove(p);
@@ -370,6 +374,8 @@ namespace CMVP
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
+                            prevTriangles.Remove(car);
+                            prevTriangles.Add(car, triangle);
                             break;
                         }
                     }
@@ -545,7 +551,7 @@ namespace CMVP
                 double diff = Math.Abs(tempDiff);
 
                 double error = diff/bArea;
-                if (error == 0)
+                if (error < 0.4)
                 {
                     Boolean add = true;
                     foreach(AForge.IntPoint c in triangle.getPoints())

@@ -40,7 +40,7 @@ namespace CMVP
             Kd_steer = 0.01f; 
             Kd_throttle = 0.0f; 
             // Set variables 
-            throttleIntegratorSum = -0.5f;
+            throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PI";
@@ -58,6 +58,8 @@ namespace CMVP
         {
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
+            if (!car.found)
+                errorSpeed = 0 - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed;
             outThrottle += throttleIntegratorSum * Ki_throttle;
@@ -115,7 +117,6 @@ namespace CMVP
             outSteer += Kd_steer * (errorHeading-prevHeadingErrorAvg);
             prevHeadingError.Insert(0, errorHeading);
             prevHeadingError.Remove(prevHeadingError.Last());
-
             outThrottle = capThrottleOutput(outThrottle);
             outSteer = capSteerOutput(outSteer);
         }
