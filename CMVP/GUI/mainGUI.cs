@@ -18,7 +18,7 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread brainThread, dataGridThread;
+        private Thread dataGridThread;
         private List<Track> tracks = new List<Track>();
         private int dataGridUpdateTime = 1000;
         //public event FormClosingEventHandler FormClosing;
@@ -27,7 +27,7 @@ namespace CMVP
         {
             InitializeComponent();
             loadTracks();
-            brainThread = new Thread(new ThreadStart(brain.run));
+            brain.start();
             dataGridThread = new Thread(new ThreadStart(updateDataGrid));
             dataGridThread.Start();
         }
@@ -62,7 +62,6 @@ namespace CMVP
         }
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.start();
             calibration.Enabled = false;
             Initiate.Enabled = false;
             //System.Console.WriteLine("Start simulation");
@@ -93,10 +92,8 @@ namespace CMVP
             Console.WriteLine("Starting simulation...");
             
         }
-
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.stop();
             calibration.Enabled = true;
             Initiate.Enabled = true;
 

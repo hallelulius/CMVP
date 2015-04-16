@@ -18,24 +18,19 @@ namespace CMVP
         {
             InitializeComponent();
             videoStreamPanel.BackColor=Color.SpringGreen;
-            Program.videoStream.pushDestination(videoStreamPanel);
+            this.imgProcess = (ImageProcessing)Program.imageProcess;
+            this.imgProcess.pushDestination(videoStreamPanel);
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
-            this.imgProcess = (ImageProcessing)Program.imageProcess;
 
-            processedVideoRadioButton.Select();
             checkBoxDrawTrack.Checked = true;
             this.checkBoxDrawTrack_CheckedChanged_1(this, new EventArgs());
             checkBoxDrawWindows.Checked = true;
             this.checkBoxDrawWindows_CheckedChanged(this, new EventArgs());
             checkBoxDrawRefHeading.Checked = true;
             this.checkBoxDrawRefHeading_CheckedChanged(this, new EventArgs());
-        }
-        private void updatePreview(object sender, EventArgs e)
-        {
-            
-            videoStreamPanel.BackgroundImage =new Bitmap(Program.videoStream.getImage(),videoStreamPanel.Width,videoStreamPanel.Height);
-            
+            checkBoxDrawTails.Checked = true;
+            this.checkBoxDrawTails_CheckedChanged(this, new EventArgs());
         }
         private void CameraControlWindow_Load(object sender, EventArgs e)
         {
@@ -48,23 +43,6 @@ namespace CMVP
         }
         private void groupBox1_Enter(object sender, EventArgs e)
         {
-
-        }
-
-        private void processedVideoRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if(processedVideoRadioButton.Checked)
-            {
-                Console.WriteLine("Showing Processed Image");
-                Program.videoStream.removeDestination(videoStreamPanel);
-                Program.imageProcess.pushDestination(videoStreamPanel);
-            }
-            else
-            {
-                Console.WriteLine("Showing Raw Image");
-                Program.imageProcess.removeDestination(videoStreamPanel);
-                Program.videoStream.pushDestination(videoStreamPanel);
-            }
 
         }
 
@@ -113,6 +91,12 @@ namespace CMVP
         private void button1_Click(object sender, EventArgs e)
         {
             Program.videoStream.showCameraSettings();
+        }
+
+        private void checkBoxDrawTails_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("checkBoxDrawTails.Checked");
+            imgProcess.drawTailsOnImg= checkBoxDrawTails.Checked;
         }
 
     }

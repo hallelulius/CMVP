@@ -133,6 +133,7 @@
     <Compile Include="GUI\PerformanceAnalyzerWindow.Designer.cs">
       <DependentUpon>PerformanceAnalyzerWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Item.cs" />
     <Compile Include="PTGreyCamera.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
@@ -140,7 +141,9 @@
     <Compile Include="GUI\SeriesControl.Designer.cs">
       <DependentUpon>SeriesControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Quadrilateral.cs" />
     <Compile Include="Track.cs" />
+    <Compile Include="Triangle.cs" />
     <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>

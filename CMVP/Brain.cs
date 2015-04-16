@@ -15,14 +15,19 @@ namespace CMVP
     /// </summary>
     class Brain
     {
-        
+
         private List<Car> cars;
-        private EventWaitHandle wh = new AutoResetEvent(true);
+        private static EventWaitHandle wh = new ManualResetEvent(false);
         public PerformanceAnalyzerWindow analyzer;
 
+
+        public void start()
+        {
+            Thread thread = new Thread(run);
+            thread.Start();
+        }
         public void run()
         {
-            wh.WaitOne();
             cars = Program.cars;
             Stopwatch time = new Stopwatch();
             long dt = 0;
@@ -31,16 +36,17 @@ namespace CMVP
             time.Start();
             while (true)
             {
+                wh.WaitOne();
                 startTime = time.ElapsedMilliseconds;
-             
-                foreach(Car car in cars)
+
+                foreach (Car car in cars)
                 {
                     car.updateState();
                 }
                 foreach (Car car in cars)
                 {
                     if (car.getControlStrategy() != null)
-                    {
+                        {
                         car.getControlStrategy().updateReferencePoint();
                     }
                 }
@@ -52,7 +58,6 @@ namespace CMVP
                 {
                     car.send();
                 }
-                
                 dt = time.ElapsedMilliseconds - startTime;
 
                 // Give values to analyzer
@@ -77,8 +82,8 @@ namespace CMVP
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-
                 Thread.Sleep(3);
+
             }
         }
 
@@ -93,7 +98,7 @@ namespace CMVP
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {
-            if(analyzer != null)
+            if (analyzer != null)
             {
                 if (!analyzer.IsDisposed)
                 {

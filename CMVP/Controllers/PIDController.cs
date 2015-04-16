@@ -25,7 +25,8 @@ namespace CMVP
         private List<float> prevHeadingError;
         private const int DATA_HISTORY_LENGTH = 5;
 
-        public PIDController(Car car) : base (car)
+        public PIDController(Car car)
+            : base(car)
         {
             // I-controller constants:
             Ki_steer = 0.1689F;
@@ -37,10 +38,10 @@ namespace CMVP
             Kp_steer = 0.6f; //Ki_steer / Ti_steer;
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // D-controller constants:
-            Kd_steer = 0.01f; 
-            Kd_throttle = 0.0f; 
+            Kd_steer = 0.01f;
+            Kd_throttle = 0.0f;
             // Set variables 
-            throttleIntegratorSum = 0;
+            throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PID";
@@ -59,6 +60,12 @@ namespace CMVP
             //Throttle part
             outThrottle = 0;
             float errorSpeed = refSpeed - speed / maxSpeed;
+            if (!car.found)
+            {
+
+                Console.WriteLine("Car not found");
+                errorSpeed = 0 - speed / maxSpeed;
+            }
             outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed;
             outThrottle += throttleIntegratorSum * Ki_throttle;
@@ -76,7 +83,7 @@ namespace CMVP
 
 
             //Steering part
-           outSteer = 0;
+            outSteer = 0;
             float errorHeading = refHeading - heading;
             if (errorHeading > Math.PI)
                 errorHeading -= 2f * (float)Math.PI;
@@ -87,16 +94,15 @@ namespace CMVP
             //outSteer += -Ki_steer * steerIntegratorSum ;
 
             //derivative part here, not fully tested but seems to work 
-            prevHeadingErrorAvg=0;
+            prevHeadingErrorAvg = 0;
             foreach (float err in prevHeadingError)
             {
                 prevHeadingErrorAvg += err;
             }
-            prevHeadingErrorAvg /= (float) prevHeadingError.Count;
-            outSteer += Kd_steer * (errorHeading-prevHeadingErrorAvg);
+            prevHeadingErrorAvg /= (float)prevHeadingError.Count;
+            outSteer += Kd_steer * (errorHeading - prevHeadingErrorAvg);
             prevHeadingError.Insert(0, errorHeading);
             prevHeadingError.Remove(prevHeadingError.Last());
-
             outThrottle = capThrottleOutput(outThrottle);
             outSteer = capSteerOutput(outSteer);
         }
