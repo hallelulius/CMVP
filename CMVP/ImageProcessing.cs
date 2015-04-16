@@ -313,20 +313,22 @@ namespace CMVP
             {
                 AForge.IntPoint pos = car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
+                Size windowSize = new Size(200, 200);
+
                 int cropX, cropY;
                 if (car.found)
                 {
-                    cropX = pos.X - 100;
-                    cropY = pos.Y - 100;
+                    cropX = pos.X - windowSize.Width/2;
+                    cropY = pos.Y - windowSize.Height/2;
                     if (cropX < 0)
                         cropX = 0;
-                    else if (cropX > img.Width - 200)
-                        cropX = img.Width - 200;
+                    else if (cropX > img.Width - windowSize.Width)
+                        cropX = img.Width - windowSize.Width;
                     if (cropY < 0)
                         cropY = 0;
-                    else if (cropY > img.Height - 200)
-                        cropY = img.Height - 200;
-                    croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
+                    else if (cropY > img.Height - windowSize.Height)
+                        cropY = img.Height - windowSize.Height;
+                    croppedImg = img.Clone(new Rectangle(cropX, cropY, windowSize.Width, windowSize.Height), img.PixelFormat);
                 }
                 else
                 {
@@ -388,42 +390,10 @@ namespace CMVP
                 }
                 if (!carFoundThisTime)
                     car.found = false;
-
-                    /*
-                    foreach (Triangle triangle in triangles)
-                    {
-
-                        if (!carFoundThisTime && triangle.compare(idealTriangle))
-                        {
-
-                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                            List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
-                            int triangleId = idPoints.Count;
-                        if (car.ID == triangleId)
-                        {
-                                //Remove used points
-                                foreach (AForge.IntPoint p in triangle.getPoints())
-                                    points.Remove(p);
-                                foreach(AForge.IntPoint p in idPoints)
-                                    points.Remove(p);
-                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
-                            car.found = true;
-                            carFoundThisTime = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if(!carFoundThisTime)
-                {
-                    car.found = false;
-                }
-                    */
             }
            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
 
-        //TestPhase
         private Boolean pointInTriangle(AForge.IntPoint p, Triangle t,double errorMargin)
         {
             Quadrilateral boundarySquare = t.getRectangle();
