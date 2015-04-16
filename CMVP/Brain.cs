@@ -56,7 +56,15 @@ namespace CMVP
                 }
                 foreach (Car car in cars)
                 {
-                    car.send();
+                    if (car.found)
+                    {
+                        car.send();
+                    }
+                    else
+                    {
+                        car.stop();
+                    }
+                    
                 }
                 dt = time.ElapsedMilliseconds - startTime;
 

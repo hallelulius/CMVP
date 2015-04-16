@@ -32,7 +32,7 @@ namespace CMVP
         private int id; public int ID { get { return id; } } //Identification number of the car.
         public bool found;
         private Controller controller; // This cars controller 
-        private static float PIXEL_SIZE = 0.18F; // used to get the right unit for the speed
+        private static float PIXEL_SIZE = 1/3.84F; // cm used to get the right unit for the speed 
         
         //private double throttle; //A number between 0 and 1, deciding the speed of the car.
         //private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
@@ -228,43 +228,14 @@ namespace CMVP
         {
             return new List<IntPoint>(lastPositions);
         }
-        /*/// <summary>
-        /// Used to set the "found" value.
-        /// </summary>
-        /// <param name="found"> Set this to true when car is found. Else, set it to false. </param>
-        public void setFound(bool found)
+        public double getDeltaTime()
         {
-            this.found.Add(found);
-            this.found.RemoveAt(0);
+            return deltaTime.ElementAt(0);
         }
 
-        /// <summary>
-        /// Use this function to set the throttle value of the car. The value should be set between 0 and 1. Values outside of this range is set to the closest value within the range.
-        /// </summary>
-        /// <param name="t"> Only use values between 0 and 1. </param>
-        public void setThrottle(double t)
+        public void stop()
         {
-            //Check if t is in the specified range and act accordingly.
-            if (t > 1)
-                throttle = 1;
-            else if (t < 0)
-                throttle = 0;
-            else
-                throttle = t;
+            Program.com.stopCar(id);
         }
-
-        /// <summary>
-        /// Use this function to set the steering of the car. The values should be set between -1 and 1. Values outside of this range will be clipped to this range. -1 is max steering to the left and 1 is max steering to the right.
-        /// </summary>
-        /// <param name="s"> Should be set between -1 and 1. </param>
-        public void setSteering(double s)
-        {
-            if (s < -1)
-                steer = -1;
-            else if (s > 1)
-                steer = 1;
-            else 
-                steer = s;
-        }*/
     }
 }

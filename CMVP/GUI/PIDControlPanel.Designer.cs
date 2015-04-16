@@ -59,6 +59,11 @@
             // kpSteerNumeric
             // 
             this.kpSteerNumeric.DecimalPlaces = 4;
+            this.kpSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kpSteerNumeric.Location = new System.Drawing.Point(26, 23);
             this.kpSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -82,6 +87,11 @@
             // kiSteerNumeric
             // 
             this.kiSteerNumeric.DecimalPlaces = 4;
+            this.kiSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kiSteerNumeric.Location = new System.Drawing.Point(26, 44);
             this.kiSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -105,6 +115,11 @@
             // kdSteerNumeric
             // 
             this.kdSteerNumeric.DecimalPlaces = 4;
+            this.kdSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kdSteerNumeric.Location = new System.Drawing.Point(26, 65);
             this.kdSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -128,6 +143,11 @@
             // kdThrottleNumeric
             // 
             this.kdThrottleNumeric.DecimalPlaces = 4;
+            this.kdThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kdThrottleNumeric.Location = new System.Drawing.Point(127, 65);
             this.kdThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -151,6 +171,11 @@
             // kiThrottleNumeric
             // 
             this.kiThrottleNumeric.DecimalPlaces = 4;
+            this.kiThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kiThrottleNumeric.Location = new System.Drawing.Point(127, 44);
             this.kiThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -174,6 +199,11 @@
             // kpThrottleNumeric
             // 
             this.kpThrottleNumeric.DecimalPlaces = 4;
+            this.kpThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kpThrottleNumeric.Location = new System.Drawing.Point(127, 23);
             this.kpThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -215,6 +245,11 @@
             // tiSteerNumeric
             // 
             this.tiSteerNumeric.DecimalPlaces = 4;
+            this.tiSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.tiSteerNumeric.Location = new System.Drawing.Point(26, 86);
             this.tiSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -238,6 +273,11 @@
             // tiThrottleNumeric
             // 
             this.tiThrottleNumeric.DecimalPlaces = 4;
+            this.tiThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.tiThrottleNumeric.Location = new System.Drawing.Point(127, 86);
             this.tiThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -262,6 +302,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Controls.Add(this.tiThrottleLabel);
             this.Controls.Add(this.tiThrottleNumeric);
             this.Controls.Add(this.tiSteerNumeric);

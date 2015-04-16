@@ -33,13 +33,15 @@
             this.checkBoxDrawId = new System.Windows.Forms.CheckBox();
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.threshold_ScrollBar = new System.Windows.Forms.HScrollBar();
+            this.checkBoxDrawTails = new System.Windows.Forms.CheckBox();
             this.cameraSettings = new System.Windows.Forms.Button();
             this.checkBoxDrawRefHeading = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawDirection = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
-            this.checkBoxDrawTails = new System.Windows.Forms.CheckBox();
+            this.scrollbar_label = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,6 +77,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.scrollbar_label);
+            this.groupBox2.Controls.Add(this.threshold_ScrollBar);
             this.groupBox2.Controls.Add(this.checkBoxDrawTails);
             this.groupBox2.Controls.Add(this.cameraSettings);
             this.groupBox2.Controls.Add(this.checkBoxDrawRefHeading);
@@ -90,6 +94,28 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
+            // 
+            // threshold_ScrollBar
+            // 
+            this.threshold_ScrollBar.Location = new System.Drawing.Point(17, 311);
+            this.threshold_ScrollBar.Maximum = 255;
+            this.threshold_ScrollBar.Minimum = 100;
+            this.threshold_ScrollBar.Name = "threshold_ScrollBar";
+            this.threshold_ScrollBar.Size = new System.Drawing.Size(160, 15);
+            this.threshold_ScrollBar.TabIndex = 12;
+            this.threshold_ScrollBar.Value = 100;
+            this.threshold_ScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.threshold_ScrollBar_Scroll);
+            // 
+            // checkBoxDrawTails
+            // 
+            this.checkBoxDrawTails.AutoSize = true;
+            this.checkBoxDrawTails.Location = new System.Drawing.Point(6, 180);
+            this.checkBoxDrawTails.Name = "checkBoxDrawTails";
+            this.checkBoxDrawTails.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxDrawTails.TabIndex = 11;
+            this.checkBoxDrawTails.Text = "Draw tails";
+            this.checkBoxDrawTails.UseVisualStyleBackColor = true;
+            this.checkBoxDrawTails.CheckedChanged += new System.EventHandler(this.checkBoxDrawTails_CheckedChanged);
             // 
             // cameraSettings
             // 
@@ -156,16 +182,14 @@
             this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
             this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 
-            // checkBoxDrawTails
+            // scrollbar_label
             // 
-            this.checkBoxDrawTails.AutoSize = true;
-            this.checkBoxDrawTails.Location = new System.Drawing.Point(6, 180);
-            this.checkBoxDrawTails.Name = "checkBoxDrawTails";
-            this.checkBoxDrawTails.Size = new System.Drawing.Size(72, 17);
-            this.checkBoxDrawTails.TabIndex = 11;
-            this.checkBoxDrawTails.Text = "Draw tails";
-            this.checkBoxDrawTails.UseVisualStyleBackColor = true;
-            this.checkBoxDrawTails.CheckedChanged += new System.EventHandler(this.checkBoxDrawTails_CheckedChanged);
+            this.scrollbar_label.AutoSize = true;
+            this.scrollbar_label.Location = new System.Drawing.Point(14, 288);
+            this.scrollbar_label.Name = "scrollbar_label";
+            this.scrollbar_label.Size = new System.Drawing.Size(54, 13);
+            this.scrollbar_label.TabIndex = 13;
+            this.scrollbar_label.Text = "Threshold";
             // 
             // CameraControlWindow
             // 
@@ -197,5 +221,7 @@
         private System.Windows.Forms.Button cameraSettings;
         private System.Windows.Forms.CheckBox checkBoxDrawRefHeading;
         private System.Windows.Forms.CheckBox checkBoxDrawTails;
+        private System.Windows.Forms.HScrollBar threshold_ScrollBar;
+        private System.Windows.Forms.Label scrollbar_label;
     }
 }

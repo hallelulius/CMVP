@@ -22,7 +22,8 @@ namespace CMVP
             this.imgProcess.pushDestination(videoStreamPanel);
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
-
+            threshold_ScrollBar.Value = imgProcess.getThrehold();
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
             checkBoxDrawTrack.Checked = true;
             this.checkBoxDrawTrack_CheckedChanged_1(this, new EventArgs());
             checkBoxDrawWindows.Checked = true;
@@ -99,5 +100,12 @@ namespace CMVP
             imgProcess.drawTailsOnImg= checkBoxDrawTails.Checked;
         }
 
+        private void threshold_ScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            imgProcess.setThreshold((byte) threshold_ScrollBar.Value);
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
+        }
+
+        
     }
 }

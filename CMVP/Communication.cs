@@ -27,7 +27,7 @@ namespace CMVP
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE! 
         private const byte MAX_THROTTLE = 200;               //output = 2.58V
-        private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
+        private const byte NEUTRAL_THROTTLE = 110;            //output = 1.41V
         private const byte MIN_THROTTLE = 0;             //output = 0V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V

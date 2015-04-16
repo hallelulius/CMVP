@@ -60,6 +60,11 @@ namespace CMVP
             }
             
         }
+
+        public Track()
+        {
+
+        }
         
         /// <summary>
         /// Returns the next word following the character pointed to by 'p'. This will also advance 'p' to the beginning of the next word.
