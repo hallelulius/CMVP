@@ -19,13 +19,13 @@ namespace CMVP
 {
     public class Track
     {
-        private string _name;//Name of the track.
-        private string _s;   //The string extracted from the file.
-        private int _p = 0;  //A pointer to a character in the string.
-        private int _size;   //The number of vertices in the matrix being read.
-        //private float[,] _m;   //The matrix containing the track.
-        private List<IntPoint> points;   //The matrix containing the track position.
-        private List<float> speeds;   //The list containing the track speed.
+        private string _name;       //Name of the track.
+        private string _s;          //The string extracted from the file.
+        private int _p = 0;         //A pointer to a character in the string.
+        private int _size;          //The number of vertices in the matrix being read.
+        //private float[,] _m;      //The matrix containing the track.
+        private List<IntPoint> points;      //The matrix containing the track position.
+        private List<float> speeds;         //The list containing the track speed.
 
         /// <summary>
         /// TrackImporter is used to import tracks stored as .txt files.

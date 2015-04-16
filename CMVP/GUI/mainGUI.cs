@@ -418,7 +418,7 @@ namespace CMVP
             foreach(Car c in Program.cars)
             {
                 Program.com.calibrationMode(c.ID);
-                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instructions in the manual chapter 6,4. \n Remember to always simulate the platform with external power source.");
+                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instructions in the manual chapter 6,4. \n Remember to always run the platform with external power source.");
             }
         }
 
