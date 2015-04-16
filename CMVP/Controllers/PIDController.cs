@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CMVP
 {
-    public partial class PIController : Controller
+    public partial class PIDController : Controller
     {
         // Controller parameters 
         private float Ki_steer;
@@ -16,16 +16,18 @@ namespace CMVP
         private float Kp_throttle;
         private float Kd_steer;
         private float Kd_throttle;
+
         // Controller variables 
         private float throttleIntegratorSum;
         private float steerIntegratorSum;
-        private float prevSpeedErrorAvg;
-        private float prevHeadingErrorAvg;
-        private List<float> prevSpeedError;
-        private List<float> prevHeadingError;
+        private float derivativeThrottle;
+        private float derivativeSteer;
+        private float prevSpeedError;
+        private float prevHeadingError;
         private const int DATA_HISTORY_LENGTH = 5;
 
-        public PIController(Car car) : base (car)
+        public PIDController(Car car)
+            : base(car)
         {
             // I-controller constants:
             Ki_steer = 0.1689F;
@@ -37,68 +39,36 @@ namespace CMVP
             Kp_steer = 0.6f; //Ki_steer / Ti_steer;
             Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
             // D-controller constants:
-            Kd_steer = 0.01f; 
-            Kd_throttle = 0.0f; 
+            Kd_steer = 0.01f;
+            Kd_throttle = 0.0f;
             // Set variables 
             throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
             steerIntegratorSum = 0;
             // Set controler name:
-            controllerName = "PI";
-            prevHeadingError = new List<float>();
-            prevSpeedError = new List<float>();
-            for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
-            {
-                this.prevHeadingError.Add(0);
-                this.prevHeadingError.Add(0);
-            }
-
+            controllerName = "PID";
+            prevHeadingError = 0;
+            prevSpeedError = 0;
         }
 
         public override void updateController()      //PI-controller 
         {
+            //Throttle part
             outThrottle = 0;
+            float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            if (!car.found)
-                errorSpeed = 0 - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed;
+            throttleIntegratorSum += errorSpeed*dT;
             outThrottle += throttleIntegratorSum * Ki_throttle;
-
-            //derivative part here, not fully tested but seems to work 
-            /*
-            prevSpeedErrorAvg = 0;
-            foreach (float err in prevSpeedError)
-            {
-                prevSpeedErrorAvg += err;
-            }
             
-            prevSpeedErrorAvg /= (float)prevSpeedError.Count;
-            outThrottle += Kd_throttle * (errorSpeed - prevSpeedErrorAvg);
-            prevSpeedError.Insert(0, errorSpeed);
-            prevSpeedError.Remove(prevSpeedError.Last());
-            */
-
-            /*
-            outThrottle = 0.13f;
-            if (speed <2  )
-                throttleIntegratorSum += 0.00005f;
-            else if (speed > 8)
-            {
-                throttleIntegratorSum -= 0.00005f;
-            }
-            outThrottle += refSpeed / 4;
-            outThrottle += throttleIntegratorSum;
-            */
-
-            //float errorSpeed = refSpeed - speed/50;
-            //outThrottle += Kp_throttle * errorSpeed;
-            //throttleIntegratorSum += errorSpeed;
-            //outThrottle += Ki_throttle * throttleIntegratorSum;
+            //derivative part here, not fully tested but seems to work 
+            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+            outThrottle += Kd_throttle * derivativeThrottle;
+            prevSpeedError = errorSpeed;
 
 
 
-
-           outSteer = 0;
+            //Steering part
+            outSteer = 0;
             float errorHeading = refHeading - heading;
             if (errorHeading > Math.PI)
                 errorHeading -= 2f * (float)Math.PI;
@@ -106,17 +76,14 @@ namespace CMVP
                 errorHeading += 2f * (float)Math.PI;
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
-            //outSteer += -Ki_steer * steerIntegratorSum ;
+            //outSteer += -Ki_steer * steerIntegratorSum *dT;
+
             //derivative part here, not fully tested but seems to work 
-            prevHeadingErrorAvg=0;
-            foreach (float err in prevHeadingError)
-            {
-                prevHeadingErrorAvg += err;
-            }
-            prevHeadingErrorAvg /= (float) prevHeadingError.Count;
-            outSteer += Kd_steer * (errorHeading-prevHeadingErrorAvg);
-            prevHeadingError.Insert(0, errorHeading);
-            prevHeadingError.Remove(prevHeadingError.Last());
+            derivativeSteer = (errorHeading - prevHeadingError) / dT;
+            outSteer += Kd_throttle * derivativeSteer;
+            prevHeadingError = errorHeading;
+
+
             outThrottle = capThrottleOutput(outThrottle);
             outSteer = capSteerOutput(outSteer);
         }
@@ -156,7 +123,17 @@ namespace CMVP
             get { return Ti_throttle; }
             set { Ti_throttle = value; }
         }
-        
+        public float KdSteer
+        {
+            get { return Kd_steer; }
+            set { Kd_steer = value; }
+        }
+
+        public float KdThrottle
+        {
+            get { return Kd_throttle; }
+            set { Kd_throttle = value; }
+        }
         public override void resetController()
         {
             throttleIntegratorSum = 0;

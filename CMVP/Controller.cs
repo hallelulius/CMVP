@@ -110,7 +110,7 @@ namespace CMVP
         {
             return refPoint;
         }
-        
+      
         public void setMaxSpeed(float maxSpeed)
         {
             this.maxSpeed = maxSpeed;

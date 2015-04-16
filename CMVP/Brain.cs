@@ -15,10 +15,17 @@ namespace CMVP
     /// </summary>
     class Brain
     {
-        
-        private List<Car> cars;   
+
+        private List<Car> cars;
+        private static EventWaitHandle wh = new ManualResetEvent(false);
         public PerformanceAnalyzerWindow analyzer;
 
+
+        public void start()
+        {
+            Thread thread = new Thread(run);
+            thread.Start();
+        }
         public void run()
         {
             cars = Program.cars;
@@ -29,16 +36,17 @@ namespace CMVP
             time.Start();
             while (true)
             {
+                wh.WaitOne();
                 startTime = time.ElapsedMilliseconds;
-             
-                foreach(Car car in cars)
+
+                foreach (Car car in cars)
                 {
                     car.updateState();
                 }
                 foreach (Car car in cars)
                 {
                     if (car.getControlStrategy() != null)
-                    {
+                        {
                         car.getControlStrategy().updateReferencePoint();
                     }
                 }
@@ -48,9 +56,16 @@ namespace CMVP
                 }
                 foreach (Car car in cars)
                 {
-                    car.send();
+                    if (car.found)
+                    {
+                        car.send();
+                    }
+                    else
+                    {
+                        car.stop();
+                    }
+                    
                 }
-                
                 dt = time.ElapsedMilliseconds - startTime;
 
                 // Give values to analyzer
@@ -75,15 +90,23 @@ namespace CMVP
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-
                 Thread.Sleep(3);
+
             }
         }
 
+        public void StartWorking()
+        {
+            wh.Set();
+        }
+        public void StopWorking()
+        {
+            wh.Reset();
+        }
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {
-            if(analyzer != null)
+            if (analyzer != null)
             {
                 if (!analyzer.IsDisposed)
                 {

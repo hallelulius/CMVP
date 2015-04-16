@@ -67,7 +67,7 @@ namespace CMVP
         }
 
         private void UpdateUI(object sender, ProgressChangedEventArgs e)
-        {
+            {
  	        image = m_processedImage.bitmap;
    
             foreach (Panel p in panelsToUpdate)

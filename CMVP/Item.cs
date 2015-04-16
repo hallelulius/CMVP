@@ -32,7 +32,7 @@ namespace CMVP
         {
             this.position = pos;
         }
-        public AForge.IntPoint getPosition()
+        public virtual AForge.IntPoint getPosition()
         {
             return position;
         }

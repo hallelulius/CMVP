@@ -47,11 +47,12 @@ namespace CMVP
         private Bitmap canvas;
 
         private List<Panel> panelsToUpdate;
-        public Panel panelToUpdate;
+        //public Panel panelToUpdate;
         //private System.Timers.Timer imgProcesTimer;
         private System.Windows.Forms.Timer imgProcesTimer;
         private System.Windows.Forms.Timer drawTimer;
-        
+        private byte threshold;
+
         List<Blob> cirkels;
         List<Car> objects;
         List<Quadrilateral> squares = new List<Quadrilateral>();
@@ -61,11 +62,13 @@ namespace CMVP
         private double deltaTime;
         private double prevTime;
 
+
         //sets ideal triangle base and height
         static private double idealHeight = 35; // 44 on table 35 on floor
         static private double idealBase = 12;  //  18 on table 12 on the floor.
-        static private double heightError = 4;
-        static private double baseError = 4;
+        
+        //static private double heightError = 4;
+        //static private double baseError = 4;
         static private int blobMin = 2;
         static private int blobMax = 6;
         static private Triangle idealTriangle = new Triangle(idealHeight, idealBase);
@@ -85,6 +88,7 @@ namespace CMVP
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
+            this.threshold = 200;
 
             this.cirkels = new List<Blob>();
 
@@ -100,8 +104,9 @@ namespace CMVP
         }
         void updatePanels(object sender, EventArgs e)
         {
-            if (panelsToUpdate.Count == 0)
-                Console.WriteLine("No Panel to update");
+            if (panelsToUpdate.Count == 0){
+                //Console.WriteLine("No Panel to update");
+            }
             else
             {
             Bitmap panelImage = drawFeaturesOnImg();
@@ -240,6 +245,9 @@ namespace CMVP
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(blobMin,blobMax,img);
             List<AForge.IntPoint> points = getPoints(cirkels);
+            // uncomment when you want to detemine how many pixels there are per meter
+            //pixelsPerMeter();
+
             initiateCars(points);
             initiateBlocks(points);
 
@@ -364,7 +372,7 @@ namespace CMVP
                 foreach(Triangle triangle in triangles)
                 {
                     //Unknown if comparing to idealTriangle is nescesarry.
-                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 25000)
+                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 100000)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
                         List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
@@ -590,7 +598,7 @@ namespace CMVP
         private List<Blob> getBlobs(int minHeight, int maxHeight,Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(200, 200, 200).Color;
+            blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
             blobCounter.MinHeight = minHeight;
             blobCounter.MaxHeight = maxHeight;
             blobCounter.FilterBlobs = true;
@@ -624,8 +632,30 @@ namespace CMVP
             return videoStream.getTime();
                 }
 
+        
+        public byte getThrehold(){
+            return threshold;
+        }
+        public void setThreshold(byte val){
+            threshold=val;
+        }
+
+        private void pixelsPerMeter()
+        {
+            List<Blob> blobs = getBlobs(2, 10, img);
+            List<IntPoint> points = getPoints(blobs);
+            if (points.Count != 2)
+            {
+                MessageBox.Show("Make sure that you only have the measuring stick in the picture\n Points found: "+ points.Count);
+
+            }
+            else
+            {
+                MessageBox.Show("Pixels in one meter:" + points[0].DistanceTo(points[1]).ToString());
+            }
 
 
+        }
         /* Methods that could be used in the future for insperation.
          * 
          * private List<Blob> filterOutIdRectangles(List<Blob> rectangles, AForge.Point p)

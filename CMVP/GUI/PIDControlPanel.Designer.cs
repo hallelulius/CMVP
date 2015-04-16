@@ -44,12 +44,8 @@
             this.throttleLabel = new System.Windows.Forms.Label();
             this.tiSteerNumeric = new System.Windows.Forms.NumericUpDown();
             this.tiSteerLabel = new System.Windows.Forms.Label();
-            this.tdSteerNumeric = new System.Windows.Forms.NumericUpDown();
             this.tiThrottleNumeric = new System.Windows.Forms.NumericUpDown();
-            this.tdThrottleNumeric = new System.Windows.Forms.NumericUpDown();
-            this.tdSteerLabel = new System.Windows.Forms.Label();
             this.tiThrottleLabel = new System.Windows.Forms.Label();
-            this.tdThrottleLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.kpSteerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kiSteerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdSteerNumeric)).BeginInit();
@@ -57,14 +53,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.kiThrottleNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kpThrottleNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tiSteerNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tdSteerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tiThrottleNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tdThrottleNumeric)).BeginInit();
             this.SuspendLayout();
             // 
             // kpSteerNumeric
             // 
             this.kpSteerNumeric.DecimalPlaces = 4;
+            this.kpSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kpSteerNumeric.Location = new System.Drawing.Point(26, 23);
             this.kpSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -74,11 +73,6 @@
             this.kpSteerNumeric.Name = "kpSteerNumeric";
             this.kpSteerNumeric.Size = new System.Drawing.Size(70, 20);
             this.kpSteerNumeric.TabIndex = 3;
-            this.kpSteerNumeric.Value = new decimal(new int[] {
-            722,
-            0,
-            0,
-            262144});
             this.kpSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kpSteerLabel
@@ -93,6 +87,11 @@
             // kiSteerNumeric
             // 
             this.kiSteerNumeric.DecimalPlaces = 4;
+            this.kiSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kiSteerNumeric.Location = new System.Drawing.Point(26, 44);
             this.kiSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -102,11 +101,6 @@
             this.kiSteerNumeric.Name = "kiSteerNumeric";
             this.kiSteerNumeric.Size = new System.Drawing.Size(70, 20);
             this.kiSteerNumeric.TabIndex = 5;
-            this.kiSteerNumeric.Value = new decimal(new int[] {
-            1689,
-            0,
-            0,
-            262144});
             this.kiSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kiSteerLabel
@@ -121,7 +115,11 @@
             // kdSteerNumeric
             // 
             this.kdSteerNumeric.DecimalPlaces = 4;
-            this.kdSteerNumeric.Enabled = false;
+            this.kdSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kdSteerNumeric.Location = new System.Drawing.Point(26, 65);
             this.kdSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -145,7 +143,11 @@
             // kdThrottleNumeric
             // 
             this.kdThrottleNumeric.DecimalPlaces = 4;
-            this.kdThrottleNumeric.Enabled = false;
+            this.kdThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kdThrottleNumeric.Location = new System.Drawing.Point(127, 65);
             this.kdThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -169,6 +171,11 @@
             // kiThrottleNumeric
             // 
             this.kiThrottleNumeric.DecimalPlaces = 4;
+            this.kiThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kiThrottleNumeric.Location = new System.Drawing.Point(127, 44);
             this.kiThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -178,11 +185,6 @@
             this.kiThrottleNumeric.Name = "kiThrottleNumeric";
             this.kiThrottleNumeric.Size = new System.Drawing.Size(70, 20);
             this.kiThrottleNumeric.TabIndex = 11;
-            this.kiThrottleNumeric.Value = new decimal(new int[] {
-            131,
-            0,
-            0,
-            196608});
             this.kiThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kiThrottleLabel
@@ -197,6 +199,11 @@
             // kpThrottleNumeric
             // 
             this.kpThrottleNumeric.DecimalPlaces = 4;
+            this.kpThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.kpThrottleNumeric.Location = new System.Drawing.Point(127, 23);
             this.kpThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -206,11 +213,6 @@
             this.kpThrottleNumeric.Name = "kpThrottleNumeric";
             this.kpThrottleNumeric.Size = new System.Drawing.Size(70, 20);
             this.kpThrottleNumeric.TabIndex = 9;
-            this.kpThrottleNumeric.Value = new decimal(new int[] {
-            125,
-            0,
-            0,
-            262144});
             this.kpThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // kpThrottleLabel
@@ -243,6 +245,11 @@
             // tiSteerNumeric
             // 
             this.tiSteerNumeric.DecimalPlaces = 4;
+            this.tiSteerNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.tiSteerNumeric.Location = new System.Drawing.Point(26, 86);
             this.tiSteerNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -252,11 +259,6 @@
             this.tiSteerNumeric.Name = "tiSteerNumeric";
             this.tiSteerNumeric.Size = new System.Drawing.Size(70, 20);
             this.tiSteerNumeric.TabIndex = 17;
-            this.tiSteerNumeric.Value = new decimal(new int[] {
-            23397,
-            0,
-            0,
-            262144});
             this.tiSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
             // 
             // tiSteerLabel
@@ -268,24 +270,14 @@
             this.tiSteerLabel.TabIndex = 16;
             this.tiSteerLabel.Text = "Ti:";
             // 
-            // tdSteerNumeric
-            // 
-            this.tdSteerNumeric.DecimalPlaces = 4;
-            this.tdSteerNumeric.Enabled = false;
-            this.tdSteerNumeric.Location = new System.Drawing.Point(26, 107);
-            this.tdSteerNumeric.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.tdSteerNumeric.Name = "tdSteerNumeric";
-            this.tdSteerNumeric.Size = new System.Drawing.Size(70, 20);
-            this.tdSteerNumeric.TabIndex = 18;
-            this.tdSteerNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
-            // 
             // tiThrottleNumeric
             // 
             this.tiThrottleNumeric.DecimalPlaces = 4;
+            this.tiThrottleNumeric.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.tiThrottleNumeric.Location = new System.Drawing.Point(127, 86);
             this.tiThrottleNumeric.Maximum = new decimal(new int[] {
             1000,
@@ -295,36 +287,7 @@
             this.tiThrottleNumeric.Name = "tiThrottleNumeric";
             this.tiThrottleNumeric.Size = new System.Drawing.Size(70, 20);
             this.tiThrottleNumeric.TabIndex = 19;
-            this.tiThrottleNumeric.Value = new decimal(new int[] {
-            105179,
-            0,
-            0,
-            262144});
             this.tiThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
-            // 
-            // tdThrottleNumeric
-            // 
-            this.tdThrottleNumeric.DecimalPlaces = 4;
-            this.tdThrottleNumeric.Enabled = false;
-            this.tdThrottleNumeric.Location = new System.Drawing.Point(127, 107);
-            this.tdThrottleNumeric.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.tdThrottleNumeric.Name = "tdThrottleNumeric";
-            this.tdThrottleNumeric.Size = new System.Drawing.Size(70, 20);
-            this.tdThrottleNumeric.TabIndex = 20;
-            this.tdThrottleNumeric.ValueChanged += new System.EventHandler(this.numericValueChanged);
-            // 
-            // tdSteerLabel
-            // 
-            this.tdSteerLabel.AutoSize = true;
-            this.tdSteerLabel.Location = new System.Drawing.Point(3, 109);
-            this.tdSteerLabel.Name = "tdSteerLabel";
-            this.tdSteerLabel.Size = new System.Drawing.Size(23, 13);
-            this.tdSteerLabel.TabIndex = 21;
-            this.tdSteerLabel.Text = "Td:";
             // 
             // tiThrottleLabel
             // 
@@ -335,25 +298,13 @@
             this.tiThrottleLabel.TabIndex = 22;
             this.tiThrottleLabel.Text = "Ti:";
             // 
-            // tdThrottleLabel
-            // 
-            this.tdThrottleLabel.AutoSize = true;
-            this.tdThrottleLabel.Location = new System.Drawing.Point(104, 109);
-            this.tdThrottleLabel.Name = "tdThrottleLabel";
-            this.tdThrottleLabel.Size = new System.Drawing.Size(23, 13);
-            this.tdThrottleLabel.TabIndex = 23;
-            this.tdThrottleLabel.Text = "Td:";
-            // 
             // PIDControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tdThrottleLabel);
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Controls.Add(this.tiThrottleLabel);
-            this.Controls.Add(this.tdSteerLabel);
-            this.Controls.Add(this.tdThrottleNumeric);
             this.Controls.Add(this.tiThrottleNumeric);
-            this.Controls.Add(this.tdSteerNumeric);
             this.Controls.Add(this.tiSteerNumeric);
             this.Controls.Add(this.tiSteerLabel);
             this.Controls.Add(this.throttleLabel);
@@ -372,6 +323,7 @@
             this.Controls.Add(this.kpSteerLabel);
             this.Name = "PIDControlPanel";
             this.Size = new System.Drawing.Size(200, 159);
+            this.Load += new System.EventHandler(this.PIDControlPanel_Load);
             ((System.ComponentModel.ISupportInitialize)(this.kpSteerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kiSteerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdSteerNumeric)).EndInit();
@@ -379,9 +331,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.kiThrottleNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kpThrottleNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tiSteerNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tdSteerNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tiThrottleNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tdThrottleNumeric)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -405,11 +355,7 @@
         private System.Windows.Forms.Label throttleLabel;
         private System.Windows.Forms.NumericUpDown tiSteerNumeric;
         private System.Windows.Forms.Label tiSteerLabel;
-        private System.Windows.Forms.NumericUpDown tdSteerNumeric;
         private System.Windows.Forms.NumericUpDown tiThrottleNumeric;
-        private System.Windows.Forms.NumericUpDown tdThrottleNumeric;
-        private System.Windows.Forms.Label tdSteerLabel;
         private System.Windows.Forms.Label tiThrottleLabel;
-        private System.Windows.Forms.Label tdThrottleLabel;
     }
 }

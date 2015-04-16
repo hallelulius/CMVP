@@ -19,9 +19,7 @@ namespace CMVP
         public static Communication com = new Communication();
         public static List<Car> cars = new List<Car>();
         public static List<Item> obstacle = new List<Item>();
-        //Simulation variables
-        //public static float sampleTime = 1/150F;             // Iteration time, equal 1/(updating frequency)
-        //private static bool simulating = false;
+
         public static PTGreyCamera videoStream;
         public static ImageProcessing imageProcess;
 
@@ -38,12 +36,5 @@ namespace CMVP
             Application.Run(mainFrame);
    
         }
-       
-        /*
-        public static bool isSimulating()
-        {
-            return simulating;
-        }
-         */
     }
 }
