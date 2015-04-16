@@ -21,6 +21,7 @@ namespace CMVP
         //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<IntPoint> lastPositions; //A list to prevent flickering.
+        private List<bool> foundList; //A list that stores if the car is found or not
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
         private List<double> speed; //Velocity of the car in cm/s.
@@ -57,6 +58,7 @@ namespace CMVP
             this.deltaTime = new List<double>();
             this.acceleration = new List<double>();
             this.lastPositions = new List<IntPoint>();
+            this.foundList = new List<bool>();
             this.controlStrategy = new ControlStrategies.JustFollow(this);
             setMaxSpeed(150F);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
@@ -68,6 +70,7 @@ namespace CMVP
                 this.angles.Add(0);
                 this.deltaTime.Add(0.001F);
                 this.lastPositions.Add(pos);
+                this.foundList.Add(true);
             }
             found=true;
         }
@@ -96,6 +99,7 @@ namespace CMVP
             //Remove oldest element.
            acceleration.Remove(acceleration.Last()); //We tried another way to remove last object. Se below
             //acceleration.RemoveAt(acceleration.Count-1);
+           foundList.Add(found);
         }
 
         /// <summary>

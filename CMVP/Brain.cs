@@ -64,7 +64,6 @@ namespace CMVP
                     {
                         car.stop();
                     }
-                    
                 }
                 dt = time.ElapsedMilliseconds - startTime;
 

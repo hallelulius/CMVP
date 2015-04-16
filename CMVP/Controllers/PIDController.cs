@@ -30,7 +30,7 @@ namespace CMVP
             : base(car)
         {
             // I-controller constants:
-            Ki_steer = 0.1689F;
+            Ki_steer = 0.0000F;
             Ki_throttle = 0.001F;
             // Integral time constants:
             Ti_steer = 2.3397F;
@@ -57,12 +57,12 @@ namespace CMVP
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
             outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed*dT;
+            throttleIntegratorSum += errorSpeed;
             outThrottle += throttleIntegratorSum * Ki_throttle;
             
             //derivative part here, not fully tested but seems to work 
             derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-            outThrottle += Kd_throttle * derivativeThrottle;
+            //outThrottle += Kd_throttle * derivativeThrottle;
             prevSpeedError = errorSpeed;
 
 
@@ -76,7 +76,7 @@ namespace CMVP
                 errorHeading += 2f * (float)Math.PI;
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
-            //outSteer += -Ki_steer * steerIntegratorSum *dT;
+            outSteer += -Ki_steer * steerIntegratorSum *dT;
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;

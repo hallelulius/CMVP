@@ -229,6 +229,7 @@ namespace CMVP
         {
             return image.Size;
         }
+
         public double getTime()
         {
             if (m_grabImages)

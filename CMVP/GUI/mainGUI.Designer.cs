@@ -463,7 +463,8 @@
             this.controlStrategyControlStrategyDropDown.Items.AddRange(new object[] {
             "Stand still",
             "Follow track",
-            "Overtaking"});
+            "Overtaking",
+            "Step response"});
             this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
             this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(101, 21);

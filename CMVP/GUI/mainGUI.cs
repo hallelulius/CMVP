@@ -225,6 +225,11 @@ namespace CMVP
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
                 }
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
+                {
+                    ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
+                    tempCar.setControlStrategy(sr);
+                }
                 tempCar.setMaxSpeed((float) trafficMaxSpeedNumeric.Value);
                 trafficApplyButton.Enabled = false;
             }
@@ -264,6 +269,9 @@ namespace CMVP
                       controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
                       controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
                       controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                      controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
+                      controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
+                      
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
