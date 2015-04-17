@@ -46,6 +46,9 @@
             this.tiSteerLabel = new System.Windows.Forms.Label();
             this.tiThrottleNumeric = new System.Windows.Forms.NumericUpDown();
             this.tiThrottleLabel = new System.Windows.Forms.Label();
+            this.saveSettings = new System.Windows.Forms.Button();
+            this.loadSettings = new System.Windows.Forms.Button();
+            this.settingsText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.kpSteerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kiSteerNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdSteerNumeric)).BeginInit();
@@ -298,11 +301,43 @@
             this.tiThrottleLabel.TabIndex = 22;
             this.tiThrottleLabel.Text = "Ti:";
             // 
+            // saveSettings
+            // 
+            this.saveSettings.Location = new System.Drawing.Point(6, 128);
+            this.saveSettings.Name = "saveSettings";
+            this.saveSettings.Size = new System.Drawing.Size(75, 23);
+            this.saveSettings.TabIndex = 23;
+            this.saveSettings.Text = "Save";
+            this.saveSettings.UseVisualStyleBackColor = true;
+            this.saveSettings.Click += new System.EventHandler(this.saveSettings_Click);
+            // 
+            // loadSettings
+            // 
+            this.loadSettings.Location = new System.Drawing.Point(107, 127);
+            this.loadSettings.Name = "loadSettings";
+            this.loadSettings.Size = new System.Drawing.Size(75, 23);
+            this.loadSettings.TabIndex = 24;
+            this.loadSettings.Text = "Load";
+            this.loadSettings.UseVisualStyleBackColor = true;
+            this.loadSettings.Click += new System.EventHandler(this.loadSettings_Click);
+            // 
+            // settingsText
+            // 
+            this.settingsText.AutoSize = true;
+            this.settingsText.Location = new System.Drawing.Point(3, 112);
+            this.settingsText.Name = "settingsText";
+            this.settingsText.Size = new System.Drawing.Size(165, 13);
+            this.settingsText.TabIndex = 25;
+            this.settingsText.Text = "Save and Load controller settings";
+            // 
             // PIDControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Controls.Add(this.settingsText);
+            this.Controls.Add(this.loadSettings);
+            this.Controls.Add(this.saveSettings);
             this.Controls.Add(this.tiThrottleLabel);
             this.Controls.Add(this.tiThrottleNumeric);
             this.Controls.Add(this.tiSteerNumeric);
@@ -357,5 +392,8 @@
         private System.Windows.Forms.Label tiSteerLabel;
         private System.Windows.Forms.NumericUpDown tiThrottleNumeric;
         private System.Windows.Forms.Label tiThrottleLabel;
+        private System.Windows.Forms.Button saveSettings;
+        private System.Windows.Forms.Button loadSettings;
+        private System.Windows.Forms.Label settingsText;
     }
 }

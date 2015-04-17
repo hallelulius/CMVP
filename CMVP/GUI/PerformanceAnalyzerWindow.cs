@@ -130,36 +130,6 @@ namespace CMVP
                 Debug.WriteLine(ex.Message);
             }
         }
-        /*
-        protected override void WndProc(ref Message m)
-        {
 
-            if (m.Msg == 0x0112) // WM_SYSCOMMAND
-            {
-
-                // Check your window state here
-                if (m.WParam == new IntPtr(0xF030)) // Maximize event - SC_MAXIMIZE from Winuser.h
-                {
-                    // THe window is being maximized
-                    //Rectangle rec = Screen.GetBounds;
-                    Screen myScreen = Screen.FromControl(this);
-                    int width = myScreen.Bounds.Width;
-                    int height = myScreen.Bounds.Height;
-                    performanceChart.Size.Width = (width - width / 2);
-                    performanceChart.Size.Height= height - height / 2;
-
-                }
-                if (m.WParam == new IntPtr(0xF120)) // Maximize event - SC_RESTORE from Winuser.h
-                {
-                    // THe window is being maximized
-                }
-                if (m.WParam == new IntPtr(0XF020)) // Maximize event - SC_MINIMIZE from Winuser.h
-                {
-                    // THe window is being maximized
-                }
-            }
-            base.WndProc(ref m);
-        }
-         * */
     }
 }

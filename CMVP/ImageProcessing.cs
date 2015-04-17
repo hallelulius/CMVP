@@ -27,8 +27,8 @@ namespace CMVP
         static private Pen bluePen = new Pen(Color.LightSkyBlue, 2);
         static private Pen greenPen = new Pen(Color.Green, 2);
         static private Pen yellowPen = new Pen(Color.Yellow, 2);
-        static private Pen turkosPen = new Pen(Color.Turquoise, 2);
-        static private Pen[] penArray = { bluePen, greenPen, yellowPen, turkosPen };
+        static private Pen turquoisePen = new Pen(Color.Turquoise, 2);
+        static private Pen[] penArray = { bluePen, greenPen, yellowPen, turquoisePen };
         private Graphics g;
 
         public Boolean drawCirkelsOnImg;
@@ -144,12 +144,34 @@ namespace CMVP
             {
                 if (drawTailsOnImg)
                 {
+                    //turquoise if the car is found else red
                     List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
+                    IntPoint p1 = car.getPositionHistory().First();
+                    bool b1 = car.getFoundList().First();
+                    for(int i = 0; i < car.HISTORY_LENGTH; i++)
+                    {
+                        IntPoint p2 = car.getPositionHistory().ElementAt(i);
+                        bool b2= car.getFoundList().ElementAt(i);
+                        if (b2)
+                        {
+                            g.DrawLine(turquoisePen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
+
+                        }
+                        else
+                        {
+                            g.DrawLine(redPen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
+                        }
+                        p1 = p2;
+                        b1 = b2;
+                    }
+                    /*
                     foreach (AForge.IntPoint p in car.getPositionHistory())
                     {
                         positionHistory.Add(new System.Drawing.Point(p.X, p.Y));
+                        //cahnge color depending on if the car is found or not
                     }
                     g.DrawLines(turkosPen, positionHistory.ToArray());
+                     */
                 }
 
                 Controller controller = car.getController();
@@ -248,7 +270,8 @@ namespace CMVP
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
             List<AForge.IntPoint> points = getPoints(cirkels);
-            // uncomment when you want to detemine how many pixels there are per meter
+            
+            // uncomment when you want to detemine how many pixels there are per meter (use measuring stick)
             //pixelsPerMeter();
 
             initiateCars(points);
@@ -292,8 +315,6 @@ namespace CMVP
                     objects.Add(car);
                     prevTriangles.Add(car, triangle);
                 }
-
-
             }
         }
         private void initiateBlocks(List<AForge.IntPoint> points)

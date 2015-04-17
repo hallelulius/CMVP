@@ -10,6 +10,7 @@ using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
 using AForge;
+using System.Diagnostics;
 
 //using Math;
 
@@ -25,22 +26,19 @@ namespace CMVP
         private List<AForge.Point> direction; //The direction of the car as a normalized 2D vector.
         private List<float> angles;//angles
         private List<double> speed; //Velocity of the car in cm/s.
-        private List<double> deltaTime; //delta between updates
+        private List<double> deltaTime; //time between updates
         private List<double> acceleration; //Acceleration of the car calculated as the difference in velocity between the last velocity and the current velocity.
-        private float maxSpeed = 150;
+        private float maxSpeed;
         
         private ControlStrategy controlStrategy; // This specific cars control strategy
         private int id; public int ID { get { return id; } } //Identification number of the car.
         public bool found;
         private Controller controller; // This cars controller 
-        private static float PIXEL_SIZE = 1/3.84F; // cm used to get the right unit for the speed 
         
-        //private double throttle; //A number between 0 and 1, deciding the speed of the car.
-        //private double steer; //A number between -1 and 1, deciding the steering of the car. -1: max left. 1: max right.
 
         //Const settings:
-        private const int DATA_HISTORY_LENGTH = 50; //Decides how many elements will be stored in the position, direction, speed, acceleration and found lists.
-
+        private const int DATA_HISTORY_LENGTH = 50; public int HISTORY_LENGTH { get { return DATA_HISTORY_LENGTH; } } //Decides how many elements will be stored in the position, direction, speed, acceleration and found lists.
+        private static float PIXEL_SIZE = 1 / 3.84F; // used to get the right unit for the speed 
 
         /// <summary>
         /// The "Car" class is the virtual representation of the real world RC car.
@@ -84,35 +82,20 @@ namespace CMVP
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
             lock (this)
             {
-                double tempSpeed = (double)((Math.Sqrt((dx * dx) + (dy * dy))) / deltaTime.ElementAt(0)) * PIXEL_SIZE;
+                double tempSpeed = (double)((Math.Sqrt((dx * dx) + (dy * dy))) / deltaTime.First()) * PIXEL_SIZE;
                 speed.Insert(0, tempSpeed);
-
                 //Remove oldest element.
-                //double xspeed = speed.ElementAt(speed.Count-1);
                 //speed.Remove(speed.Last());
                 speed.RemoveAt(speed.Count-1); 
             }
             
-
             //Calculate acceleration
-            acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.ElementAt(0));
+            acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.First());
             //Remove oldest element.
            acceleration.Remove(acceleration.Last()); //We tried another way to remove last object. Se below
             //acceleration.RemoveAt(acceleration.Count-1);
-           foundList.Add(found);
+           
         }
-
-        /// <summary>
-        /// Set the cars position and orientation.
-        /// </summary>
-        /// <param name="pos"> The new postition of the car. </param>
-        /// <param name="angle"> The new orientation of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, double angle,double deltaTime)
-        {
-            AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
-            this.setPositionAndOrientation(pos, dir, deltaTime);
-        }
-
         /// <summary>
         /// Set the cars position and orientation.
         /// </summary>
@@ -139,9 +122,11 @@ namespace CMVP
             }
             else
             {
-                position.Insert(0, position.ElementAt(0));
+                position.Insert(0, position.First());
                 position.Remove(position.Last());
             }
+            foundList.Insert(0, found);
+            foundList.Remove(foundList.Last());
 
             direction.Insert(0,dir);
             direction.Remove(direction.Last());
@@ -166,7 +151,6 @@ namespace CMVP
         {
             return angles.First();
         }
-
         public void send()
         {
             Program.com.updateThrottle(id, controller.getThrottle());
@@ -230,16 +214,33 @@ namespace CMVP
         }
         public List<AForge.IntPoint> getPositionHistory()
         {
-            return new List<IntPoint>(lastPositions);
+            return new List<IntPoint>(position);
+        }
+        public List<bool> getFoundList()
+        {
+            lock (this) { 
+            return new List<bool>(foundList);
+            }
         }
         public double getDeltaTime()
         {
-            return deltaTime.ElementAt(0);
+            return deltaTime.First<double>();
         }
-
         public void stop()
         {
             Program.com.stopCar(id);
         }
+        /*
+        /// <summary>
+        /// Set the cars position and orientation.
+        /// </summary>
+        /// <param name="pos"> The new postition of the car. </param>
+        /// <param name="angle"> The new orientation of the car. </param>
+        public void setPositionAndOrientation(AForge.IntPoint pos, double angle,double deltaTime)
+        {
+            AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
+            this.setPositionAndOrientation(pos, dir, deltaTime);
+        }
+        */
     }
 }

@@ -626,6 +626,7 @@
             this.Controls.Add(this.startSimulationButton);
             this.Controls.Add(this.simulationBasePanel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "mainGUI";
             this.Text = "CMVP";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainGUI_FormClosed);

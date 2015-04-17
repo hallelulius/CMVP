@@ -27,8 +27,8 @@ namespace CMVP
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE! 
         private const byte MAX_THROTTLE = 200;               //output = 2.58V
-        private const byte NEUTRAL_THROTTLE = 110;            //output = 1.41V
-        private const byte MIN_THROTTLE = 0;             //output = 0V
+        private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
+        private const byte MIN_THROTTLE = 7;             //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
@@ -124,6 +124,8 @@ namespace CMVP
             sendSteering(id, NEUTRAL_STEERING);
             id = convertCarIDToDAC(carID,"Throttle");
             sendThrottle(id,MIN_THROTTLE);
+            System.Threading.Thread.Sleep(100);
+            sendThrottle(id, NEUTRAL_THROTTLE);
             Console.WriteLine("Car " + carID + " stopped" );
         }
 
@@ -241,36 +243,24 @@ namespace CMVP
         /// <param name="carID">The car that should be updated</param>
          /// <param name="mode">If steering or throttle should be updated</param>
          /// <param name="b">Decides which reverse setting that should be used</param>
-         public void reverseSetting(int carID, String mode, bool b)
+         public void reverseSetting(int carID, String mode)
          {
-            if (b && mode.Equals("Throttle"))
+            if (mode.Equals("Throttle"))
             {
-                sendThrottle(convertCarIDToDAC(carID,mode), MAX_THROTTLE);
-                Console.WriteLine("Press and hold max throttle trim. Hold for at least 3 seconds.");
+                sendThrottle(convertCarIDToDAC(carID,mode), MIN_THROTTLE);
+                Console.WriteLine("Press and hold one of the throttle trim button. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
-            else if (!b && mode.Equals("Throttle"))
-            {
-                sendThrottle(convertCarIDToDAC(carID, mode), MIN_THROTTLE);
-                Console.WriteLine("Press and hold min throttle trim. Hold for at least 3 seconds.");
-                Console.WriteLine("Press any key");
-                Console.ReadKey();
-            }
-            else if (b && mode.Equals("Steering"))
+
+            else if (mode.Equals("Steering"))
             {
                 sendSteering(convertCarIDToDAC(carID, mode), LEFT_STEERING);
-                Console.WriteLine("Press and hold left steering trim. Hold for at least 3 seconds.");
+                Console.WriteLine("Press and hold one of the steering trim button. Hold for at least 3 seconds.");
                 Console.WriteLine("Press any key");
                 Console.ReadKey();
             }
-            else if (!b && mode.Equals("Throttle"))
-            {
-                sendSteering(convertCarIDToDAC(carID, mode), RIGHT_STEERING);
-                Console.WriteLine("Press and hold right steering trim. Hold for at least 3 seconds.");
-                Console.WriteLine("Press any key");
-                Console.ReadKey();
-            }
+
 
         }
         public bool isActive()

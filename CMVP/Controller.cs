@@ -108,6 +108,10 @@ namespace CMVP
         }
         public IntPoint getRefPoint()
         {
+            if (refPoint == null)
+            {
+                refPoint = new IntPoint(0, 0);
+            }
             return refPoint;
         }
       

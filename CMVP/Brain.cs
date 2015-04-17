@@ -62,7 +62,9 @@ namespace CMVP
                     }
                     else
                     {
-                        car.stop();
+                       // car.stop();
+                        car.send();
+                        Console.WriteLine("Car not found");
                     }
                 }
                 dt = time.ElapsedMilliseconds - startTime;
@@ -81,6 +83,11 @@ namespace CMVP
                             sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
                             sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
                             sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle());
+                            sendDataThreadSafe(s + "heading reference signal", xValue, car.getController().getRefHeading());
+                            sendDataThreadSafe(s + "reference position X-axis", xValue, car.getController().getRefPoint().X);
+                            sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
+                            sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
+                            sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
                             // Add more sendDataThreadSafe calls here.
                         }
 

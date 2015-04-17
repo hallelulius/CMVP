@@ -21,8 +21,8 @@ namespace CMVP.ControlStrategies
 
 
         
-        float smallRadius = 100; //Ska vara adaptiv
-        float bigRadius = 200; //Ska vara adaptiv
+        float smallRadius = 50; //Ska vara adaptiv
+        float bigRadius = 75; //Ska vara adaptiv
 
         public Overtaking(Car car) : base(car, null, "Overtaking")
         {
