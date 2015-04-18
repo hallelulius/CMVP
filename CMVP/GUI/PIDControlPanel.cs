@@ -78,7 +78,7 @@ namespace CMVP
                         // Insert code to read the stream here.
                         sReader = new StreamReader(stream);
                         sReader.ReadLine();
-                        kpThrottleNumeric.Value = decimal.Parse(sReader.ReadLine());
+                        kpSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kiSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kdSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         tiSteerNumeric.Value = decimal.Parse(sReader.ReadLine());

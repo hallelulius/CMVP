@@ -33,6 +33,8 @@ namespace CMVP
         {
             this.car = car;
             maxSpeed = car.getMaxSpeed();
+            outThrottle = 0;
+            outSteer = 0;
         }
 
         public abstract void updateController();
@@ -47,8 +49,8 @@ namespace CMVP
         /// <returns>A value that is between -1 to 1</returns>
         protected float capThrottleOutput(float outThrottle)
         {
-            if (outThrottle > 1) outThrottle = 1;
-            if (outThrottle < -1) outThrottle = -1;
+            if (outThrottle >= 1) outThrottle = 1;
+            if (outThrottle <= -1) outThrottle = -1;
             return outThrottle;
         }
         /// <summary>
@@ -58,8 +60,8 @@ namespace CMVP
         /// <returns>A value that is between -1 to 1</returns>
         protected float capSteerOutput(float outSteer)
         {
-            if (outSteer > 1) outSteer = 1;
-            if (outSteer < -1) outSteer = -1;
+            if (outSteer >= 1) outSteer = 1;
+            if (outSteer <= -1) outSteer = -1;
             return outSteer;
         }
         public void setHeading(float heading)

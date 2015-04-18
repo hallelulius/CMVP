@@ -42,7 +42,7 @@ namespace CMVP
             Kd_steer = 0.01f;
             Kd_throttle = 0.0f;
             // Set variables 
-            throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
+            throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PID";

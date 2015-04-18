@@ -20,7 +20,6 @@ namespace CMVP
         private static EventWaitHandle wh = new ManualResetEvent(false);
         public PerformanceAnalyzerWindow analyzer;
 
-
         public void start()
         {
             Thread thread = new Thread(run);
@@ -88,7 +87,7 @@ namespace CMVP
                             sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
                             sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
-                            sendDataThreadSafe(s + "found", xValue, Convert.ToDouble((car.found)));
+                            sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
                             
                             // Add more sendDataThreadSafe calls here.
                         }
@@ -101,7 +100,7 @@ namespace CMVP
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(2);
 
             }
         }

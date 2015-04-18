@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.performanceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.addSeriesDropDown = new System.Windows.Forms.ComboBox();
             this.addSeriesLabel = new System.Windows.Forms.Label();
@@ -46,10 +46,10 @@
             this.performanceChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.performanceChart.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.performanceChart.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.performanceChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.performanceChart.Legends.Add(legend1);
             this.performanceChart.Location = new System.Drawing.Point(295, 12);
             this.performanceChart.Name = "performanceChart";
             this.performanceChart.Size = new System.Drawing.Size(643, 535);
@@ -70,7 +70,7 @@
             "Car 1 reference position Y-axis",
             "Car 1 position X-axis",
             "Car 1 position Y-axis",
-            "Car 1 found",
+            "Car 1 found history",
             "Car 2 velocity",
             "Car 2 velocity reference signal",
             "Car 2 steer control signal",
@@ -79,7 +79,7 @@
             "Car 2 reference position Y-axis",
             "Car 2 position X-axis",
             "Car 2 position Y-axis",
-            "Car 1 found",
+            "Car 2 found history",
             "FPS image processing",
             "Brain execution time"});
             this.addSeriesDropDown.Location = new System.Drawing.Point(78, 10);

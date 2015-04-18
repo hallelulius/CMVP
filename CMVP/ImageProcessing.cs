@@ -88,7 +88,7 @@ namespace CMVP
             this.objects = objects;
             this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
-            this.threshold = 200;
+            this.threshold = 180;
 
             this.cirkels = new List<Blob>();
 

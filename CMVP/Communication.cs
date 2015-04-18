@@ -9,14 +9,12 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
-       /// <summary>
-       /// This class sends the right steering and throttle parametres to the arduino 
-       /// </summary>
-       /// 
-     class Communication
-     {
-
-        public List<byte> lastValues;
+    /// <summary>
+    /// This class sends the right steering and throttle parametres to the arduino 
+    /// </summary>
+    /// 
+    class Communication
+    {
         //addresses for the DACs
         // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
@@ -28,7 +26,7 @@ namespace CMVP
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE! 
         private const byte MAX_THROTTLE = 200;               //output = 2.58V
-        private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
+        private const byte NEUTRAL_THROTTLE = 111;            //output = 1.44V
         private const byte MIN_THROTTLE = 7;                 //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
@@ -46,32 +44,30 @@ namespace CMVP
         /// </summary>
         public Communication()
         {
-            lastValues = new List<byte>();
-            for (int i = 0; i < 20; i++)
+            if (getFirstPort() != null)
             {
-                lastValues.Add(0);
-            }
-                if (getFirstPort() != null)
+                port = new SerialPort(getFirstPort(), 115200);          //remember to sync baudrate with arduino sketch
+                portOpen = port.IsOpen;
+                System.Threading.Thread.Sleep(1000);
+                try
                 {
-                    port = new SerialPort(getFirstPort(), 115200);          //remember to sync baudrate with arduino sketch
-                    portOpen = port.IsOpen;
-                    System.Threading.Thread.Sleep(1000);
-                    try
-                    {
-                        port.Open();
-                        System.Console.WriteLine("Communication OK");
-                    }
-                    catch (Exception e)
-                    {
-                        System.Console.WriteLine("Could not open port");
-                        Console.WriteLine(e.ToString());
-                    }
+                    port.Open();
+                    System.Console.WriteLine("Communication OK");
                 }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine("Could not open port");
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            // to ensure the settings on the car wont change
+            stopCars();
+
         }
 
         ~Communication()
         {
-
+            stopCars();
             if (port != null)
             {
                 if (isActive())
@@ -83,18 +79,18 @@ namespace CMVP
             }
         }
 
-         /// <summary>
-         /// Converts a Car ID and its mode and return its corresponding DAC address
-         /// If no DAC address is found it returns an error code
-         /// Modes are "Steering" and "Throttle"
-         /// </summary>
-         /// <param name="id">The ID of the Car that is used</param>
-         /// <param name="mode">If it should find DAC address for throttle or steering</param>
-         /// <returns>The correspnding DAC address for the id and the mode</returns>
+        /// <summary>
+        /// Converts a Car ID and its mode and return its corresponding DAC address
+        /// If no DAC address is found it returns an error code
+        /// Modes are "Steering" and "Throttle"
+        /// </summary>
+        /// <param name="id">The ID of the Car that is used</param>
+        /// <param name="mode">If it should find DAC address for throttle or steering</param>
+        /// <returns>The correspnding DAC address for the id and the mode</returns>
         private byte convertCarIDToDAC(int id, String mode)
         {
             byte DAC;
-            if (id == 1 && mode.Equals("Throttle") )
+            if (id == 1 && mode.Equals("Throttle"))
             {
                 DAC = throttleA;
             }
@@ -117,50 +113,46 @@ namespace CMVP
             }
             return DAC;
         }
-      
+
 
         public void stopCar(int carID)
         {
-            byte id = convertCarIDToDAC(carID,"Steering");
-            sendSteering(id, NEUTRAL_STEERING);
-            id = convertCarIDToDAC(carID,"Throttle");
-            sendThrottle(id,MIN_THROTTLE);
-            Console.WriteLine("Car " + carID + " stopped" );
+            sendSteering(convertCarIDToDAC(carID, "Steering"), NEUTRAL_STEERING);
+            sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
+            Console.WriteLine("Car " + carID + " stopped");
         }
 
-         /// <summary>
-         /// Used for setting throttle values on a car
-         /// </summary>
-         /// <param name="carID">The car that should be updated</param>
-         /// <param name="value">Throttle value</param>
+        /// <summary>
+        /// Used for setting throttle values on a car
+        /// </summary>
+        /// <param name="carID">The car that should be updated</param>
+        /// <param name="value">Throttle value</param>
         public void updateThrottle(int carID, float value)
         {
             float val = 0;
-            if (value > 0)
+            if (value >= 0)
             {
                 val = NEUTRAL_THROTTLE + value * (MAX_THROTTLE - NEUTRAL_THROTTLE);
             }
             else if (value < 0)
             {
                 val = NEUTRAL_THROTTLE + value * -(MIN_THROTTLE - NEUTRAL_THROTTLE);
-            }   
+            }
 
-            byte id = convertCarIDToDAC(carID,"Throttle");
-            sendThrottle(id,(byte) val);
-            lastValues.Insert(0, (byte) val);
-            lastValues.Remove(lastValues.Last());    
+            byte id = convertCarIDToDAC(carID, "Throttle");
+            sendThrottle(id, (byte)val);
         }
 
-        
-         /// <summary>
-         /// Used for setting steering angle on a car
-         /// </summary>
-         /// <param name="carID">The car that should be updated</param>
-         /// <param name="value">Steering value</param>
-         public void updateSteering(int carID, float value)
+
+        /// <summary>
+        /// Used for setting steering angle on a car
+        /// </summary>
+        /// <param name="carID">The car that should be updated</param>
+        /// <param name="value">Steering value</param>
+        public void updateSteering(int carID, float value)
         {
             float val = 0;
-            if (value > 0)
+            if (value >= 0)
             {
                 val = NEUTRAL_STEERING + value * (RIGHT_STEERING - NEUTRAL_STEERING);
             }
@@ -168,21 +160,21 @@ namespace CMVP
             {
                 val = NEUTRAL_STEERING + value * -(LEFT_STEERING - NEUTRAL_STEERING);
             }
-            
-            byte id = convertCarIDToDAC(carID,"Steering");
-            sendSteering(id, (byte) val);
+
+            byte id = convertCarIDToDAC(carID, "Steering");
+            sendSteering(id, (byte)val);
 
         }
-         /// <summary>
-         /// Sends the steering value of a car to the arduino
-         /// </summary>
-         /// <param name="carID">The car that should be updated</param>
-         /// <param name="value">Steering value</param>
+        /// <summary>
+        /// Sends the steering value of a car to the arduino
+        /// </summary>
+        /// <param name="carID">The car that should be updated</param>
+        /// <param name="value">Steering value</param>
         private void sendSteering(byte DAC, byte value)
         {
-            if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP ) 
+            if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
-                byte[] bits = {DAC, value };
+                byte[] bits = { DAC, value };
                 port.Write(bits, 0, 2);
             }
             else
@@ -190,17 +182,17 @@ namespace CMVP
                 System.Console.WriteLine("Error in steering");
             }
         }
-         /// <summary>
+        /// <summary>
         ///  Sends the throttle value of a car to the arduino
-         /// </summary>
+        /// </summary>
         /// <param name="carID">The car that should be updated</param>
-         /// <param name="value">throttleValue</param>
+        /// <param name="value">throttleValue</param>
         private void sendThrottle(byte DAC, byte value)
-            {
+        {
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
-                    byte[] bits = { DAC, value };
-                    port.Write(bits, 0, 2);
+                byte[] bits = { DAC, value };
+                port.Write(bits, 0, 2);
             }
             else
             {
@@ -208,10 +200,10 @@ namespace CMVP
             }
         }
 
-         /// <summary>
-         /// Gets the first COM-port on the computer
-         /// </summary>
-         /// <returns>Name of the COM-port</returns>
+        /// <summary>
+        /// Gets the first COM-port on the computer
+        /// </summary>
+        /// <returns>Name of the COM-port</returns>
         private String getFirstPort()
         {
             List<String> allPorts = new List<String>();
@@ -223,7 +215,7 @@ namespace CMVP
             {
                 return allPorts[0];
             }
-            catch (System.ArgumentOutOfRangeException e)        
+            catch (System.ArgumentOutOfRangeException e)
             {
                 System.Console.WriteLine("No COMs found! Please connect the Arduino to the PC.");
                 Debug.WriteLine(e.Message);
@@ -231,20 +223,20 @@ namespace CMVP
             }
         }
 
-    
-         /// <summary>
-         /// Reverse steering or throttle i.e., making 0 to full throttle instead of 255 and vice versa
-         /// See the KT-18 Perfex manual for more info
-         /// Modes are "Steering" or "Throttle"
-         /// </summary>
+
+        /// <summary>
+        /// Reverse steering or throttle i.e., making 0 to full throttle instead of 255 and vice versa
+        /// See the KT-18 Perfex manual for more info
+        /// Modes are "Steering" or "Throttle"
+        /// </summary>
         /// <param name="carID">The car that should be updated</param>
-         /// <param name="mode">If steering or throttle should be updated</param>
-         /// <param name="b">Decides which reverse setting that should be used</param>
-         public void reverseSetting(int carID, String mode)
-         {
+        /// <param name="mode">If steering or throttle should be updated</param>
+        /// <param name="b">Decides which reverse setting that should be used</param>
+        public void reverseSetting(int carID, String mode)
+        {
             if (mode.Equals("Throttle"))
             {
-                sendThrottle(convertCarIDToDAC(carID,mode), MIN_THROTTLE);
+                sendThrottle(convertCarIDToDAC(carID, mode), MIN_THROTTLE);
                 MessageBox.Show("Press and hold one of the throttle trim button. Hold for at least 3 seconds.");
             }
 
@@ -261,8 +253,16 @@ namespace CMVP
         }
         public void calibrationMode(int carId)
         {
-            sendThrottle(convertCarIDToDAC(carId,"Throttle"),NEUTRAL_THROTTLE);
+            sendThrottle(convertCarIDToDAC(carId, "Throttle"), NEUTRAL_THROTTLE);
             sendSteering(convertCarIDToDAC(carId, "Steering"), NEUTRAL_STEERING);
+        }
+
+        internal void stopCars()
+        {
+            sendSteering(steeringA, NEUTRAL_STEERING);
+            sendSteering(steeringB, NEUTRAL_STEERING);
+            sendThrottle(throttleA, NEUTRAL_THROTTLE);
+            sendThrottle(throttleB, NEUTRAL_THROTTLE);
         }
     }
 }

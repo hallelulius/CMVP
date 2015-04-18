@@ -67,7 +67,7 @@
             0,
             0,
             131072});
-            this.kpSteerNumeric.Location = new System.Drawing.Point(26, 23);
+            this.kpSteerNumeric.Location = new System.Drawing.Point(27, 23);
             this.kpSteerNumeric.Maximum = new decimal(new int[] {
             1000,
             0,

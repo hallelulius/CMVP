@@ -31,12 +31,11 @@ namespace CMVP
             dataGridThread = new Thread(new ThreadStart(updateDataGrid));
             dataGridThread.Start();
         }
+
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
         {
-            foreach (Car car in Program.cars)
-            {
-                Program.com.stopCar(car.ID);
-            }
+            brain.StopWorking();
+            Program.com.stopCars();
             Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
