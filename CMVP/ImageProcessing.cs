@@ -152,7 +152,7 @@ namespace CMVP
                     {
                         IntPoint p2 = car.getPositionHistory().ElementAt(i);
                         bool b2= car.getFoundList().ElementAt(i);
-                        if (b2)
+                        if (b1)
                         {
                             g.DrawLine(turquoisePen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
 
@@ -270,9 +270,6 @@ namespace CMVP
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
             List<AForge.IntPoint> points = getPoints(cirkels);
-            
-            // uncomment when you want to detemine how many pixels there are per meter (use measuring stick)
-            //pixelsPerMeter();
 
             initiateCars(points);
             initiateBlocks(points);
@@ -282,7 +279,7 @@ namespace CMVP
             {
                 intList.Add(car.ID);
             }
-            MessageBox.Show("The following cars where found: " + String.Join(",", intList.ToArray()) + " \n " + Program.obstacle.Count + " obstecles was found");
+            MessageBox.Show("The following cars where found: " + String.Join(",", intList.ToArray()) + " \n " + Program.obstacle.Count + " obstacles was found");
         }
         private void initiateCars(List<AForge.IntPoint> points)
         {
@@ -394,7 +391,7 @@ namespace CMVP
                 foreach (Triangle triangle in triangles)
                 {
                     //Unknown if comparing to idealTriangle is nescesarry.
-                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 100000)
+                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
                         List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
@@ -685,8 +682,6 @@ namespace CMVP
         {
             return videoStream.getTime();
         }
-
-
         public byte getThrehold()
         {
             return threshold;
@@ -695,10 +690,14 @@ namespace CMVP
         {
             threshold = val;
         }
-
+        /// <summary>
+        /// Use to calculate how many pixels there are per meter. Put the measure stick on the track to calculate
+        /// Use when  the camera is moved then update PIXEL_SIZE in the car class
+        /// </summary>
         private void pixelsPerMeter()
         {
-            List<Blob> blobs = getBlobs(2, 10, img);
+            Bitmap bp = videoStream.getImage();
+            List<Blob> blobs = getBlobs(2, 10, bp);
             List<IntPoint> points = getPoints(blobs);
             if (points.Count != 2)
             {

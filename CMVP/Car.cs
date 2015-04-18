@@ -85,8 +85,8 @@ namespace CMVP
                 double tempSpeed = (double)((Math.Sqrt((dx * dx) + (dy * dy))) / deltaTime.First()) * PIXEL_SIZE;
                 speed.Insert(0, tempSpeed);
                 //Remove oldest element.
-                //speed.Remove(speed.Last());
-                speed.RemoveAt(speed.Count-1); 
+                speed.Remove(speed.Last());
+                //speed.RemoveAt(speed.Count-1); 
             }
             
             //Calculate acceleration

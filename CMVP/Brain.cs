@@ -88,15 +88,20 @@ namespace CMVP
                             sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
                             sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
+                            sendDataThreadSafe(s + "found", xValue, Convert.ToDouble((car.found)));
+                            
                             // Add more sendDataThreadSafe calls here.
                         }
-
                         // Give other values to analyzer:
+                        if (cars.First() != null)
+                        {
+                            sendDataThreadSafe("FPS image processing", xValue, 1 / cars.First().getDeltaTime());
+                        }
                         sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-                Thread.Sleep(3);
+                Thread.Sleep(1);
 
             }
         }

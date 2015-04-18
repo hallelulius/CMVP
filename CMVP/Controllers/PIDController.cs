@@ -50,7 +50,7 @@ namespace CMVP
             prevSpeedError = 0;
         }
 
-        public override void updateController()      //PI-controller 
+        public override void updateController()
         {
             //Throttle part
             outThrottle = 0;

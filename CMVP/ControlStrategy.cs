@@ -19,7 +19,6 @@ namespace CMVP
     {
         protected Track track;
         protected Car car;
-        protected float scaleSpeed = 0f; //Is not
         protected String strategyName;
 
         public ControlStrategy(Car car, Track track, String strategyName) // Constructor 
@@ -30,8 +29,12 @@ namespace CMVP
         }
 
         public abstract void updateReferencePoint(); // Calculate next point for a car in reference signal
-
-        protected void setReference(IntPoint refPoint, float speed) // Transform the reference points coordinate and the cars current coordinates to a reference signal (speed and angle) 
+        /// <summary>
+        /// Transform the reference points coordinate and the cars current coordinates to a reference signal (speed and angle) 
+        /// </summary>
+        /// <param name="refPoint"></param>
+        /// <param name="speed"></param>
+        protected void setReference(IntPoint refPoint, float speed) 
         {
             float refAngle = (float) Math.Atan2(refPoint.Y-car.getPosition().Y , refPoint.X-car.getPosition().X);
             car.getController().setRefHeading(refAngle); //sets controllers
@@ -43,17 +46,6 @@ namespace CMVP
         {
             this.track = track; 
         }
-
-        public void setScaleSpeed(float scaleSpeed)
-        {
-            this.scaleSpeed = scaleSpeed;
-        }
-
-        public float getScaleSpeed()
-        {
-            return scaleSpeed;
-        }
-
         public Track getTrack() 
         {
             return track;

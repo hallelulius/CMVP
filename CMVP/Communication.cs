@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace CMVP
 {
@@ -15,7 +16,7 @@ namespace CMVP
      class Communication
      {
 
-        List<byte> lastValues;
+        public List<byte> lastValues;
         //addresses for the DACs
         // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
@@ -28,7 +29,7 @@ namespace CMVP
         // DO NOT CHANGE! 
         private const byte MAX_THROTTLE = 200;               //output = 2.58V
         private const byte NEUTRAL_THROTTLE = 90;            //output = 1.16V
-        private const byte MIN_THROTTLE = 7;             //output = 0.09V
+        private const byte MIN_THROTTLE = 7;                 //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
         private const byte LEFT_STEERING = 218;              //output = 2.82V
         private const byte RIGHT_STEERING = 7;               //output = 0.09V
@@ -41,7 +42,7 @@ namespace CMVP
         /// <summary>
         /// Takes the first COM port it finds and opens up a serial communcation with it.
         /// Handles all the communication between the computer and the arduino
-        /// May need to be smarter if any problems occur because of many devices are used at the same time 
+        /// May need to be smarter if any problems occur if many COM-devices are used at the same time 
         /// </summary>
         public Communication()
         {
@@ -52,7 +53,7 @@ namespace CMVP
             }
                 if (getFirstPort() != null)
                 {
-                    port = new SerialPort(getFirstPort(), 115200);          //remeber to sync baudrate with arduino sketch
+                    port = new SerialPort(getFirstPort(), 115200);          //remember to sync baudrate with arduino sketch
                     portOpen = port.IsOpen;
                     System.Threading.Thread.Sleep(1000);
                     try
@@ -124,8 +125,6 @@ namespace CMVP
             sendSteering(id, NEUTRAL_STEERING);
             id = convertCarIDToDAC(carID,"Throttle");
             sendThrottle(id,MIN_THROTTLE);
-            System.Threading.Thread.Sleep(100);
-            sendThrottle(id, NEUTRAL_THROTTLE);
             Console.WriteLine("Car " + carID + " stopped" );
         }
 
@@ -185,7 +184,6 @@ namespace CMVP
             {
                 byte[] bits = {DAC, value };
                 port.Write(bits, 0, 2);
-                //System.Console.WriteLine("Updated steering! DAC: "+ carID + " Value= " + value);
             }
             else
             {
@@ -203,7 +201,6 @@ namespace CMVP
             {
                     byte[] bits = { DAC, value };
                     port.Write(bits, 0, 2);
-                    //System.Console.WriteLine("Updated throttle! DAC: " + carID + " Value= " + value);
             }
             else
             {
@@ -248,19 +245,14 @@ namespace CMVP
             if (mode.Equals("Throttle"))
             {
                 sendThrottle(convertCarIDToDAC(carID,mode), MIN_THROTTLE);
-                Console.WriteLine("Press and hold one of the throttle trim button. Hold for at least 3 seconds.");
-                Console.WriteLine("Press any key");
-                Console.ReadKey();
+                MessageBox.Show("Press and hold one of the throttle trim button. Hold for at least 3 seconds.");
             }
 
             else if (mode.Equals("Steering"))
             {
                 sendSteering(convertCarIDToDAC(carID, mode), LEFT_STEERING);
-                Console.WriteLine("Press and hold one of the steering trim button. Hold for at least 3 seconds.");
-                Console.WriteLine("Press any key");
-                Console.ReadKey();
+                MessageBox.Show("Press and hold one of the steering trim button. Hold for at least 3 seconds.");
             }
-
 
         }
         public bool isActive()

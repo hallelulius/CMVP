@@ -72,7 +72,6 @@ namespace CMVP.ControlStrategies
 
             if (index < 0)
             {
-                //setReference(new PointF(0, 0), 0);
                 Console.WriteLine("No referencepoints found");
                 lastIndex = -1;
                 return;

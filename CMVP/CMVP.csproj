@@ -120,6 +120,7 @@
     <Compile Include="Car.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
+    <Compile Include="Controllers\NoFeedback.cs" />
     <Compile Include="ControlStrategies\Overtaking.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
@@ -170,7 +171,9 @@
     <Compile Include="GUI\PIDControlPanel.Designer.cs">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Program.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

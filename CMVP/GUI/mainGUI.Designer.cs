@@ -418,10 +418,15 @@
             this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
             this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
             this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
-            10000,
+            500,
             0,
             0,
             0});
+            this.trafficMaxSpeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.trafficMaxSpeedNumeric.Name = "trafficMaxSpeedNumeric";
             this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(101, 20);
             this.trafficMaxSpeedNumeric.TabIndex = 9;

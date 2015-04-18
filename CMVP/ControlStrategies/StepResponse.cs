@@ -19,7 +19,7 @@ namespace CMVP.ControlStrategies
 
         public StepResponse(Car car) : base(car, null, "Step response")
         {
-             setTrack(new Track(1));
+            track = new Track(1); 
         }
 
            public override void updateReferencePoint() // Find the next point in hte reference signal 
