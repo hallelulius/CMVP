@@ -36,6 +36,7 @@ namespace CMVP
 
         private SerialPort port;
         private bool portOpen = false;
+        private byte lastThrottle = NEUTRAL_THROTTLE;
 
         /// <summary>
         /// Takes the first COM port it finds and opens up a serial communcation with it.
@@ -117,8 +118,19 @@ namespace CMVP
 
         public void stopCar(int carID)
         {
+            if (lastThrottle <= NEUTRAL_THROTTLE)
+            {
+                for (byte i = lastThrottle; i < NEUTRAL_THROTTLE; i++)
+                {
+                    sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
+                    System.Threading.Thread.Sleep(3);
+                }
+            }
+            else
+            {
+                sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
+            }
             sendSteering(convertCarIDToDAC(carID, "Steering"), NEUTRAL_STEERING);
-            sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
             Console.WriteLine("Car " + carID + " stopped");
         }
 
@@ -193,6 +205,7 @@ namespace CMVP
             {
                 byte[] bits = { DAC, value };
                 port.Write(bits, 0, 2);
+                lastThrottle = value;
             }
             else
             {
@@ -259,10 +272,23 @@ namespace CMVP
 
         internal void stopCars()
         {
+            if (lastThrottle <= NEUTRAL_THROTTLE)
+            {
+                for (byte i = lastThrottle; i < NEUTRAL_THROTTLE; i++)
+                {
+                    sendThrottle(throttleA, NEUTRAL_THROTTLE);
+                    sendThrottle(throttleB, NEUTRAL_THROTTLE);
+                    System.Threading.Thread.Sleep(3);
+                }
+            }
+            else
+            {
+                sendThrottle(throttleA, NEUTRAL_THROTTLE);
+                sendThrottle(throttleB, NEUTRAL_THROTTLE);
+            }
             sendSteering(steeringA, NEUTRAL_STEERING);
             sendSteering(steeringB, NEUTRAL_STEERING);
-            sendThrottle(throttleA, NEUTRAL_THROTTLE);
-            sendThrottle(throttleB, NEUTRAL_THROTTLE);
+            
         }
     }
 }

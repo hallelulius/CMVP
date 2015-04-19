@@ -69,9 +69,9 @@ namespace CMVP
         {
             wh = videoStream.NEWIMGAVAIABLE;
             prevTime = videoStream.getTime();
-            Thread thread = new Thread(processImage);
+            Thread thread = new Thread(run);
             thread.Name = "Image Processing";
-            thread.Priority = ThreadPriority.Highest;
+            thread.Priority = ThreadPriority.AboveNormal;
             thread.Start();
         }
         public void initiate()
@@ -138,129 +138,134 @@ namespace CMVP
                 }
             }
         }
-        private void processImage()
+
+        private void run()
         {
-            //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             while (true)
             {
                 wh.WaitOne();
-                img = videoStream.getImage();
-                double tempTime = videoStream.getTime();
-                deltaTime = tempTime - prevTime;
-                prevTime = tempTime;
+                processImage();
 
-                foreach (Car car in objects)
+            }
+        }
+        private void processImage()
+        {
+            img = videoStream.getImage();
+            double tempTime = videoStream.getTime();
+            deltaTime = tempTime - prevTime;
+            //Console.WriteLine(deltaTime);
+            prevTime = tempTime;
+
+            foreach (Car car in objects)
+            {
+                AForge.IntPoint pos = car.getPosition();
+                //bör ta hänsyn till riktningen för minimera fönstret
+                int cropX, cropY;
+                if (car.found)
                 {
-                    AForge.IntPoint pos = car.getPosition();
-                    //bör ta hänsyn till riktningen för minimera fönstret
-                    int cropX, cropY;
-                    if (car.found)
-                    {
-                        cropX = pos.X - 100;
-                        cropY = pos.Y - 100;
-                        if (cropX < 0)
-                            cropX = 0;
-                        else if (cropX > img.Width - 200)
-                            cropX = img.Width - 200;
-                        if (cropY < 0)
-                            cropY = 0;
-                        else if (cropY > img.Height - 200)
-                            cropY = img.Height - 200;
-                        croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
-                    }
-                    else
-                    {
+                    cropX = pos.X - 100;
+                    cropY = pos.Y - 100;
+                    if (cropX < 0)
                         cropX = 0;
+                    else if (cropX > img.Width - 200)
+                        cropX = img.Width - 200;
+                    if (cropY < 0)
                         cropY = 0;
-                        croppedImg = img;
-                    }
+                    else if (cropY > img.Height - 200)
+                        cropY = img.Height - 200;
+                    croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
+                }
+                else
+                {
+                    cropX = 0;
+                    cropY = 0;
+                    croppedImg = img;
+                }
 
-                    List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
-                    List<AForge.IntPoint> points = getPoints(cirkels);
+                List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
+                List<AForge.IntPoint> points = getPoints(cirkels);
 
-                    points = filterPointsThatBelongsToOtherCars(points, car);
+                points = filterPointsThatBelongsToOtherCars(points, car);
 
-                    List<Triangle> triangles = getTriangles(points);
-                    triangles = filterTriangleDubblets(triangles);
+                List<Triangle> triangles = getTriangles(points);
+                triangles = filterTriangleDubblets(triangles);
 
-                    Triangle prevTriangle = null;
-                    prevTriangles.TryGetValue(car, out prevTriangle);
+                Triangle prevTriangle = null;
+                prevTriangles.TryGetValue(car, out prevTriangle);
 
-                    triangles.Sort(delegate(Triangle t1, Triangle t2)
+                triangles.Sort(delegate(Triangle t1, Triangle t2)
+                {
+
+                    return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
+                });
+                List<double> d = new List<double>();
+                List<int> i = new List<int>();
+                foreach (Triangle t in triangles)
+                {
+                    d.Add(t.compareTo(prevTriangle) + t.compareTo(idealTriangle));
+                    i.Add(getIdPoints(t, points).Count);
+                }
+                bool carFoundThisTime = false;
+                foreach (Triangle triangle in triangles)
+                {
+                    //Unknown if comparing to idealTriangle is nescesarry.
+                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
                     {
-
-                        return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
-                    });
-                    List<double> d = new List<double>();
-                    List<int> i = new List<int>();
-                    foreach (Triangle t in triangles)
-                    {
-                        d.Add(t.compareTo(prevTriangle) + t.compareTo(idealTriangle));
-                        i.Add(getIdPoints(t, points).Count);
-                    }
-                    bool carFoundThisTime = false;
-                    foreach (Triangle triangle in triangles)
-                    {
-                        //Unknown if comparing to idealTriangle is nescesarry.
-                        if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
-                        {
-                            AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
-                            List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
-                            int triangleId = idPoints.Count;
-                            if (car.ID == triangleId)
-                            {
-                                if (worstAccepted < d[1])
-                                    worstAccepted = d[1];
-                                //Remove used points
-                                foreach (AForge.IntPoint p in triangle.getPoints())
-                                    points.Remove(p);
-                                foreach (AForge.IntPoint p in idPoints)
-                                    points.Remove(p);
-                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
-                                car.found = true;
-                                carFoundThisTime = true;
-                                prevTriangles.Remove(car);
-                                triangle.offset(translation);
-                                prevTriangles.Add(car, triangle);
-                                break;
-                            }
-                        }
-                    }
-                    if (!carFoundThisTime)
-                        car.found = false;
-
-                    /*
-                    foreach (Triangle triangle in triangles)
-                    {
-
-                        if (!carFoundThisTime && triangle.compare(idealTriangle))
-                        {
-
-                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                            List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
-                            int triangleId = idPoints.Count;
+                        AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
+                        List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
+                        int triangleId = idPoints.Count;
                         if (car.ID == triangleId)
                         {
-                                //Remove used points
-                                foreach (AForge.IntPoint p in triangle.getPoints())
-                                    points.Remove(p);
-                                foreach(AForge.IntPoint p in idPoints)
-                                    points.Remove(p);
-                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
+                            if (worstAccepted < d[1])
+                                worstAccepted = d[1];
+                            //Remove used points
+                            foreach (AForge.IntPoint p in triangle.getPoints())
+                                points.Remove(p);
+                            foreach (AForge.IntPoint p in idPoints)
+                                points.Remove(p);
+                            car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
+                            prevTriangles.Remove(car);
+                            triangle.offset(translation);
+                            prevTriangles.Add(car, triangle);
                             break;
                         }
                     }
                 }
-                
-                if(!carFoundThisTime)
-                {
+                if (!carFoundThisTime)
                     car.found = false;
+
+                /*
+                foreach (Triangle triangle in triangles)
+                {
+
+                    if (!carFoundThisTime && triangle.compare(idealTriangle))
+                    {
+
+                    AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
+                        List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                        int triangleId = idPoints.Count;
+                    if (car.ID == triangleId)
+                    {
+                            //Remove used points
+                            foreach (AForge.IntPoint p in triangle.getPoints())
+                                points.Remove(p);
+                            foreach(AForge.IntPoint p in idPoints)
+                                points.Remove(p);
+                            car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
+                        car.found = true;
+                        carFoundThisTime = true;
+                        break;
+                    }
                 }
-                    */
-                }
-                // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
+            }
+                
+            if(!carFoundThisTime)
+            {
+                car.found = false;
+            }
+                */
             }
         }
 
@@ -726,5 +731,10 @@ namespace CMVP
          * 
          * 
          */
+
+        internal double getDeltaTime()
+        {
+            return deltaTime;
+        }
     }
 }

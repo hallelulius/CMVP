@@ -17,12 +17,14 @@ namespace CMVP
     {
 
         private List<Car> cars;
-        private static EventWaitHandle wh = new ManualResetEvent(false);
+        private static EventWaitHandle wh = new AutoResetEvent(false);
         public PerformanceAnalyzerWindow analyzer;
+        private bool working;
+        private Thread thread;
 
         public void start()
         {
-            Thread thread = new Thread(run);
+            thread = new Thread(run);
             thread.Name = "Brain";
             thread.Start();
         }
@@ -89,29 +91,34 @@ namespace CMVP
                             sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
                             sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
-                            
                             // Add more sendDataThreadSafe calls here.
                         }
                         // Give other values to analyzer:
-                        if (cars.First() != null)
+                        if (cars.Count != 0)
                         {
-                            sendDataThreadSafe("FPS image processing", xValue, 1 / cars.First().getDeltaTime());
+                            sendDataThreadSafe("FPS image processing", xValue, cars.First().getDeltaTime());
                         }
                         sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
                 Thread.Sleep(2);
-
+                if (working)
+                {
+                    wh.Set();
+                }
             }
         }
 
         public void StartWorking()
         {
+            working = true;
             wh.Set();
+            
         }
         public void StopWorking()
         {
+            working = false;
             wh.Reset();
         }
 

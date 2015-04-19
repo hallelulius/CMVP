@@ -56,14 +56,32 @@ namespace CMVP
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed;
-            outThrottle += throttleIntegratorSum * Ki_throttle;
+            if (errorSpeed < 0)
+            {
+                //implement for breaking here PID 
+                //outThrottle = -0.5F;
+                //outThrottle = 0;
+                outThrottle += Kp_throttle * errorSpeed;
+                throttleIntegratorSum += errorSpeed;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
+
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+                //outThrottle += Kd_throttle * derivativeThrottle;
+                prevSpeedError = errorSpeed;
+            }
+            else
+            {
+                outThrottle += Kp_throttle * errorSpeed;
+                throttleIntegratorSum += errorSpeed;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
+
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+                //outThrottle += Kd_throttle * derivativeThrottle;
+                prevSpeedError = errorSpeed;
+            }
             
-            //derivative part here, not fully tested but seems to work 
-            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-            //outThrottle += Kd_throttle * derivativeThrottle;
-            prevSpeedError = errorSpeed;
 
 
 

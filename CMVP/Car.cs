@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Drawing;
-
 
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
 using AForge;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 //using Math;
 
@@ -20,6 +19,9 @@ namespace CMVP
     {
         
         //The first element in the lists is the last one logged, ie. the current one.
+        private ConcurrentQueue<double> speed2;
+        private ConcurrentQueue<double> position2; // if more problems arise
+        private double d;
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<IntPoint> lastPositions; //A list to prevent flickering.
         private List<bool> foundList; //A list that stores if the car is found or not
@@ -53,17 +55,19 @@ namespace CMVP
             this.position = new List<AForge.IntPoint>();
             this.angles = new List<float>();
             this.speed = new List<double>();
+            this.speed2 = new ConcurrentQueue<double>();
             this.deltaTime = new List<double>();
             this.acceleration = new List<double>();
             this.lastPositions = new List<IntPoint>();
             this.foundList = new List<bool>();
             this.controlStrategy = new ControlStrategies.JustFollow(this);
-            setMaxSpeed(150F);
+            setMaxSpeed(120F);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
             {
                 this.direction.Add(dir);
                 this.position.Add(pos);
                 this.speed.Add(1.0);
+                this.speed2.Enqueue(1.0);
                 this.acceleration.Add(0);
                 this.angles.Add(0);
                 this.deltaTime.Add(0.001F);
@@ -80,14 +84,14 @@ namespace CMVP
             //Calculate horizontal and vertical movement using the last two elements in the position list.
             double dx = position.ElementAt(1).X - position.ElementAt(0).X;
             double dy = position.ElementAt(1).Y - position.ElementAt(0).Y;
-            lock (this)
-            {
                 double tempSpeed = (double)((Math.Sqrt((dx * dx) + (dy * dy))) / deltaTime.First()) * PIXEL_SIZE;
                 speed.Insert(0, tempSpeed);
-                //Remove oldest element.
+                speed2.Enqueue(tempSpeed);
+                speed2.TryDequeue(out d);
+            //Remove oldest element.
                 speed.Remove(speed.Last());
                 //speed.RemoveAt(speed.Count-1); 
-            }
+
             
             //Calculate acceleration
             acceleration.Insert(0,(speed.ElementAt(1) - speed.ElementAt(0))/deltaTime.First());
@@ -142,7 +146,8 @@ namespace CMVP
             if (controller != null)
             {
                 controller.setHeading(tempAngle);
-                controller.setSpeed((float)this.speed.First());
+                //controller.setSpeed((float)this.speed.First());
+                controller.setSpeed((float)this.speed2.Last());
                 
             }
                 
@@ -185,13 +190,13 @@ namespace CMVP
             double tempSpeed = 0;
             lock (this)
             {
-                List<double> tempSpeedList = new List<double>(speed); //Copy to prevent exceptions in foreach 
+                ConcurrentQueue<double> tempSpeeds = new ConcurrentQueue<double>(speed2); //Copy to prevent exceptions in foreach 
 
-                foreach (double s in tempSpeedList)
+                foreach (double s in tempSpeeds)
                 {
                     tempSpeed += s;
                 }
-                double tempSpeed2 = (double)tempSpeed / (tempSpeedList.Count);
+                double tempSpeed2 = (double)tempSpeed / (tempSpeeds.Count);
 
                 if (tempSpeed2 > 0.01F)
                 {
@@ -214,7 +219,7 @@ namespace CMVP
         }
         public List<AForge.IntPoint> getPositionHistory()
         {
-            return new List<IntPoint>(position);
+            return new List<IntPoint>(lastPositions);
         }
         public List<bool> getFoundList()
         { 

@@ -23,7 +23,6 @@ namespace CMVP.GUI
         private Graphics g;
 
         private Bitmap img;
-        private Bitmap drawImg;
         private ImageProcessing ip;
         private System.Timers.Timer timer;
         private Object locker;
@@ -81,8 +80,8 @@ namespace CMVP.GUI
                 if (panel != null)
                 {
 
-                    drawImg = drawFeaturesOnImg();
-                    panel.BackgroundImage = new Bitmap(drawImg, panel.Size);
+                    //drawImg = (Bitmap)drawFeaturesOnImg().Clone();
+                    panel.BackgroundImage = drawFeaturesOnImg();
 
                 }
             }    
@@ -112,6 +111,11 @@ namespace CMVP.GUI
             */
             foreach (Car car in Program.cars)
             {
+                if (drawCirkelsOnImg)
+                {
+                    List<Blob> cirkels = ip.getBlobs(blobMin, blobMax, img);
+                    drawCirkels(cirkels);
+                }
                 if (drawTailsOnImg)
                 {
                     //turquoise if the car is found else red
@@ -217,11 +221,6 @@ namespace CMVP.GUI
                         cropY = img.Height - 200;
                     g.DrawRectangle(redPen, new Rectangle(cropX, cropY, 200, 200));
                 }
-            if (drawCirkelsOnImg)
-            {
-                List<Blob> cirkels = ip.getBlobs(blobMin, blobMax, img);
-                drawCirkels(cirkels);
-            }
             foreach (Car car in Program.cars)
             {
                 if (drawCenterOnImg)

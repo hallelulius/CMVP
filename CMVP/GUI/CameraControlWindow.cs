@@ -25,13 +25,10 @@ namespace CMVP
             videoStreamPanel.BackColor=Color.SpringGreen;
         }
 
-        public void setPanelSize(Size s){
-            videoStreamPanel.Size = s;
-        }
+        
         private void initSettings()
         {
             this.FormClosing += new FormClosingEventHandler(CCWFormClosing);
-            this.Resize += new EventHandler(resizePanel);
             threshold_ScrollBar.Value = imgProcess.getThrehold();
             scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
             checkBoxDrawTrack.Checked = true;
@@ -44,10 +41,6 @@ namespace CMVP
             this.checkBoxDrawTails_CheckedChanged(this, new EventArgs());
 
         }
-        private void resizePanel(object sender, EventArgs e)
-        {
-            videoStreamPanel.Height = (int) (videoStreamPanel.Width * 0.75);
-        }
         private void CCWFormClosing(object sender, FormClosingEventArgs e)
         {
             this.Hide();
@@ -55,7 +48,7 @@ namespace CMVP
         }
         private void CameraControlWindow_Load(object sender, EventArgs e)
         {
-           
+            videoStreamPanel.Size = Program.videoStream.getSize();
         }
 
         private void videoStreamPanel_Paint(object sender, PaintEventArgs e)

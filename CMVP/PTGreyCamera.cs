@@ -54,7 +54,15 @@ namespace CMVP
         {
             lock (this)
             {
-                return (Bitmap)image.Clone();
+                if (image != null)
+                {
+                    return (Bitmap)image.Clone();
+                }
+                else
+                {
+                    return null;
+                }
+                
             }
         }
 
@@ -77,6 +85,7 @@ namespace CMVP
         {
             Console.WriteLine("GrabLoop started");
             BackgroundWorker worker = sender as BackgroundWorker;
+            
             while (m_grabImages)
             {
                 try
@@ -113,8 +122,6 @@ namespace CMVP
                     Console.WriteLine("Worker report failed!");
                     continue;
                 }
-
-
             }
         }
 

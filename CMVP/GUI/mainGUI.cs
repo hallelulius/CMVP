@@ -18,7 +18,6 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread dataGridThread;
         private List<Track> tracks = new List<Track>();
         private CameraControlWindow ccw;
         private PerformanceAnalyzerWindow paw;
@@ -30,12 +29,19 @@ namespace CMVP
             InitializeComponent();
             loadTracks();
             brain.start();            
-            dataGridThread = new Thread(new ThreadStart(updateDataGrid));
-            dataGridThread.Name = "dataGridThread";
-            dataGridThread.Start();            
             ccw = new CameraControlWindow();
             paw = new PerformanceAnalyzerWindow();
             brain.analyzer = paw;
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval=1000;
+            timer.Tick += new EventHandler(deltaTime);
+            timer.Tick += new EventHandler(updateDataGrid);
+            timer.Start();
+        }
+
+        private void deltaTime(object sender, EventArgs e)
+        {
+            deltaTimeLabel.Text = "Update frequency: " + 1.0/Program.imageProcess.getDeltaTime();
         }
 
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
@@ -264,6 +270,10 @@ namespace CMVP
                 {
                     tempCar.setController(new KeyboardController(tempCar));
                 }
+                if (controllerTypeDropDown.SelectedItem.ToString() == "No Feedback")
+                {
+                    tempCar.setController(new Controllers.NoFeedback(tempCar));
+                }
             }
         }
 
@@ -364,17 +374,9 @@ namespace CMVP
             trafficApplyButton.Enabled = true;
         }
 
-        private void updateDataGrid()
+        private void updateDataGrid(object sender, EventArgs e)
         {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            long elapsedTime;
-            Console.WriteLine("Started data grid update thread!");
-
-            while(true)
-            {
                 //Console.WriteLine("Updating data grid...");
-                elapsedTime = timer.ElapsedMilliseconds;
                 foreach(DataGridViewRow row in dataGridView.Rows)
                 {
                     Car car = Program.cars.ElementAt(row.Index);
@@ -387,9 +389,6 @@ namespace CMVP
                     row.Cells[5].Value = car.getController().getSteer();
                     row.Cells[6].Value = car.getController().getThrottle();
                 }
-
-                Thread.Sleep(dataGridUpdateTime - (int)(timer.ElapsedMilliseconds - elapsedTime));
-            }
         }
 
         private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)

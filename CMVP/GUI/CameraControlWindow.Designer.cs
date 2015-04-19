@@ -58,9 +58,6 @@
             // 
             // videoStreamPanel
             // 
-            this.videoStreamPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.videoStreamPanel.AutoSize = true;
             this.videoStreamPanel.Location = new System.Drawing.Point(214, 12);
             this.videoStreamPanel.Name = "videoStreamPanel";
@@ -199,6 +196,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(684, 389);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.videoStreamPanel);
