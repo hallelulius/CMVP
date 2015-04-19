@@ -33,6 +33,7 @@
             this.checkBoxDrawId = new System.Windows.Forms.CheckBox();
             this.o = new System.ComponentModel.BackgroundWorker();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.scrollbar_label = new System.Windows.Forms.Label();
             this.threshold_ScrollBar = new System.Windows.Forms.HScrollBar();
             this.checkBoxDrawTails = new System.Windows.Forms.CheckBox();
             this.cameraSettings = new System.Windows.Forms.Button();
@@ -41,7 +42,6 @@
             this.checkBoxDrawWindows = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCenters = new System.Windows.Forms.CheckBox();
             this.checkBoxDrawCirkels = new System.Windows.Forms.CheckBox();
-            this.scrollbar_label = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,9 +58,13 @@
             // 
             // videoStreamPanel
             // 
-            this.videoStreamPanel.Location = new System.Drawing.Point(214, 13);
+            this.videoStreamPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.videoStreamPanel.AutoSize = true;
+            this.videoStreamPanel.Location = new System.Drawing.Point(214, 12);
             this.videoStreamPanel.Name = "videoStreamPanel";
-            this.videoStreamPanel.Size = new System.Drawing.Size(458, 364);
+            this.videoStreamPanel.Size = new System.Drawing.Size(458, 366);
             this.videoStreamPanel.TabIndex = 4;
             this.videoStreamPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.videoStreamPanel_Paint);
             // 
@@ -94,6 +98,15 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Features";
+            // 
+            // scrollbar_label
+            // 
+            this.scrollbar_label.AutoSize = true;
+            this.scrollbar_label.Location = new System.Drawing.Point(14, 288);
+            this.scrollbar_label.Name = "scrollbar_label";
+            this.scrollbar_label.Size = new System.Drawing.Size(54, 13);
+            this.scrollbar_label.TabIndex = 13;
+            this.scrollbar_label.Text = "Threshold";
             // 
             // threshold_ScrollBar
             // 
@@ -182,15 +195,6 @@
             this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
             this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 
-            // scrollbar_label
-            // 
-            this.scrollbar_label.AutoSize = true;
-            this.scrollbar_label.Location = new System.Drawing.Point(14, 288);
-            this.scrollbar_label.Name = "scrollbar_label";
-            this.scrollbar_label.Size = new System.Drawing.Size(54, 13);
-            this.scrollbar_label.TabIndex = 13;
-            this.scrollbar_label.Text = "Threshold";
-            // 
             // CameraControlWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -204,6 +208,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

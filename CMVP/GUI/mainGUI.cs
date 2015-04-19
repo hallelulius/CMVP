@@ -20,6 +20,8 @@ namespace CMVP
         private Brain brain = new Brain();
         private Thread dataGridThread;
         private List<Track> tracks = new List<Track>();
+        private CameraControlWindow ccw;
+        private PerformanceAnalyzerWindow paw;
         private int dataGridUpdateTime = 1000;
         //public event FormClosingEventHandler FormClosing;
 
@@ -27,9 +29,13 @@ namespace CMVP
         {
             InitializeComponent();
             loadTracks();
-            brain.start();
+            brain.start();            
             dataGridThread = new Thread(new ThreadStart(updateDataGrid));
-            dataGridThread.Start();
+            dataGridThread.Name = "dataGridThread";
+            dataGridThread.Start();            
+            ccw = new CameraControlWindow();
+            paw = new PerformanceAnalyzerWindow();
+            brain.analyzer = paw;
         }
 
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
@@ -63,30 +69,6 @@ namespace CMVP
         {
             calibration.Enabled = false;
             Initiate.Enabled = false;
-            //System.Console.WriteLine("Start simulation");
-
-            //brain = new Brain();
-            //thread = new Thread(new ThreadStart(brain.run));
-            //thread.Start();
-            
-            //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-           /* switch (brainThread.ThreadState)
-            {
-                case System.Threading.ThreadState.Unstarted:
-                    brainThread.Start();
-                    Console.WriteLine("Starting simulation...");
-                    break;
-
-                case System.Threading.ThreadState.Suspended:
-                    brainThread.Resume();
-                    Console.WriteLine("Resuming simulation...");
-                    break;
-
-                default:
-                    Console.WriteLine("Simulation already running...");
-                    break;*
-            }
-            */
             brain.StartWorking();
             Console.WriteLine("Starting simulation...");
             
@@ -95,8 +77,7 @@ namespace CMVP
         {
             calibration.Enabled = true;
             Initiate.Enabled = true;
-
-            Console.WriteLine("Stoping simulation");
+            Console.WriteLine("Stoping simulation...");
             try
             {
                 foreach(Car car in Program.cars)
@@ -115,8 +96,9 @@ namespace CMVP
         private void openCameraControlButton_Click(object sender, EventArgs e)
         {
             System.Console.WriteLine("Opening camera control");
-            CameraControlWindow ccw = new CameraControlWindow();
+            //ccw.setPanelSize(Program.videoStream.getSize());
             ccw.Show();
+
         }
 
         private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -300,8 +282,6 @@ namespace CMVP
 
         private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
         {
-            PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
-            brain.analyzer = paw;
             paw.Show();
         }
 

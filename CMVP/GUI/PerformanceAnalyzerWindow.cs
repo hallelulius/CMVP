@@ -22,9 +22,18 @@ namespace CMVP
         {
             InitializeComponent();
             myDelegate = new sendDataDelegate(addData);
+            this.FormClosing += new FormClosingEventHandler(PAWFormClosing);
             performanceChart.ChartAreas[0].AxisY.StripLines.Add(new StripLine());
             performanceChart.ChartAreas[0].AxisY.StripLines[0].Interval = 2;
         }
+
+        private void PAWFormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true; // this cancels the close event.
+            this.Hide();   
+        }
+
+        
 
         public void addData(string reciever, double x, double y)
         {
@@ -67,11 +76,6 @@ namespace CMVP
 
                 //addSeriesDropDown.SelectedIndex = -1;
             }
-        }
-
-        private void PerformanceAnalyzerWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Dispose();
         }
 
         private void dataPointsNumeric_ValueChanged(object sender, EventArgs e)

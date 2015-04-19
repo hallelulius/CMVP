@@ -14,14 +14,24 @@ namespace CMVP
     public partial class CameraControlWindow : Form
     {
         private ImageProcessing imgProcess;
+        private GUI.ImageProcessingDrawing ipd;
         public CameraControlWindow()
         {
             InitializeComponent();
+            imgProcess = Program.imageProcess;
+            ipd = Program.ipd;
+            ipd.setPanel(videoStreamPanel);
+            initSettings();
             videoStreamPanel.BackColor=Color.SpringGreen;
-            this.imgProcess = (ImageProcessing)Program.imageProcess;
-            this.imgProcess.pushDestination(videoStreamPanel);
-            videoStreamPanel.Size = Program.videoStream.getSize();
-            this.AutoSize = true;
+        }
+
+        public void setPanelSize(Size s){
+            videoStreamPanel.Size = s;
+        }
+        private void initSettings()
+        {
+            this.FormClosing += new FormClosingEventHandler(CCWFormClosing);
+            this.Resize += new EventHandler(resizePanel);
             threshold_ScrollBar.Value = imgProcess.getThrehold();
             scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
             checkBoxDrawTrack.Checked = true;
@@ -32,6 +42,16 @@ namespace CMVP
             this.checkBoxDrawRefHeading_CheckedChanged(this, new EventArgs());
             checkBoxDrawTails.Checked = true;
             this.checkBoxDrawTails_CheckedChanged(this, new EventArgs());
+
+        }
+        private void resizePanel(object sender, EventArgs e)
+        {
+            videoStreamPanel.Height = (int) (videoStreamPanel.Width * 0.75);
+        }
+        private void CCWFormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Hide();
+            e.Cancel = true; // this cancels the close event.
         }
         private void CameraControlWindow_Load(object sender, EventArgs e)
         {
@@ -50,43 +70,43 @@ namespace CMVP
         private void checkBoxDrawCirkels_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawCirkels.Checked");
-            imgProcess.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
+            ipd.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
         }
 
         private void checkBoxDrawCenters_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawCenters.Checked");
-            imgProcess.drawCenterOnImg = checkBoxDrawCenters.Checked;
+            ipd.drawCenterOnImg = checkBoxDrawCenters.Checked;
         }
         private void checkBoxDrawDirection_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawDirection.Checked");
-            imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
+            ipd.drawDirectionOnImg = checkBoxDrawDirection.Checked;
 
         }
 
         private void checkBoxDrawId_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawId.Checked");
-            imgProcess.drawCarIdOnImg = checkBoxDrawId.Checked;
+            ipd.drawCarIdOnImg = checkBoxDrawId.Checked;
         }
 
         private void checkBoxDrawWindows_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawWindows.Checked");
-            imgProcess.drawWindowsOnImg = checkBoxDrawWindows.Checked;
+            ipd.drawWindowsOnImg = checkBoxDrawWindows.Checked;
         }
 
         private void checkBoxDrawRefHeading_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawRefHeading.Checked");
-            imgProcess.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
+            ipd.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
         }
 
         private void checkBoxDrawTrack_CheckedChanged_1(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawTrack.Checked");
-            imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
+            ipd.drawTrackOnImg = checkBoxDrawTrack.Checked;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -97,7 +117,7 @@ namespace CMVP
         private void checkBoxDrawTails_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawTails.Checked");
-            imgProcess.drawTailsOnImg= checkBoxDrawTails.Checked;
+            ipd.drawTailsOnImg = checkBoxDrawTails.Checked;
         }
 
         private void threshold_ScrollBar_Scroll(object sender, ScrollEventArgs e)

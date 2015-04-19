@@ -23,6 +23,7 @@ namespace CMVP
         public void start()
         {
             Thread thread = new Thread(run);
+            thread.Name = "Brain";
             thread.Start();
         }
         public void run()

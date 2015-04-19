@@ -129,6 +129,7 @@
     <Compile Include="Controllers\PIDController.cs" />
     <Compile Include="Communication.cs" />
     <Compile Include="CameraController.cs" />
+    <Compile Include="GUI\ImageProcessingDrawing.cs" />
     <Compile Include="GUI\PerformanceAnalyzerWindow.cs">
       <SubType>Form</SubType>
     </Compile>

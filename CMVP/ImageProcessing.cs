@@ -15,42 +15,20 @@ using AForge.Vision.Motion;
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
+using System.Threading;
 
 
 
 namespace CMVP
 {
-    class ImageProcessing : VideoStream
+    class ImageProcessing
     {
-        //used for drawing
-        static private Pen redPen = new Pen(Color.Red, 2);
-        static private Pen bluePen = new Pen(Color.LightSkyBlue, 2);
-        static private Pen greenPen = new Pen(Color.Green, 2);
-        static private Pen yellowPen = new Pen(Color.Yellow, 2);
-        static private Pen turquoisePen = new Pen(Color.Turquoise, 2);
-        static private Pen[] penArray = { bluePen, greenPen, yellowPen, turquoisePen };
-        private Graphics g;
 
-        public Boolean drawCirkelsOnImg;
-        public Boolean drawDirectionOnImg;
-        public Boolean drawWindowsOnImg;
-        public Boolean drawCenterOnImg;
-        public Boolean drawTrackOnImg;
-        public Boolean drawCarIdOnImg;
-        public Boolean drawRefHeadingOnImg;
-        public Boolean drawTailsOnImg;
-
-
-        private VideoStream videoStream;
+        private PTGreyCamera videoStream;
         private Bitmap img;
         private Bitmap croppedImg;
-        private Bitmap canvas;
+        private object _locker = new object();
 
-        private List<Panel> panelsToUpdate;
-        //public Panel panelToUpdate;
-        //private System.Timers.Timer imgProcesTimer;
-        private System.Windows.Forms.Timer imgProcesTimer;
-        private System.Windows.Forms.Timer drawTimer;
         private byte threshold;
 
         List<Blob> cirkels;
@@ -61,6 +39,7 @@ namespace CMVP
         //variables used for calculating time difference between updates
         private double deltaTime;
         private double prevTime;
+        private AutoResetEvent wh;
 
 
         //sets ideal triangle base and height
@@ -75,194 +54,25 @@ namespace CMVP
         static private double worstAccepted = 0;
 
 
-        public ImageProcessing(VideoStream videoStream, List<Car> objects)
+        public ImageProcessing(PTGreyCamera videoStream, List<Car> objects)
         {
-            //this.imgProcesTimer = new System.Timers.Timer();
-            this.imgProcesTimer = new System.Windows.Forms.Timer();
-            this.drawTimer = new System.Windows.Forms.Timer();
-            this.imgProcesTimer.Interval = 7;
-            this.drawTimer.Interval = 50;
-            //this.imgProcesTimer.Elapsed += processImage;
-            this.imgProcesTimer.Tick += new EventHandler(processImage);
-            this.drawTimer.Tick += new EventHandler(updatePanels);
+
             this.objects = objects;
-            this.panelsToUpdate = new List<Panel>();
             this.videoStream = videoStream;
             this.threshold = 180;
-
             this.cirkels = new List<Blob>();
-
-            this.drawCirkelsOnImg = false;
-            this.drawCenterOnImg = false;
-            this.drawWindowsOnImg = false;
-            this.drawDirectionOnImg = false;
-            this.drawTailsOnImg = false;
-            prevTime = videoStream.getTime();
-            this.start();
             System.Console.WriteLine("Image processing OK");
 
         }
-        void updatePanels(object sender, EventArgs e)
-        {
-            if (panelsToUpdate.Count == 0)
-            {
-                //Console.WriteLine("No Panel to update");
-            }
-            else
-            {
-                Bitmap panelImage = drawFeaturesOnImg();
-                foreach (Panel p in panelsToUpdate)
-                {
-                    p.BackgroundImage = panelImage;
-                }
-            }
 
-        }
-        Bitmap drawFeaturesOnImg()
-        {
-
-            if (img != null)
-                canvas = (Bitmap)img.Clone();
-            else
-                return new Bitmap(10, 10);
-            this.g = Graphics.FromImage(canvas);
-
-            int k = 0;
-            foreach (Quadrilateral q in squares)
-            {
-                g.DrawLines(penArray[k % 4], q.getDrawingPoints());
-                k++;
-            }
-            System.Drawing.Point[] dp = idealTriangle.getDrawingPoints();
-            dp[0].Offset(600, 600);
-            dp[1].Offset(600, 600);
-            dp[2].Offset(600, 600);
-            dp[3].Offset(600, 600);
-            g.DrawLines(yellowPen, dp);
-
-            foreach (Car car in objects)
-            {
-                if (drawTailsOnImg)
-                {
-                    //turquoise if the car is found else red
-                    List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
-                    IntPoint p1 = car.getPositionHistory().First();
-                    bool b1 = car.getFoundList().First();
-                    for(int i = 0; i < car.HISTORY_LENGTH; i++)
-                    {
-                        IntPoint p2 = car.getPositionHistory().ElementAt(i);
-                        bool b2= car.getFoundList().ElementAt(i);
-                        if (b1)
-                        {
-                            g.DrawLine(turquoisePen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
-
-                        }
-                        else
-                        {
-                            g.DrawLine(redPen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
-                        }
-                        p1 = p2;
-                        b1 = b2;
-                    }
-                    /*
-                    foreach (AForge.IntPoint p in car.getPositionHistory())
-                    {
-                        positionHistory.Add(new System.Drawing.Point(p.X, p.Y));
-                        //cahnge color depending on if the car is found or not
-                    }
-                    g.DrawLines(turkosPen, positionHistory.ToArray());
-                     */
-                }
-
-                Controller controller = car.getController();
-                ControlStrategy controlStra = car.getControlStrategy();
-                float dir = controller.getRefHeading();
-                if (controlStra != null)
-                {
-                    if (drawTrackOnImg && controlStra.getTrack() != null)
-                    {
-                        List<IntPoint> track = controlStra.getTrack().getPoints();
-                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Count];
-                        for (int i = 0; i < track.Count; i++)
-                        {
-                            pointTrack[i] = new System.Drawing.PointF((float)track.ElementAt(i).X, (float)track.ElementAt(i).Y);
-                        }
-                        g.DrawLines(greenPen, pointTrack);
-                    }
-                    else if (drawTrackOnImg)
-                    {
-                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X - 100, car.getPosition().Y + 100 - 20);
-                        g.DrawString("This Car has no track", new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular), Brushes.Green, pos);
-
-                    }
-                    if (drawRefHeadingOnImg)
-                    {
-                        float heading = car.getController().getRefHeading();
-                        System.Drawing.Point pos = new System.Drawing.Point(car.getPosition().X, car.getPosition().Y);
-                        System.Drawing.Point pointHeading = new System.Drawing.Point((int)(car.getPosition().X + 40 * Math.Cos(heading)), (int)(car.getPosition().Y + 40 * Math.Sin(heading)));
-                        g.DrawLine(bluePen, pos, pointHeading);
-                        g.DrawEllipse(yellowPen, new Rectangle(controller.getRefPoint().X - 5, controller.getRefPoint().Y - 5, 10, 10));
-                    }
-
-                }
-                if (drawCarIdOnImg)
-                {
-                    Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
-                    Brush b = Brushes.Green;
-                    System.Drawing.PointF idPos = new System.Drawing.PointF(car.getPosition().X - 100, car.getPosition().Y - 100);
-                    g.DrawString(car.ID.ToString(), f, b, idPos);
-                }
-                if (drawCenterOnImg)
-                {
-                    // Only for testing triangles
-                    List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
-                    List<AForge.IntPoint> points = getPoints(cirkels);
-                    List<Triangle> triangles = getTriangles(points);
-                    triangles = filterTriangleDubblets(triangles);
-                    foreach (Triangle triangle in triangles)
-                    {
-                        if (triangle.compare(idealTriangle))
-                        {
-                            g.DrawLines(yellowPen, triangle.getDrawingPoints());
-                        }
-                    }
-                }
-            }
-            if (drawWindowsOnImg)
-                foreach (Car car in objects)
-                {
-                    AForge.IntPoint pos = car.getPosition();
-                    //bör ta hänsyn till riktningen för minimera fönstret
-                    int cropX = pos.X - 100;
-                    int cropY = pos.Y - 100;
-                    if (cropX < 0)
-                        cropX = 0;
-                    else if (cropX > img.Width - 200)
-                        cropX = img.Width - 200;
-                    if (cropY < 0)
-                        cropY = 0;
-                    else if (cropY > img.Height - 200)
-                        cropY = img.Height - 200;
-                    g.DrawRectangle(redPen, new Rectangle(cropX, cropY, 200, 200));
-                }
-            if (drawCirkelsOnImg)
-            {
-                List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
-                drawCirkels(cirkels);
-            }
-            foreach (Car car in objects)
-            {
-                if (drawCenterOnImg)
-                    g.DrawEllipse(bluePen, new Rectangle((int)car.getPosition().X - 2, (int)car.getPosition().Y - 2, 2, 2));
-                if (drawDirectionOnImg)
-                    g.DrawLine(yellowPen, new System.Drawing.Point(car.getPosition().X, car.getPosition().Y), new System.Drawing.Point(car.getPosition().X + (int)car.getDirection().X * 40, car.getPosition().Y + (int)car.getDirection().Y * 40));
-            }
-            return canvas;
-        }
         public void start()
         {
-            imgProcesTimer.Start();
-            drawTimer.Start();
+            wh = videoStream.NEWIMGAVAIABLE;
+            prevTime = videoStream.getTime();
+            Thread thread = new Thread(processImage);
+            thread.Name = "Image Processing";
+            thread.Priority = ThreadPriority.Highest;
+            thread.Start();
         }
         public void initiate()
         {
@@ -328,128 +138,130 @@ namespace CMVP
                 }
             }
         }
-        private void processImage(object sender, EventArgs e)
+        private void processImage()
         {
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
-            img = videoStream.getImage();
-            double tempTime = videoStream.getTime();
-            deltaTime = tempTime - prevTime;
-            //Console.WriteLine("Delta time "+ prevTime);
-            //Console.WriteLine("System Time " + System.DateTime.Now.Millisecond);
-            prevTime = tempTime;
-
-            foreach (Car car in objects)
+            while (true)
             {
-                AForge.IntPoint pos = car.getPosition();
-                //bör ta hänsyn till riktningen för minimera fönstret
-                int cropX, cropY;
-                if (car.found)
+                wh.WaitOne();
+                img = videoStream.getImage();
+                double tempTime = videoStream.getTime();
+                deltaTime = tempTime - prevTime;
+                prevTime = tempTime;
+
+                foreach (Car car in objects)
                 {
-                    cropX = pos.X - 100;
-                    cropY = pos.Y - 100;
-                    if (cropX < 0)
-                        cropX = 0;
-                    else if (cropX > img.Width - 200)
-                        cropX = img.Width - 200;
-                    if (cropY < 0)
-                        cropY = 0;
-                    else if (cropY > img.Height - 200)
-                        cropY = img.Height - 200;
-                    croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
-                }
-                else
-                {
-                    cropX = 0;
-                    cropY = 0;
-                    croppedImg = img;
-                }
-
-                List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
-                List<AForge.IntPoint> points = getPoints(cirkels);
-
-                points = filterPointsThatBelongsToOtherCars(points, car);
-
-                List<Triangle> triangles = getTriangles(points);
-                triangles = filterTriangleDubblets(triangles);
-
-                Triangle prevTriangle = null;
-                prevTriangles.TryGetValue(car, out prevTriangle);
-
-                triangles.Sort(delegate(Triangle t1, Triangle t2)
-                {
-
-                    return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
-                });
-                List<double> d = new List<double>();
-                List<int> i = new List<int>();
-                foreach (Triangle t in triangles)
-                {
-                    d.Add(t.compareTo(prevTriangle) + t.compareTo(idealTriangle));
-                    i.Add(getIdPoints(t, points).Count);
-                }
-                bool carFoundThisTime = false;
-                foreach (Triangle triangle in triangles)
-                {
-                    //Unknown if comparing to idealTriangle is nescesarry.
-                    if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
+                    AForge.IntPoint pos = car.getPosition();
+                    //bör ta hänsyn till riktningen för minimera fönstret
+                    int cropX, cropY;
+                    if (car.found)
                     {
-                        AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
-                        List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
-                        int triangleId = idPoints.Count;
+                        cropX = pos.X - 100;
+                        cropY = pos.Y - 100;
+                        if (cropX < 0)
+                            cropX = 0;
+                        else if (cropX > img.Width - 200)
+                            cropX = img.Width - 200;
+                        if (cropY < 0)
+                            cropY = 0;
+                        else if (cropY > img.Height - 200)
+                            cropY = img.Height - 200;
+                        croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
+                    }
+                    else
+                    {
+                        cropX = 0;
+                        cropY = 0;
+                        croppedImg = img;
+                    }
+
+                    List<Blob> cirkels = getBlobs(blobMin, blobMax, croppedImg);
+                    List<AForge.IntPoint> points = getPoints(cirkels);
+
+                    points = filterPointsThatBelongsToOtherCars(points, car);
+
+                    List<Triangle> triangles = getTriangles(points);
+                    triangles = filterTriangleDubblets(triangles);
+
+                    Triangle prevTriangle = null;
+                    prevTriangles.TryGetValue(car, out prevTriangle);
+
+                    triangles.Sort(delegate(Triangle t1, Triangle t2)
+                    {
+
+                        return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
+                    });
+                    List<double> d = new List<double>();
+                    List<int> i = new List<int>();
+                    foreach (Triangle t in triangles)
+                    {
+                        d.Add(t.compareTo(prevTriangle) + t.compareTo(idealTriangle));
+                        i.Add(getIdPoints(t, points).Count);
+                    }
+                    bool carFoundThisTime = false;
+                    foreach (Triangle triangle in triangles)
+                    {
+                        //Unknown if comparing to idealTriangle is nescesarry.
+                        if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
+                        {
+                            AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
+                            List<AForge.IntPoint> idPoints = getIdPoints(triangle, points);
+                            int triangleId = idPoints.Count;
+                            if (car.ID == triangleId)
+                            {
+                                if (worstAccepted < d[1])
+                                    worstAccepted = d[1];
+                                //Remove used points
+                                foreach (AForge.IntPoint p in triangle.getPoints())
+                                    points.Remove(p);
+                                foreach (AForge.IntPoint p in idPoints)
+                                    points.Remove(p);
+                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
+                                car.found = true;
+                                carFoundThisTime = true;
+                                prevTriangles.Remove(car);
+                                triangle.offset(translation);
+                                prevTriangles.Add(car, triangle);
+                                break;
+                            }
+                        }
+                    }
+                    if (!carFoundThisTime)
+                        car.found = false;
+
+                    /*
+                    foreach (Triangle triangle in triangles)
+                    {
+
+                        if (!carFoundThisTime && triangle.compare(idealTriangle))
+                        {
+
+                        AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
+                            List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
+                            int triangleId = idPoints.Count;
                         if (car.ID == triangleId)
                         {
-                            if (worstAccepted < d[1])
-                                worstAccepted = d[1];
-                            //Remove used points
-                            foreach (AForge.IntPoint p in triangle.getPoints())
-                                points.Remove(p);
-                            foreach (AForge.IntPoint p in idPoints)
-                                points.Remove(p);
-                            car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
+                                //Remove used points
+                                foreach (AForge.IntPoint p in triangle.getPoints())
+                                    points.Remove(p);
+                                foreach(AForge.IntPoint p in idPoints)
+                                    points.Remove(p);
+                                car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
-                            prevTriangles.Remove(car);
-                            triangle.offset(translation);
-                            prevTriangles.Add(car, triangle);
                             break;
                         }
                     }
                 }
-                if (!carFoundThisTime)
-                    car.found = false;
-
-                /*
-                foreach (Triangle triangle in triangles)
-                {
-
-                    if (!carFoundThisTime && triangle.compare(idealTriangle))
-                    {
-
-                    AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
-                        int triangleId = idPoints.Count;
-                    if (car.ID == triangleId)
-                    {
-                            //Remove used points
-                            foreach (AForge.IntPoint p in triangle.getPoints())
-                                points.Remove(p);
-                            foreach(AForge.IntPoint p in idPoints)
-                                points.Remove(p);
-                            car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
-                        car.found = true;
-                        carFoundThisTime = true;
-                        break;
-                    }
-                }
-            }
                 
-            if(!carFoundThisTime)
-            {
-                car.found = false;
+                if(!carFoundThisTime)
+                {
+                    car.found = false;
+                }
+                    */
+                }
+                // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
             }
-                */
-            }
-            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
         }
 
         //TestPhase
@@ -492,13 +304,6 @@ namespace CMVP
 
             }
             return filteredPoints;
-        }
-        private void drawCirkels(List<Blob> cirkels)
-        {
-            foreach (Blob cirkel in cirkels)
-            {
-                g.DrawEllipse(redPen, cirkel.Rectangle);
-            }
         }
         private List<AForge.IntPoint> getPoints(List<Blob> blobs)
         {
@@ -646,7 +451,7 @@ namespace CMVP
             }
             return idPoints;
         }
-        private List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
+        public List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
         {
             BlobCounter blobCounter = new BlobCounter();
             blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
@@ -659,24 +464,13 @@ namespace CMVP
         }
         public void stop()
         {
-            imgProcesTimer.Stop();
-            drawTimer.Stop();
+            throw new NotImplementedException();
         }
-        public void pushDestination(Panel panel)
-        {
-            panelsToUpdate.Add(panel);
-        }
-        public void removeDestination(Panel panel)
-        {
-            panelsToUpdate.Remove(panel);
-        }
-        public Size getSize()
-        {
-            return videoStream.getSize();
-        }
+
+
         public Bitmap getImage()
         {
-            return img;
+            return videoStream.getImage();
         }
         public double getTime()
         {

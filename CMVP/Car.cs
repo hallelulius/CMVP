@@ -217,10 +217,8 @@ namespace CMVP
             return new List<IntPoint>(position);
         }
         public List<bool> getFoundList()
-        {
-            lock (this) { 
+        { 
             return new List<bool>(foundList);
-            }
         }
         public double getDeltaTime()
         {
