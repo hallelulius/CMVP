@@ -67,7 +67,7 @@ namespace CMVP
 
         public void start()
         {
-            wh = videoStream.NEWIMGAVAIABLE;
+            wh = videoStream.NEW_IMG_AVAILABLE;
             prevTime = videoStream.getTime();
             Thread thread = new Thread(run);
             thread.Name = "Image Processing";
@@ -481,7 +481,7 @@ namespace CMVP
         {
             return videoStream.getTime();
         }
-        public byte getThrehold()
+        public byte getThreshold()
         {
             return threshold;
         }

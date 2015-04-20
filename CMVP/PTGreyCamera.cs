@@ -23,7 +23,7 @@ namespace CMVP
         private ManagedImage m_rawImage;
         private ManagedImage m_processedImage;
         private bool m_grabImages;
-        private AutoResetEvent newImgAvaiable; public AutoResetEvent NEWIMGAVAIABLE { get { return newImgAvaiable; } }
+        private AutoResetEvent newImgAvaiable; public AutoResetEvent NEW_IMG_AVAILABLE { get { return newImgAvaiable; } }
         private BackgroundWorker m_grabThread;
         private Bitmap image;
         private Panel panel;
@@ -62,7 +62,7 @@ namespace CMVP
                 {
                     return null;
                 }
-                
+
             }
         }
 
@@ -77,15 +77,15 @@ namespace CMVP
 
         private void UpdateImg(object sender, ProgressChangedEventArgs e)
         {
-                image = m_processedImage.bitmap;
-                newImgAvaiable.Set();
+            image = m_processedImage.bitmap;
+            newImgAvaiable.Set();
         }
 
         private void GrabLoop(object sender, DoWorkEventArgs e)
         {
             Console.WriteLine("GrabLoop started");
             BackgroundWorker worker = sender as BackgroundWorker;
-            
+
             while (m_grabImages)
             {
                 try

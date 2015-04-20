@@ -20,7 +20,7 @@ namespace CMVP
 
         public static PTGreyCamera videoStream;
         public static ImageProcessing imageProcess;
-        public static GUI.ImageProcessingDrawing ipd;
+        public static ImageProcessingGraphics ipd;
 
         [STAThread]
         public static void Main()
@@ -31,7 +31,7 @@ namespace CMVP
             videoStream = new PTGreyCamera();
             videoStream.start();
             imageProcess = new ImageProcessing(videoStream, cars);
-            ipd = new GUI.ImageProcessingDrawing(imageProcess);
+            ipd = new ImageProcessingGraphics(imageProcess);
             imageProcess.start();
             mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);

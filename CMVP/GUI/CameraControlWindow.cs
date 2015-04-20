@@ -14,7 +14,7 @@ namespace CMVP
     public partial class CameraControlWindow : Form
     {
         private ImageProcessing imgProcess;
-        private GUI.ImageProcessingDrawing ipd;
+        private ImageProcessingGraphics ipd;
         public CameraControlWindow()
         {
             InitializeComponent();
@@ -29,8 +29,8 @@ namespace CMVP
         private void initSettings()
         {
             this.FormClosing += new FormClosingEventHandler(CCWFormClosing);
-            threshold_ScrollBar.Value = imgProcess.getThrehold();
-            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
+            threshold_ScrollBar.Value = imgProcess.getThreshold();
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThreshold();
             checkBoxDrawTrack.Checked = true;
             this.checkBoxDrawTrack_CheckedChanged_1(this, new EventArgs());
             checkBoxDrawWindows.Checked = true;
@@ -63,7 +63,7 @@ namespace CMVP
         private void checkBoxDrawCirkels_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("checkBoxDrawCirkels.Checked");
-            ipd.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
+            ipd.drawCirclesOnImg = checkBoxDrawCirkels.Checked;
         }
 
         private void checkBoxDrawCenters_CheckedChanged(object sender, EventArgs e)
@@ -116,7 +116,7 @@ namespace CMVP
         private void threshold_ScrollBar_Scroll(object sender, ScrollEventArgs e)
         {
             imgProcess.setThreshold((byte) threshold_ScrollBar.Value);
-            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThreshold();
         }
 
         

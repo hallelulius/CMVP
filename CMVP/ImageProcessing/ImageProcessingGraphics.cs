@@ -9,9 +9,9 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 
-namespace CMVP.GUI
+namespace CMVP
 {
-    class ImageProcessingDrawing
+    class ImageProcessingGraphics
     {
         //used for drawing
         static private Pen redPen = new Pen(Color.Red, 2);
@@ -27,7 +27,7 @@ namespace CMVP.GUI
         private System.Timers.Timer timer;
         private Object locker;
         private Panel panel;
-        public Boolean drawCirkelsOnImg;
+        public Boolean drawCirclesOnImg;
         public Boolean drawDirectionOnImg;
         public Boolean drawWindowsOnImg;
         public Boolean drawCenterOnImg;
@@ -40,7 +40,7 @@ namespace CMVP.GUI
         static private int blobMin = 2;
         static private int blobMax = 6;
 
-        public ImageProcessingDrawing(ImageProcessing ip)
+        public ImageProcessingGraphics(ImageProcessing ip)
         {
             standardSettings();
             this.ip = ip;
@@ -60,13 +60,13 @@ namespace CMVP.GUI
             this.panel = panel;
         }
         private void standardSettings(){
-            this.drawCirkelsOnImg = false;
+            this.drawCirclesOnImg = false;
             this.drawCenterOnImg = false;
             this.drawWindowsOnImg = false;
             this.drawDirectionOnImg = false;
             this.drawTailsOnImg = false;
         }
-        private void drawCirkels(List<Blob> cirkels)
+        private void drawCircles(List<Blob> cirkels)
         {
             foreach (Blob cirkel in cirkels)
             {
@@ -111,10 +111,10 @@ namespace CMVP.GUI
             */
             foreach (Car car in Program.cars)
             {
-                if (drawCirkelsOnImg)
+                if (drawCirclesOnImg)
                 {
                     List<Blob> cirkels = ip.getBlobs(blobMin, blobMax, img);
-                    drawCirkels(cirkels);
+                    drawCircles(cirkels);
                 }
                 if (drawTailsOnImg)
                 {
