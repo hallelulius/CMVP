@@ -63,5 +63,10 @@ namespace CMVP
             //Thread thread = new Thread(new ThreadStart(updateStatusLabel));
             //thread.Start();
         }
+
+        public int getCarToFollowID()
+        {
+            return Convert.ToInt32(carToFollowIDDropDown.SelectedItem.ToString());
+        }
     }
 }

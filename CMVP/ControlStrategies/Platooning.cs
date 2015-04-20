@@ -16,11 +16,17 @@ namespace CMVP.ControlStrategies
         private bool following_leader = false;
         private int searchDistance = 56;
         private float desiredDistance = 73.0f;
+        private int lastIndex = -1;
 
         // Control Parameters
-        private float Kp;
-        private float Ki;
-        private float Ti;
+        private float Kp = 10.0f;
+        private float Ki = 0;
+        private float Kd = 0.7f;
+        //private float Ti;
+        //private float Td;
+        // Control Variables
+        private float integratorSum = 0;
+        private float lastError = 0;
 
         public Platooning(Car car) : base(car, null, "Platooning")
         {
@@ -37,7 +43,7 @@ namespace CMVP.ControlStrategies
         {
             new_track.Add(followed_car.getPosition());
 
-            if(!following_leader)  // decide which reference to follow. The old one or the platooning leaders
+            if(!following_leader)  // decide which reference to follow. The old one or the platooning leader's
             {
                 if(searchDistance * searchDistance >= 
                       ((new_track.First().X - car.getPosition().X) * (new_track.First().X - car.getPosition().X) 
@@ -49,83 +55,141 @@ namespace CMVP.ControlStrategies
                 }
                 else
                 {
-                    float shortestLength = 2000; //Maximum search distance
                     int index = -1;
+                    float quality = 9999;
                     if (track != null)
                     {
-                        for (int i = 0; i < track.m.Length / 3; i++)
+                        int trackLength = track.getPoints().Count;
+                        for (int i = 0; i < trackLength; i++)
                         {
-                            AForge.Point tempPoint = new AForge.Point(track.m[0, i] - car.getPosition().X, track.m[1, i] - car.getPosition().Y);
-                            float carNorm = car.getDirection().EuclideanNorm();
-                            float trackNorm = tempPoint.EuclideanNorm();
+                            Point point = track.getPoints().ElementAt(i);
 
-                            //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
+                            float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
+
+                            Point tempPoint = point - car.getPosition();
                             float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                            if (Math.Acos(scalarProduct) < Math.PI / 6)
+                            float angleToPoint = (float)Math.Acos(scalarProduct);
+
+                            float indexDistance = 0;
+                            if (lastIndex != -1)
                             {
-                                //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                                float currentLength = ((new Point(track.m[0, i], track.m[1, i])) - car.getPosition()).EuclideanNorm();
-                                if (currentLength < shortestLength && currentLength > 50)
+                                int temp1 = Math.Abs(lastIndex - 1);
+                                int temp2 = Math.Abs(lastIndex - trackLength - 1);
+                                if (temp1 < temp2)
                                 {
-                                    shortestLength = currentLength;
-                                    index = i;
+                                    indexDistance = temp1;
                                 }
+                                else
+                                {
+                                    indexDistance = temp2;
+                                }
+                            }
+
+                            float tempQuality;
+                            // if (angleToPoint > Math.PI / 2)
+                            //    tempQuality = 9999;
+                            //else
+                            tempQuality = 0.01f * lengthToPoint + angleToPoint + indexDistance;
+                            if (tempQuality < quality && lengthToPoint > 45)
+                            {
+                                quality = tempQuality;
+                                index = i;
                             }
                         }
 
                         if (index < 0)
                         {
                             //setReference(new PointF(0, 0), 0);
-                            Console.WriteLine("No points found");
+                            Console.WriteLine("No referencepoints found");
+                            lastIndex = -1;
                             return;
                         }
                         else
                         {
-                            setReference(new IntPoint((int)track.m[0, index], (int)track.m[1, index]), track.m[2, index]);
+
+                            setReference(track.getPoints().ElementAt(index), track.getSpeeds().ElementAt(index));
+                            lastIndex = index;
                         }
                     }
                 }
             }
             else
             {
-                float shortestLength = 2000; //Maximum search distance
                 IntPoint refPoint = new IntPoint();
                 bool pointIsFound = false;
-                if (track != null)
+                int index = -1;
+                float quality = 9999;
+                if (new_track != null)
                 {
-                    foreach (IntPoint point in new_track)
+                    int trackLength = new_track.Count;
+                    for (int i = 0; i < trackLength; i++)
                     {
-                        AForge.Point tempPoint = new AForge.Point(point.X - car.getPosition().X, point.Y - car.getPosition().Y);
-                        float carNorm = car.getDirection().EuclideanNorm();
-                        float trackNorm = tempPoint.EuclideanNorm();
+                        Point point = new_track.ElementAt(i);
 
-                        //float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (Norm(car.getDirection()) * Norm(tempPoint));
+                        float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
+
+                        Point tempPoint = point - car.getPosition();
                         float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
-                        if (Math.Acos(scalarProduct) < Math.PI / 6)
+                        float angleToPoint = (float)Math.Acos(scalarProduct);
+
+                        float indexDistance = 0;
+                        if (lastIndex != -1)
                         {
-                            //float currentLength = Norm(Subtract(tempPoint, car.getPosition()));
-                            float currentLength = ((new Point(point.X, point.Y)) - car.getPosition()).EuclideanNorm();
-                            if (currentLength < shortestLength && currentLength > 50)
+                            int temp1 = Math.Abs(lastIndex - 1);
+                            int temp2 = Math.Abs(lastIndex - trackLength - 1);
+                            if (temp1 < temp2)
                             {
-                                shortestLength = currentLength;
-                                refPoint = new IntPoint(point.X, point.Y);
-                                pointIsFound = true;
+                                indexDistance = temp1;
                             }
+                            else
+                            {
+                                indexDistance = temp2;
+                            }
+                        }
+
+                        float tempQuality;
+                        // if (angleToPoint > Math.PI / 2)
+                        //    tempQuality = 9999;
+                        //else
+                        tempQuality = 0.01f * lengthToPoint + angleToPoint + indexDistance;
+                        if (tempQuality < quality && lengthToPoint > 45)
+                        {
+                            quality = tempQuality;
+                            index = i;
                         }
                     }
 
-                    if (!pointIsFound)
+                    if (index < 0)
                     {
                         //setReference(new PointF(0, 0), 0);
-                        Console.WriteLine("No points found");
+                        Console.WriteLine("No referencepoints found");
+                        lastIndex = -1;
                         return;
                     }
                     else
                     {
-                        IntPoint carPos = car.getPosition();
-                        IntPoint leaderPos = followed_car.getPosition();
-                        float distance = (float)Math.Sqrt(Convert.ToDouble((carPos.X - leaderPos.X) ^ 2 + (carPos.Y - leaderPos.Y) ^ 2));
-                        setReference(new IntPoint(refPoint.X, refPoint.Y), desiredDistance - distance);
+                        // Calculate reference speed
+                        float controlError = (float)Math.Sqrt(
+                            (car.getPosition().X - followed_car.getPosition().X) * (car.getPosition().X - followed_car.getPosition().X)
+                            + (car.getPosition().Y - followed_car.getPosition().Y) * (car.getPosition().Y - followed_car.getPosition().Y))
+                            - desiredDistance;
+
+                        // Proportional gain
+                        float controlSignal = controlError * Kp;
+
+                        // Integrator gain
+                        integratorSum += controlError;
+                        controlSignal += Ki * integratorSum;
+
+                        // Derivative gain
+                        controlSignal += Kd * (lastError - controlError) / (float)car.getDeltaTime();
+                        lastError = controlError;
+
+                        // Add leaders speed to reference signal
+                        controlSignal += (float)followed_car.getSpeed();
+
+                        setReference(track.getPoints().ElementAt(index), controlSignal);
+                        lastIndex = index;
                     }
                 }
             }

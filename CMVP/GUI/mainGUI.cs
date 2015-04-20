@@ -227,12 +227,13 @@ namespace CMVP
                 }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
-                    ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
-                    //ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
-                    //pl.setTrack(tempCar.getControlStrategy().getTrack());
-                    //tempCar.setControlStrategy(pl);
-                    //Car carToFollow = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).Controls.Find("carToFollowIDDropDown", true));
-                    //pl.followedCar = ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread()
+                    //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
+                    ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
+                    pl.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(pl);
+                    int followedID = ((PlatooningControlPanel)controlStrategyTypePanel.Controls.Find("carToFollowIDDropDown", true)[0]).getCarToFollowID();
+                    Car carToFollow = Program.cars.Find(car => car.ID == followedID);
+                    pl.followedCar = carToFollow;
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();
                 }
                 tempCar.setMaxSpeed((float)trafficMaxSpeedNumeric.Value);
@@ -434,6 +435,20 @@ namespace CMVP
         private void trackCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             trackApplyButton.Enabled = true;
+        }
+
+        private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            trackApplyButton.Enabled = true;
+        }
+
+        private void calibration_Click(object sender, EventArgs e)
+        {
+            foreach (Car c in Program.cars)
+            {
+                Program.com.calibrationMode(c.ID);
+                MessageBox.Show("Calibrate the controller for car: " + c.ID + ".\n Read the instructions in the manual chapter 6,4. \n Remember to always run the platform with external power source.");
+            }
         }
     }
 }

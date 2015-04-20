@@ -124,7 +124,6 @@
     <Compile Include="ControlStrategies\Platooning.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
-    <Compile Include="ControlStrategies\StepResponse.cs" />
     <Compile Include="ControlStrategy.cs" />
     <Compile Include="Controllers\PIDController.cs" />
     <Compile Include="Communication.cs" />
