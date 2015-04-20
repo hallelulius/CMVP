@@ -9,13 +9,23 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
+    /// <summary>
+    /// This class updates all cars with the current states, sets the new reference point and send new values to the DAC according to the control strategy
+    /// Also handles the performance analyzer
+    /// </summary>
     class Brain
     {
-        
-        private List<Car> cars;   
-        public PerformanceAnalyzerWindow analyzer;
-        int i = 0;
 
+        private List<Car> cars;
+        private static EventWaitHandle wh = new ManualResetEvent(false);
+        public PerformanceAnalyzerWindow analyzer;
+
+
+        public void start()
+        {
+            Thread thread = new Thread(run);
+            thread.Start();
+        }
         public void run()
         {
             cars = Program.cars;
@@ -26,35 +36,36 @@ namespace CMVP
             time.Start();
             while (true)
             {
+                wh.WaitOne();
                 startTime = time.ElapsedMilliseconds;
-             
-                foreach(Car car in cars)
+
+                foreach (Car car in cars)
                 {
                     car.updateState();
                 }
                 foreach (Car car in cars)
                 {
                     if (car.getControlStrategy() != null)
-                    {
+                        {
                         car.getControlStrategy().updateReferencePoint();
                     }
                 }
                 foreach (Car car in cars)
                 {
                     car.getController().updateController();
-                    if (i >= 25)
-                    {
-                        Console.WriteLine(car.getPosition());
-                        Console.WriteLine(car.getSpeed());
-                        i=0;
-                    }
-                    i++;
                 }
                 foreach (Car car in cars)
                 {
-                    car.send();
+                    if (car.found)
+                    {
+                        car.send();
+                    }
+                    else
+                    {
+                        car.stop();
+                    }
+                    
                 }
-                
                 dt = time.ElapsedMilliseconds - startTime;
 
                 // Give values to analyzer
@@ -68,7 +79,7 @@ namespace CMVP
                         {
                             string s = "Car " + car.ID + " ";
                             sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
-                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed());
+                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
                             sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
                             sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle());
                             // Add more sendDataThreadSafe calls here.
@@ -79,14 +90,23 @@ namespace CMVP
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-
                 Thread.Sleep(3);
+
             }
+        }
+
+        public void StartWorking()
+        {
+            wh.Set();
+        }
+        public void StopWorking()
+        {
+            wh.Reset();
         }
 
         private void sendDataThreadSafe(string reciever, double x, double y)
         {
-            if(analyzer != null)
+            if (analyzer != null)
             {
                 if (!analyzer.IsDisposed)
                 {

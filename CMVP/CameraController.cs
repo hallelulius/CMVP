@@ -12,6 +12,10 @@ using AForge;
 
 namespace CMVP
 {
+    /// <summary>
+    /// Used with the old cameras
+    /// Not in use right now
+    /// </summary>
     public partial class CameraController : VideoStream
     {
         private List<Camera> allCameras = new List<Camera>();//All that is connected to the computer
@@ -28,11 +32,11 @@ namespace CMVP
         }
         public void useCamerasForSetting()
         {
-            if(!Program.isSimulating())
-            {
+           // if(!Program.isSimulating())
+           // {
                 loadCamList();
                 startAllCameras();
-            }
+            //}
         }
         private void loadCamList()
         {

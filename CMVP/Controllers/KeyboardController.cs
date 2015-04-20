@@ -8,7 +8,7 @@ namespace CMVP
 {
     class KeyboardController : Controller
     {
-        public KeyboardController () : base()
+        public KeyboardController (Car car) : base(car)
         {
             controllerName = "Manual keyboard";
         }
@@ -16,11 +16,11 @@ namespace CMVP
         {
             if (NativeKeyboard.IsKeyDown(KeyCode.Up))
             {
-                outThrottle += 3/150F;
+                outThrottle = 10/2500F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Down))
             {
-                outThrottle -= 3/150F;
+                outThrottle = 10/2500F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
@@ -30,16 +30,13 @@ namespace CMVP
             {
                 outSteer -= 5/150F;
             }
-            if (NativeKeyboard.IsKeyDown(KeyCode.Space)) // Emergency Stop 
+            if (NativeKeyboard.IsKeyDown(KeyCode.Space))
             {
                 outThrottle = 0;
                 Console.WriteLine("Emergency Stop ");
             }
-            if (outThrottle > 1) outThrottle = 1;
-            if (outThrottle < -1) outThrottle = -1;
-            if (outSteer > 1) outSteer = 1;
-            if (outSteer < -1) outSteer = -1;
-            //Console.WriteLine("Throttle: " + outThrottle);
+            outThrottle = capThrottleOutput(outThrottle);
+            outSteer = capSteerOutput(outSteer);
         }
 
         /// <summary>
@@ -111,6 +108,7 @@ namespace CMVP
         }
 
     }
+ 
 }
 
 

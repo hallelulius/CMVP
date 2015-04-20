@@ -18,23 +18,26 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread brainThread, dataGridThread;
+        private Thread dataGridThread;
         private List<Track> tracks = new List<Track>();
         private int dataGridUpdateTime = 1000;
-        public event FormClosingEventHandler FormClosing;
+        //public event FormClosingEventHandler FormClosing;
 
         public mainGUI()
         {
             InitializeComponent();
             loadTracks();
-            brainThread = new Thread(new ThreadStart(brain.run));
+            brain.start();
             dataGridThread = new Thread(new ThreadStart(updateDataGrid));
             dataGridThread.Start();
         }
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
         {
             foreach (Car car in Program.cars)
+            {
                 Program.com.stopCar(car.ID);
+        }
+            Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
@@ -51,14 +54,16 @@ namespace CMVP
                     tracks.Add(track);
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Couldn't locate the 'Tracks' folder. The program will not load tracks automatically. To fix this add the folder to the applications directory (" + currentFolder + ").");
+                Debug.WriteLine(ex.Message);
             }
         }
         private void startSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.start();
+            calibration.Enabled = false;
+            Initiate.Enabled = false;
             //System.Console.WriteLine("Start simulation");
 
             //brain = new Brain();
@@ -66,7 +71,7 @@ namespace CMVP
             //thread.Start();
             
             //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-            switch (brainThread.ThreadState)
+           /* switch (brainThread.ThreadState)
             {
                 case System.Threading.ThreadState.Unstarted:
                     brainThread.Start();
@@ -80,26 +85,31 @@ namespace CMVP
 
                 default:
                     Console.WriteLine("Simulation already running...");
-                    break;
+                    break;*
             }
-        }
+            */
+            brain.StartWorking();
+            Console.WriteLine("Starting simulation...");
 
+        }
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
-            Program.imageProcess.stop();
-            //thread.Abort();
+            calibration.Enabled = true;
+            Initiate.Enabled = true;
+
             Console.WriteLine("Stoping simulation");
             try
             {
                 foreach(Car car in Program.cars)
                 {
                     Program.com.stopCar(car.ID);
+                    car.getController().resetController();
                 }
-                brainThread.Suspend();
+                brain.StopWorking();
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -150,10 +160,11 @@ namespace CMVP
                     {
                         File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
                     }
-                    catch (DirectoryNotFoundException exception)
+                    catch (DirectoryNotFoundException ex)
                     {
                         Directory.CreateDirectory(currentFolder + @"\Tracks\");
                         File.Copy(file, currentFolder + @"\Tracks\" + Path.GetFileName(file));
+                        Debug.WriteLine(ex.Message);
                     }
 
                 }
@@ -208,6 +219,12 @@ namespace CMVP
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
                 }
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
+                {
+                    ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
+                    ot.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ot);
+                }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
                     ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
@@ -218,6 +235,7 @@ namespace CMVP
                     //pl.followedCar = ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread()
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();
                 }
+                tempCar.setMaxSpeed((float)trafficMaxSpeedNumeric.Value);
 
                 trafficApplyButton.Enabled = false;
             }
@@ -247,15 +265,16 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
                 {
-                    PIController controller = new PIController();
+                    PIDController controller = new PIDController(tempCar);
+
                     foreach (Control ctrl in controllerTypePanel.Controls)
                     {
-                        //controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-                      //  controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-                      //  controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-                      //  controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                      //  controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-                      //  controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                      controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                      controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                      controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                      controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                      controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
+                      controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
@@ -265,7 +284,7 @@ namespace CMVP
 
                 if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
                 {
-                    tempCar.setController(new KeyboardController());
+                    tempCar.setController(new KeyboardController(tempCar));
                 }
             }
         }
@@ -296,7 +315,6 @@ namespace CMVP
             {
                 int tempID = (int)trackCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
                 if(tracksDropDown.SelectedIndex != -1)
                     tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
 
@@ -310,7 +328,7 @@ namespace CMVP
             {
                 int tempID = (int)trafficCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
+                trafficMaxSpeedNumeric.Value = (decimal)tempCar.getMaxSpeed();
                 controlStrategyControlStrategyDropDown.SelectedItem = tempCar.getControlStrategy().getStrategyName();
             }
         }
@@ -321,9 +339,9 @@ namespace CMVP
             {
                 int tempID = (int)controllerCarIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
                 controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
                 updateControllerParametersGUI(tempCar);
+                controllerApplyButton.Enabled = true;
             }
         }
 
@@ -333,12 +351,14 @@ namespace CMVP
             {
                 if (car.getController().getName() == "PID")
                 {
-                    ((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KpThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).KiThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIController)car.getController()).TiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiThrottle);
+                    ((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdSteer);
+                    ((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdThrottle);
                 }
             }
         }
@@ -351,10 +371,10 @@ namespace CMVP
 
         private void Initiate_Click(object sender, EventArgs e)
         {
-            if(brainThread.IsAlive)
-                brainThread.Suspend();
+            brain.StopWorking();
             Program.imageProcess.initiate();
             startSimulationButton.Enabled = true;
+            calibration.Enabled = true;
             dataGridView.Rows.Clear();
             if (Program.cars.Count > 0)
                 dataGridView.Rows.Add(Program.cars.Count);
@@ -410,10 +430,6 @@ namespace CMVP
             dataGridUpdateTime = Convert.ToInt32(dataGridTimeNumeric.Value);
         }
 
-        private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            trackApplyButton.Enabled = true;
-        }
 
         private void trackCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {

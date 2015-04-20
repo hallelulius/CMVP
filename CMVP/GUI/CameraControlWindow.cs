@@ -18,16 +18,20 @@ namespace CMVP
         {
             InitializeComponent();
             videoStreamPanel.BackColor=Color.SpringGreen;
-            Program.videoStream.pushDestination(videoStreamPanel);
+            this.imgProcess = (ImageProcessing)Program.imageProcess;
+            this.imgProcess.pushDestination(videoStreamPanel);
             videoStreamPanel.Size = Program.videoStream.getSize();
             this.AutoSize = true;
-            this.imgProcess = (ImageProcessing)Program.imageProcess;
-        }
-        private void updatePreview(object sender, EventArgs e)
-        {
-            
-            videoStreamPanel.BackgroundImage =new Bitmap(Program.videoStream.getImage(),videoStreamPanel.Width,videoStreamPanel.Height);
-            
+            threshold_ScrollBar.Value = imgProcess.getThrehold();
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
+            checkBoxDrawTrack.Checked = true;
+            this.checkBoxDrawTrack_CheckedChanged_1(this, new EventArgs());
+            checkBoxDrawWindows.Checked = true;
+            this.checkBoxDrawWindows_CheckedChanged(this, new EventArgs());
+            checkBoxDrawRefHeading.Checked = true;
+            this.checkBoxDrawRefHeading_CheckedChanged(this, new EventArgs());
+            checkBoxDrawTails.Checked = true;
+            this.checkBoxDrawTails_CheckedChanged(this, new EventArgs());
         }
         private void CameraControlWindow_Load(object sender, EventArgs e)
         {
@@ -43,55 +47,45 @@ namespace CMVP
 
         }
 
-        private void processedVideoRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if(processedVideoRadioButton.Checked)
-            {
-                Console.WriteLine("Showing Processed Image");
-                Program.videoStream.removeDestination(videoStreamPanel);
-                Program.imageProcess.pushDestination(videoStreamPanel);
-            }
-            else
-            {
-                Console.WriteLine("Showing Raw Image");
-                Program.imageProcess.removeDestination(videoStreamPanel);
-                Program.videoStream.pushDestination(videoStreamPanel);
-            }
-
-        }
-
         private void checkBoxDrawCirkels_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawCirkels.Checked");
             imgProcess.drawCirkelsOnImg = checkBoxDrawCirkels.Checked;
         }
 
         private void checkBoxDrawCenters_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawCenters.Checked");
             imgProcess.drawCenterOnImg = checkBoxDrawCenters.Checked;
         }
         private void checkBoxDrawDirection_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawDirection.Checked");
             imgProcess.drawDirectionOnImg = checkBoxDrawDirection.Checked;
 
         }
 
         private void checkBoxDrawId_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawId.Checked");
             imgProcess.drawCarIdOnImg = checkBoxDrawId.Checked;
         }
 
         private void checkBoxDrawWindows_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawWindows.Checked");
             imgProcess.drawWindowsOnImg = checkBoxDrawWindows.Checked;
         }
 
         private void checkBoxDrawRefHeading_CheckedChanged(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawRefHeading.Checked");
             imgProcess.drawRefHeadingOnImg = checkBoxDrawRefHeading.Checked;
         }
 
         private void checkBoxDrawTrack_CheckedChanged_1(object sender, EventArgs e)
         {
+            Console.WriteLine("checkBoxDrawTrack.Checked");
             imgProcess.drawTrackOnImg = checkBoxDrawTrack.Checked;
         }
 
@@ -100,5 +94,18 @@ namespace CMVP
             Program.videoStream.showCameraSettings();
         }
 
+        private void checkBoxDrawTails_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("checkBoxDrawTails.Checked");
+            imgProcess.drawTailsOnImg= checkBoxDrawTails.Checked;
+        }
+
+        private void threshold_ScrollBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            imgProcess.setThreshold((byte) threshold_ScrollBar.Value);
+            scrollbar_label.Text = "Threshold: " + imgProcess.getThrehold();
+        }
+
+        
     }
 }
