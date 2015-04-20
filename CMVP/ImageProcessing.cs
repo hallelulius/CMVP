@@ -108,13 +108,31 @@ namespace CMVP
                 {
                     if (drawTrackOnImg && controlStra.getTrack()!=null)
                     {
-                        float[,] track = controlStra.getTrack().m;
-                        System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
-                        for (int i = 0; i < track.Length / 3; i++)
+                        if (controlStra.getStrategyName() == "Platooning")
                         {
-                            pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
+                            if(((ControlStrategies.Platooning)controlStra).isFollowingLeader)
+                            {
+                                List<AForge.IntPoint> track = new List<AForge.IntPoint>(((ControlStrategies.Platooning)controlStra).newTrack);
+                                System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Count];
+                                int i = 0;
+                                foreach (IntPoint p in track)
+                                {
+                                    pointTrack[i] = new System.Drawing.PointF(p.X, p.Y);
+                                    i++;
+                                }
+                                g.DrawLines(greenPen, pointTrack);
+                            }
                         }
-                        g.DrawLines(greenPen, pointTrack);
+                        else
+                        {
+                            float[,] track = controlStra.getTrack().m;
+                            System.Drawing.PointF[] pointTrack = new System.Drawing.PointF[track.Length / 3];
+                            for (int i = 0; i < track.Length / 3; i++)
+                            {
+                                pointTrack[i] = new System.Drawing.PointF(track[0, i], track[1, i]);
+                            }
+                            g.DrawLines(greenPen, pointTrack);
+                        }
                     }
                     else if(drawTrackOnImg)
                     {

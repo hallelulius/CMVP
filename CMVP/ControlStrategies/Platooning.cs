@@ -17,6 +17,11 @@ namespace CMVP.ControlStrategies
         private int searchDistance = 56;
         private float desiredDistance = 73.0f;
 
+        // Control Parameters
+        private float Kp;
+        private float Ki;
+        private float Ti;
+
         public Platooning(Car car) : base(car, null, "Platooning")
         {
 
@@ -40,6 +45,7 @@ namespace CMVP.ControlStrategies
                 {
                     following_leader = true;
                     Console.WriteLine("Following leader!");
+                    System.Windows.Forms.MessageBox.Show("Following leader!");
                 }
                 else
                 {
@@ -130,6 +136,11 @@ namespace CMVP.ControlStrategies
         public bool isFollowingLeader
         {
             get { return following_leader; }
+        }
+
+        public List<AForge.IntPoint> newTrack
+        {
+            get { return new_track; }
         }
     }
 }

@@ -210,10 +210,13 @@ namespace CMVP
                 }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
-                    ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
-                    pl.setTrack(tempCar.getControlStrategy().getTrack());
-                    tempCar.setControlStrategy(pl);
-                    ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();
+                    ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
+                    //ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
+                    //pl.setTrack(tempCar.getControlStrategy().getTrack());
+                    //tempCar.setControlStrategy(pl);
+                    //Car carToFollow = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).Controls.Find("carToFollowIDDropDown", true));
+                    //pl.followedCar = ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread()
+                    //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();
                 }
 
                 trafficApplyButton.Enabled = false;
@@ -414,7 +417,7 @@ namespace CMVP
 
         private void trackCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            trackApplyButton.Enabled = true;
+        }
     }
-}
 }
