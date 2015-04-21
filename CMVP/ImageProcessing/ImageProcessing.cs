@@ -35,7 +35,7 @@ namespace CMVP
         List<Car> objects;
         List<Quadrilateral> squares = new List<Quadrilateral>();
         Dictionary<Car, Triangle> prevTriangles = new Dictionary<Car, Triangle>();
-
+        
         //variables used for calculating time difference between updates
         private double deltaTime;
         private double prevTime;
@@ -45,14 +45,14 @@ namespace CMVP
         //sets ideal triangle base and height
         static private double idealHeight = 35; // 44 on table 35 on floor
         static private double idealBase = 12;  //  18 on table 12 on the floor.
-
+        
         //static private double heightError = 4;
         //static private double baseError = 4;
         static private int blobMin = 2;
         static private int blobMax = 6;
         static private Triangle idealTriangle = new Triangle(idealHeight, idealBase);
         static private double worstAccepted = 0;
-
+        
 
         public ImageProcessing(PTGreyCamera videoStream, List<Car> objects)
         {
@@ -76,7 +76,7 @@ namespace CMVP
         }
         public void initiate()
         {
-
+            
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
             List<AForge.IntPoint> points = getPoints(cirkels);
@@ -92,7 +92,7 @@ namespace CMVP
             MessageBox.Show("The following cars where found: " + String.Join(",", intList.ToArray()) + " \n " + Program.obstacle.Count + " obstacles was found");
         }
         private void initiateCars(List<AForge.IntPoint> points)
-        {
+                {
             objects.Clear();
             List<Triangle> triangles = getTriangles(points);
             triangles = filterTriangleDubblets(triangles);
@@ -115,7 +115,7 @@ namespace CMVP
                     foreach (AForge.IntPoint p in triangle.getPoints())
                         points.Remove(p);
                     foreach (AForge.IntPoint p in idPoints)
-                        points.Remove(p);
+                       points.Remove(p);
                     Console.WriteLine("ID: " + triangleId);
                     //Size need to be calculated implement later.
                     Car car = new Car(triangleId, triangle.CENTER, triangle.DIRECTION, 50);
@@ -125,7 +125,7 @@ namespace CMVP
             }
         }
         private void initiateBlocks(List<AForge.IntPoint> points)
-        {
+            {
             List<Quadrilateral> tempSquares = getQuadrilaterals(points);
             tempSquares = filterQuadrilateralDubblets(tempSquares);
             squares = new List<Quadrilateral>();
@@ -135,7 +135,7 @@ namespace CMVP
                 {
                     squares.Add(q);
                     Program.obstacle.Add(new Item(q.CENTER, (int)Math.Round(q.SIZE)));
-                }
+            }
             }
         }
 
@@ -146,7 +146,7 @@ namespace CMVP
                 wh.WaitOne();
                 processImage();
 
-            }
+        }
         }
         private void processImage()
         {
@@ -160,24 +160,26 @@ namespace CMVP
             {
                 AForge.IntPoint pos = car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
+                Size windowSize = new Size(200, 200);
+
                 int cropX, cropY;
                 if (car.found)
                 {
-                    cropX = pos.X - 100;
-                    cropY = pos.Y - 100;
+                    cropX = pos.X - windowSize.Width/2;
+                    cropY = pos.Y - windowSize.Height/2;
                     if (cropX < 0)
                         cropX = 0;
-                    else if (cropX > img.Width - 200)
-                        cropX = img.Width - 200;
+                    else if (cropX > img.Width - windowSize.Width)
+                        cropX = img.Width - windowSize.Width;
                     if (cropY < 0)
                         cropY = 0;
-                    else if (cropY > img.Height - 200)
-                        cropY = img.Height - 200;
-                    croppedImg = img.Clone(new Rectangle(cropX, cropY, 200, 200), img.PixelFormat);
+                    else if (cropY > img.Height - windowSize.Height)
+                        cropY = img.Height - windowSize.Height;
+                    croppedImg = img.Clone(new Rectangle(cropX, cropY, windowSize.Width, windowSize.Height), img.PixelFormat);
                 }
                 else
                 {
-                    cropX = 0;
+                    cropX = 0;  
                     cropY = 0;
                     croppedImg = img;
                 }
@@ -229,48 +231,18 @@ namespace CMVP
                             prevTriangles.Remove(car);
                             triangle.offset(translation);
                             prevTriangles.Add(car, triangle);
-                            break;
+                            break;      
                         }
                     }
                 }
                 if (!carFoundThisTime)
                     car.found = false;
-
-                /*
-                foreach (Triangle triangle in triangles)
-                {
-
-                    if (!carFoundThisTime && triangle.compare(idealTriangle))
-                    {
-
-                    AForge.IntPoint translation = new AForge.IntPoint(cropX,cropY);
-                        List<AForge.IntPoint> idPoints = getIdPoints(triangle,points);
-                        int triangleId = idPoints.Count;
-                    if (car.ID == triangleId)
-                    {
-                            //Remove used points
-                            foreach (AForge.IntPoint p in triangle.getPoints())
-                                points.Remove(p);
-                            foreach(AForge.IntPoint p in idPoints)
-                                points.Remove(p);
-                            car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
-                        car.found = true;
-                        carFoundThisTime = true;
-                        break;
-                    }
                 }
-            }
-                
-            if(!carFoundThisTime)
-            {
-                car.found = false;
-            }
                 */
             }
         }
 
-        //TestPhase
-        private Boolean pointInTriangle(AForge.IntPoint p, Triangle t, double errorMargin)
+        private Boolean pointInTriangle(AForge.IntPoint p, Triangle t,double errorMargin)
         {
             Quadrilateral boundarySquare = t.getRectangle();
             AForge.IntPoint[] boundary = boundarySquare.CORNERS;
@@ -306,7 +278,7 @@ namespace CMVP
                         }
                     }
                 }
-
+                    
             }
             return filteredPoints;
         }
@@ -407,7 +379,7 @@ namespace CMVP
                     {
                         if (t.Equals(ft))
                             add = false;
-                    }
+                        }
                     if (add)
                     {
                         filteredQuadrilaterals.Add(t);
@@ -420,7 +392,7 @@ namespace CMVP
         {
             List<AForge.IntPoint> idPoints = new List<AForge.IntPoint>();
             Quadrilateral boundarySquare = triangle.getRectangle();
-            if (squares.Count == 0)
+            if (squares.Count == 0) 
                 squares.Add(boundarySquare);
             AForge.IntPoint[] boundary = boundarySquare.CORNERS;
             double bArea = boundarySquare.getArea();
@@ -470,17 +442,17 @@ namespace CMVP
         public void stop()
         {
             throw new NotImplementedException();
-        }
+                }
 
 
         public Bitmap getImage()
-        {
+                {
             return videoStream.getImage();
-        }
+                }
         public double getTime()
-        {
+                {
             return videoStream.getTime();
-        }
+                }
         public byte getThreshold()
         {
             return threshold;
