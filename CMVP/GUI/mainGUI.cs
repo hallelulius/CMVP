@@ -18,8 +18,9 @@ namespace CMVP
     {
         //private Thread thread;
         private Brain brain = new Brain();
-        private Thread dataGridThread;
         private List<Track> tracks = new List<Track>();
+        private CameraControlWindow ccw;
+        private PerformanceAnalyzerWindow paw;
         private int dataGridUpdateTime = 1000;
         //public event FormClosingEventHandler FormClosing;
 
@@ -28,15 +29,25 @@ namespace CMVP
             InitializeComponent();
             loadTracks();
             brain.start();
-            dataGridThread = new Thread(new ThreadStart(updateDataGrid));
-            dataGridThread.Start();
+            ccw = new CameraControlWindow();
+            paw = new PerformanceAnalyzerWindow();
+            brain.analyzer = paw;
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval=1000;
+            timer.Tick += new EventHandler(deltaTime);
+            timer.Tick += new EventHandler(updateDataGrid);
+            timer.Start();
         }
+
+        private void deltaTime(object sender, EventArgs e)
+        {
+            deltaTimeLabel.Text = "Update frequency: " + 1.0/Program.imageProcess.getDeltaTime();
+            }
+
         private void mainGUI_FormClosed(object sender, FormClosedEventArgs e)
         {
-            foreach (Car car in Program.cars)
-            {
-                Program.com.stopCar(car.ID);
-        }
+            brain.StopWorking();
+            Program.com.stopCars();
             Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
@@ -64,40 +75,15 @@ namespace CMVP
         {
             calibration.Enabled = false;
             Initiate.Enabled = false;
-            //System.Console.WriteLine("Start simulation");
-
-            //brain = new Brain();
-            //thread = new Thread(new ThreadStart(brain.run));
-            //thread.Start();
-            
-            //Added this so that there isnt a new brain created whenever the "Start simulation" button is pressed:
-           /* switch (brainThread.ThreadState)
-            {
-                case System.Threading.ThreadState.Unstarted:
-                    brainThread.Start();
-                    Console.WriteLine("Starting simulation...");
-                    break;
-
-                case System.Threading.ThreadState.Suspended:
-                    brainThread.Resume();
-                    Console.WriteLine("Resuming simulation...");
-                    break;
-
-                default:
-                    Console.WriteLine("Simulation already running...");
-                    break;*
-            }
-            */
             brain.StartWorking();
             Console.WriteLine("Starting simulation...");
-
+            
         }
         private void stopSimulationButton_Click(object sender, EventArgs e)
         {
             calibration.Enabled = true;
             Initiate.Enabled = true;
-
-            Console.WriteLine("Stoping simulation");
+            Console.WriteLine("Stoping simulation...");
             try
             {
                 foreach(Car car in Program.cars)
@@ -116,8 +102,9 @@ namespace CMVP
         private void openCameraControlButton_Click(object sender, EventArgs e)
         {
             System.Console.WriteLine("Opening camera control");
-            CameraControlWindow ccw = new CameraControlWindow();
+            //ccw.setPanelSize(Program.videoStream.getSize());
             ccw.Show();
+
         }
 
         private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -225,6 +212,11 @@ namespace CMVP
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
                 }
+                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
+                {
+                    ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
+                    tempCar.setControlStrategy(sr);
+                }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
@@ -276,6 +268,9 @@ namespace CMVP
                       controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
                       controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
                       controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                      controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
+                      controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
+                      
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
@@ -305,8 +300,6 @@ namespace CMVP
 
         private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
         {
-            PerformanceAnalyzerWindow paw = new PerformanceAnalyzerWindow();
-            brain.analyzer = paw;
             paw.Show();
         }
 
@@ -398,17 +391,9 @@ namespace CMVP
             trafficApplyButton.Enabled = true;
         }
 
-        private void updateDataGrid()
-        {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            long elapsedTime;
-            Console.WriteLine("Started data grid update thread!");
-
-            while(true)
+        private void updateDataGrid(object sender, EventArgs e)
             {
                 //Console.WriteLine("Updating data grid...");
-                elapsedTime = timer.ElapsedMilliseconds;
                 foreach(DataGridViewRow row in dataGridView.Rows)
                 {
                     Car car = Program.cars.ElementAt(row.Index);
@@ -421,9 +406,6 @@ namespace CMVP
                     row.Cells[5].Value = car.getController().getSteer();
                     row.Cells[6].Value = car.getController().getThrottle();
                 }
-
-                Thread.Sleep(dataGridUpdateTime - (int)(timer.ElapsedMilliseconds - elapsedTime));
-            }
         }
 
         private void dataGridTimeNumeric_ValueChanged(object sender, EventArgs e)

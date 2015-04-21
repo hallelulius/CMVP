@@ -78,6 +78,7 @@
             this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.calibration = new System.Windows.Forms.Button();
+            this.deltaTimeLabel = new System.Windows.Forms.Label();
             this.simulationBasePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
@@ -420,10 +421,15 @@
             this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
             this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
             this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
-            10000,
+            500,
             0,
             0,
             0});
+            this.trafficMaxSpeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
             this.trafficMaxSpeedNumeric.Name = "trafficMaxSpeedNumeric";
             this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(101, 20);
             this.trafficMaxSpeedNumeric.TabIndex = 9;
@@ -466,6 +472,7 @@
             "Stand still",
             "Follow track",
             "Overtaking",
+            "Step response",
             "Platooning"});
             this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
             this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
@@ -607,11 +614,21 @@
             this.calibration.UseVisualStyleBackColor = false;
             this.calibration.Click += new System.EventHandler(this.calibration_Click);
             // 
+            // deltaTimeLabel
+            // 
+            this.deltaTimeLabel.AutoSize = true;
+            this.deltaTimeLabel.Location = new System.Drawing.Point(225, 395);
+            this.deltaTimeLabel.Name = "deltaTimeLabel";
+            this.deltaTimeLabel.Size = new System.Drawing.Size(69, 13);
+            this.deltaTimeLabel.TabIndex = 13;
+            this.deltaTimeLabel.Text = "Delta time : 0";
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 584);
+            this.Controls.Add(this.deltaTimeLabel);
             this.Controls.Add(this.calibration);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridTimeNumeric);
@@ -628,6 +645,7 @@
             this.Controls.Add(this.startSimulationButton);
             this.Controls.Add(this.simulationBasePanel);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "mainGUI";
             this.Text = "CMVP";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainGUI_FormClosed);
@@ -701,5 +719,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SteeringControlSignal;
         private System.Windows.Forms.DataGridViewTextBoxColumn ThrottleControlSignal;
         private System.Windows.Forms.Button calibration;
+        private System.Windows.Forms.Label deltaTimeLabel;
     }
 }

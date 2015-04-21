@@ -6,26 +6,23 @@ using System.Threading.Tasks;
 
 using AForge;
 using AForge.Video;
-using AForge.Video.DirectShow;
 using AForge.Imaging.Filters;
 using AForge.Vision.Motion;
 using AForge.Imaging;
-using AForge.Math.Geometry;
 using AForge.Math;
 
 namespace CMVP.ControlStrategies
 {
-    class JustFollow : ControlStrategy
+    class StepResponse:ControlStrategy
     {
+        int lastIndex=-1;
 
-        int lastIndex = -1;
-        
-        public JustFollow(Car car) : base(car,null, "Follow track")
+        public StepResponse(Car car) : base(car, null, "Step response")
         {
-
+            track = new Track(1); 
         }
 
-        public override void updateReferencePoint() // Find the next point in hte reference signal 
+           public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
             int index = -1;
             float quality = 9999;
@@ -72,6 +69,7 @@ namespace CMVP.ControlStrategies
 
             if (index < 0)
             {
+                //setReference(new PointF(0, 0), 0);
                 Console.WriteLine("No referencepoints found");
                 lastIndex = -1;
                 return;
@@ -83,5 +81,6 @@ namespace CMVP.ControlStrategies
 
             }
         }
+
     }
 }

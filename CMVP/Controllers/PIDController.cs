@@ -30,7 +30,7 @@ namespace CMVP
             : base(car)
         {
             // I-controller constants:
-            Ki_steer = 0.1689F;
+            Ki_steer = 0.0000F;
             Ki_throttle = 0.001F;
             // Integral time constants:
             Ti_steer = 2.3397F;
@@ -42,7 +42,7 @@ namespace CMVP
             Kd_steer = 0.01f;
             Kd_throttle = 0.0f;
             // Set variables 
-            throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
+            throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PID";
@@ -50,20 +50,38 @@ namespace CMVP
             prevSpeedError = 0;
         }
 
-        public override void updateController()      //PI-controller 
+        public override void updateController()
         {
             //Throttle part
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed*dT;
-            outThrottle += throttleIntegratorSum * Ki_throttle;
+            if (errorSpeed < 0)
+            {
+                //implement for breaking here PID 
+                //outThrottle = -0.5F;
+                //outThrottle = 0;
+                outThrottle += Kp_throttle * errorSpeed;
+                throttleIntegratorSum += errorSpeed;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
+
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+                //outThrottle += Kd_throttle * derivativeThrottle;
+                prevSpeedError = errorSpeed;
+            }
+            else
+            {
+                outThrottle += Kp_throttle * errorSpeed;
+                throttleIntegratorSum += errorSpeed;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
+
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+                //outThrottle += Kd_throttle * derivativeThrottle;
+                prevSpeedError = errorSpeed;
+            }
             
-            //derivative part here, not fully tested but seems to work 
-            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-            outThrottle += Kd_throttle * derivativeThrottle;
-            prevSpeedError = errorSpeed;
 
 
 
@@ -76,7 +94,7 @@ namespace CMVP
                 errorHeading += 2f * (float)Math.PI;
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading;
-            //outSteer += -Ki_steer * steerIntegratorSum *dT;
+            outSteer += -Ki_steer * steerIntegratorSum *dT;
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
