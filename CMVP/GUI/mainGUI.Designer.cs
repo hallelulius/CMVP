@@ -321,8 +321,7 @@
             this.controllerTypeDropDown.FormattingEnabled = true;
             this.controllerTypeDropDown.Items.AddRange(new object[] {
             "PID",
-            "Manual keyboard",
-            "No Feedback"});
+            "Manual keyboard"});
             this.controllerTypeDropDown.Location = new System.Drawing.Point(86, 45);
             this.controllerTypeDropDown.Name = "controllerTypeDropDown";
             this.controllerTypeDropDown.Size = new System.Drawing.Size(108, 21);

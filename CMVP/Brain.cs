@@ -102,7 +102,7 @@ namespace CMVP
                         // Add more sendDataThreadSafe calls here.
                     }
                 }
-                Thread.Sleep(2);
+                //Thread.Sleep(2);
                 if (working)
                 {
                     wh.Set();

@@ -53,6 +53,7 @@ namespace CMVP
                 try
                 {
                     port.Open();
+                    //port.bu
                     System.Console.WriteLine("Communication OK");
                 }
                 catch (Exception e)
@@ -128,9 +129,9 @@ namespace CMVP
             }
             else
             {
-                sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
+                sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_STEERING);    
             }
-            sendSteering(convertCarIDToDAC(carID, "Steering"), NEUTRAL_STEERING);
+            sendSteering(convertCarIDToDAC(carID, "Steering"), LEFT_STEERING);
             Console.WriteLine("Car " + carID + " stopped");
         }
 

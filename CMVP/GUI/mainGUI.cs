@@ -270,10 +270,6 @@ namespace CMVP
                 {
                     tempCar.setController(new KeyboardController(tempCar));
                 }
-                if (controllerTypeDropDown.SelectedItem.ToString() == "No Feedback")
-                {
-                    tempCar.setController(new Controllers.NoFeedback(tempCar));
-                }
             }
         }
 

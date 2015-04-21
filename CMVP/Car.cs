@@ -18,10 +18,11 @@ namespace CMVP
     public  partial class Car : Item
     {
         
-        //The first element in the lists is the last one logged, ie. the current one.
+        
         private ConcurrentQueue<double> speed2;
-        private ConcurrentQueue<double> position2; // if more problems arise
-        private double d;
+        //private ConcurrentQueue<double> position2; // if more problems arise
+        private double d; // output from dequeue
+        //The first element in the lists is the last one logged, ie. the current one.
         private List<AForge.IntPoint> position; //Position of the car as two integers.
         private List<IntPoint> lastPositions; //A list to prevent flickering.
         private List<bool> foundList; //A list that stores if the car is found or not
@@ -233,17 +234,5 @@ namespace CMVP
         {
             Program.com.stopCar(id);
         }
-        /*
-        /// <summary>
-        /// Set the cars position and orientation.
-        /// </summary>
-        /// <param name="pos"> The new postition of the car. </param>
-        /// <param name="angle"> The new orientation of the car. </param>
-        public void setPositionAndOrientation(AForge.IntPoint pos, double angle,double deltaTime)
-        {
-            AForge.Point dir = new AForge.Point((float)Math.Cos(angle),(float)Math.Sin(angle));
-            this.setPositionAndOrientation(pos, dir, deltaTime);
-        }
-        */
     }
 }
