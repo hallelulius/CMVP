@@ -48,6 +48,7 @@ namespace CMVP
         {
             brain.StopWorking();
             Program.com.stopCars();
+            Thread.Sleep(100);
             Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
@@ -212,11 +213,6 @@ namespace CMVP
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
                 }
-                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
-                {
-                    ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
-                    tempCar.setControlStrategy(sr);
-                }
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
@@ -266,8 +262,6 @@ namespace CMVP
                       controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
                       controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
                       controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                      controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-                      controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
                       controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
                       controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
                       
@@ -349,8 +343,6 @@ namespace CMVP
                     ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpThrottle);
                     ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiSteer);
                     ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiThrottle);
                     ((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdSteer);
                     ((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdThrottle);
                 }

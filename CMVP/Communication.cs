@@ -124,7 +124,6 @@ namespace CMVP
                 for (byte i = lastThrottle; i < NEUTRAL_THROTTLE; i++)
                 {
                     sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
-                    System.Threading.Thread.Sleep(3);
                 }
             }
             else
@@ -188,11 +187,18 @@ namespace CMVP
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
                 byte[] bits = { DAC, value };
-                port.Write(bits, 0, 2);
+                try
+                {
+                    port.Write(bits, 0, 2);
+                }
+                catch (InvalidOperationException e){
+                    Console.WriteLine("Port is closed");
+                    Debug.WriteLine(e);
+                }
             }
             else
             {
-                System.Console.WriteLine("Error in steering");
+                Console.WriteLine("Error in steering");
             }
         }
         /// <summary>
@@ -279,7 +285,6 @@ namespace CMVP
                 {
                     sendThrottle(throttleA, NEUTRAL_THROTTLE);
                     sendThrottle(throttleB, NEUTRAL_THROTTLE);
-                    System.Threading.Thread.Sleep(3);
                 }
             }
             else
