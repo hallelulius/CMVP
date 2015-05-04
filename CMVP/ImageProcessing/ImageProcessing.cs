@@ -146,7 +146,7 @@ namespace CMVP
             while (true)
             {
                 whBrain.Set();
-                whCamera.WaitOne(10);
+                whCamera.WaitOne(20);
                 processImage();
                 whBrain.Set();
 

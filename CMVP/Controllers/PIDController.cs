@@ -50,32 +50,16 @@ namespace CMVP
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            if (errorSpeed < 0)
-            {
-                //implement for breaking here PID 
-                //outThrottle = -0.5F;
-                //outThrottle = 0;
-                outThrottle += Kp_throttle * errorSpeed;
-                throttleIntegratorSum += errorSpeed;
-                outThrottle += throttleIntegratorSum * Ki_throttle*dT;
+            outThrottle += Kp_throttle * errorSpeed;
+            throttleIntegratorSum += errorSpeed * dT;
+            outThrottle += throttleIntegratorSum * Ki_throttle;
 
-                //derivative part here, not fully tested but seems to work 
-                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-                //outThrottle += Kd_throttle * derivativeThrottle;
-                prevSpeedError = errorSpeed;
-            }
-            else
-            {
-                outThrottle += Kp_throttle * errorSpeed;
-                throttleIntegratorSum += errorSpeed;
-                outThrottle += throttleIntegratorSum * Ki_throttle;
+            //derivative part here, not fully tested but seems to work 
+            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+            //outThrottle += Kd_throttle * derivativeThrottle;
+            prevSpeedError = errorSpeed;
 
-                //derivative part here, not fully tested but seems to work 
-                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-                //outThrottle += Kd_throttle * derivativeThrottle;
-                prevSpeedError = errorSpeed;
-            }
-            
+
 
 
 
@@ -87,8 +71,8 @@ namespace CMVP
             else if (errorHeading < -Math.PI)
                 errorHeading += 2f * (float)Math.PI;
             outSteer += -Kp_steer * errorHeading;
-            steerIntegratorSum += errorHeading;
-            outSteer += -Ki_steer * steerIntegratorSum *dT;
+            steerIntegratorSum += errorHeading * dT;
+            outSteer += -Ki_steer * steerIntegratorSum;
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
