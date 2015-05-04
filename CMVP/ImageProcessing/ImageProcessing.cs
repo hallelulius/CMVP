@@ -70,6 +70,7 @@ namespace CMVP
             wh = videoStream.NEW_IMG_AVAILABLE;
             prevTime = videoStream.getTime();
             Thread thread = new Thread(run);
+            Thread thread2 = new Thread(run);
             thread.Name = "Image Processing";
             thread.Priority = ThreadPriority.AboveNormal;
             thread.Start();
@@ -143,8 +144,17 @@ namespace CMVP
         {
             while (true)
             {
-                wh.WaitOne();
-                processImage();
+                if (wh.WaitOne(10))
+                {
+                    processImage();
+
+                }
+                else
+                {
+                    processImage();
+                    Console.WriteLine("Timeout!");
+                }
+                
 
         }
         }
@@ -440,7 +450,7 @@ namespace CMVP
         public void stop()
         {
             throw new NotImplementedException();
-                }
+        }
 
 
         public Bitmap getImage()

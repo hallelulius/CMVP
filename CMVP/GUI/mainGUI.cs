@@ -219,7 +219,8 @@ namespace CMVP
                     ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
                     pl.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(pl);
-                    int followedID = ((PlatooningControlPanel)controlStrategyTypePanel.Controls.Find("carToFollowIDDropDown", true)[0]).getCarToFollowID();
+                    //int followedID = ((PlatooningControlPanel)controlStrategyTypePanel.Controls.Find("carToFollowIDDropDown", true)[0]).getCarToFollowID();
+                    int followedID = ((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).getCarToFollowID();
                     Car carToFollow = Program.cars.Find(car => car.ID == followedID);
                     pl.followedCar = carToFollow;
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).startStatusLabelThread();

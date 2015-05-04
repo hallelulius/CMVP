@@ -63,9 +63,10 @@ namespace CMVP
             //thread.Start();
         }
 
+
         public int getCarToFollowID()
         {
-            return Convert.ToInt32(carToFollowIDDropDown.SelectedItem.ToString());
+            return (int) carToFollowIDDropDown.SelectedItem;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace CMVP
         private int _size;          //The number of vertices in the matrix being read.
         //private float[,] _m;      //The matrix containing the track.
         private List<IntPoint> points;      //The matrix containing the track position.
-        private List<float> speeds;         //The list containing the track speed.
+        private List<float> speeds;         //The list containing the track speed.-
 
         private const int WIDTH = 1280;
         private const int HEIGHT = 1024;
@@ -64,26 +64,6 @@ namespace CMVP
 
         }
 
-        public Track(float finalValue)
-        {
-            points = new List<IntPoint>();
-            speeds = new List<float>();
-
-            this.name = "Step Response";
-            for (int i = 0; i < WIDTH; i++)
-            {
-                points.Add(new IntPoint(i, 1024 / 3));
-                if (i < WIDTH - 10)
-                {
-                    speeds.Add(finalValue);
-                }
-                else
-                {
-                    speeds.Add(0);
-                }
-
-            }
-        }
 
         /// <summary>
         /// Returns the next word following the character pointed to by 'p'. This will also advance 'p' to the beginning of the next word.

@@ -18,8 +18,8 @@ namespace CMVP
         //addresses for the DACs
         // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
-        private const byte throttleB = 2;    // DAC B gain 1
-        private const byte steeringA = 4;    // DAC C gain 1
+        private const byte throttleB = 4;    // DAC B gain 1
+        private const byte steeringA = 2;    // DAC C gain 1
         private const byte steeringB = 6;    // DAC D gain 1
         private const byte ERROR_CODE = 230;
 

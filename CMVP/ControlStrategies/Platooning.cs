@@ -51,7 +51,7 @@ namespace CMVP.ControlStrategies
                 {
                     following_leader = true;
                     Console.WriteLine("Following leader!");
-                    System.Windows.Forms.MessageBox.Show("Following leader!");
+                    //System.Windows.Forms.MessageBox.Show("Following leader!");
                 }
                 else
                 {
