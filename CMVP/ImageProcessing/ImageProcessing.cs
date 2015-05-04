@@ -144,7 +144,7 @@ namespace CMVP
         {
             while (true)
             {
-                if (wh.WaitOne(10))
+                /*if (wh.WaitOne(10))
                 {
                     processImage();
 
@@ -154,7 +154,8 @@ namespace CMVP
                     processImage();
                     Console.WriteLine("Timeout!");
                 }
-                
+                */
+                wh.WaitOne();
 
         }
         }
