@@ -57,7 +57,7 @@ namespace CMVP
                 //outThrottle = 0;
                 outThrottle += Kp_throttle * errorSpeed;
                 throttleIntegratorSum += errorSpeed;
-                outThrottle += throttleIntegratorSum * Ki_throttle;
+                outThrottle += throttleIntegratorSum * Ki_throttle*dT;
 
                 //derivative part here, not fully tested but seems to work 
                 derivativeThrottle = (errorSpeed - prevSpeedError) / dT;

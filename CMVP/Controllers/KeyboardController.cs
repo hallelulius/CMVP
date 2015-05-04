@@ -24,11 +24,11 @@ namespace CMVP
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Left))
             {
-                outSteer += 2/450F;
+                outSteer += 20/450F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Right))
             {
-                outSteer -= 2/450F;
+                outSteer -= 20/450F;
             }
             if (NativeKeyboard.IsKeyDown(KeyCode.Space))
             {
