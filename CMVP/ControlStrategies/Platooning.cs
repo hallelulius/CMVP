@@ -187,8 +187,8 @@ namespace CMVP.ControlStrategies
 
                         // Add leaders speed to reference signal
                         controlSignal += (float)followed_car.getSpeed();
-
-                        setReference(track.getPoints().ElementAt(index), controlSignal);
+                        Console.WriteLine("Platooning!");
+                        setReference(new_track.ElementAt(index), controlSignal);
                         lastIndex = index;
                     }
                 }

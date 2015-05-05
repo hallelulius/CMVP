@@ -40,6 +40,7 @@ namespace CMVP
         private double deltaTime;
         private double prevTime;
         private AutoResetEvent whCamera;
+        private AutoResetEvent whTime;
         public AutoResetEvent whBrain;
 
 
@@ -69,6 +70,7 @@ namespace CMVP
         public void start()
         {
             whCamera = videoStream.NEW_IMG_AVAILABLE;
+            whTime = videoStream.TIME_MEASURED;
             whBrain = new AutoResetEvent(false);
             prevTime = videoStream.getTime();
             Thread thread = new Thread(run);
@@ -146,7 +148,7 @@ namespace CMVP
             while (true)
             {
                 whBrain.Set();
-                whCamera.WaitOne(20);
+                whCamera.WaitOne();
                 processImage();
                 whBrain.Set();
 
@@ -156,8 +158,8 @@ namespace CMVP
         {
             img = videoStream.getImage();
             double tempTime = videoStream.getTime();
+            whTime.Set();
             deltaTime = tempTime - prevTime;
-            //Console.WriteLine(deltaTime);
             prevTime = tempTime;
 
             foreach (Car car in objects)

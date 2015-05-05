@@ -49,7 +49,7 @@ namespace CMVP
             brain.StopWorking();
             Program.com.stopCars();
             Thread.Sleep(100);
-            Environment.Exit(0);
+            //Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {

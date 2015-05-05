@@ -102,10 +102,11 @@ namespace CMVP
                                 // Add more sendDataThreadSafe calls here.
                             }
                             // Give other values to analyzer:
-                            if (cars.Count != 0)
-                            {
-                                sendDataThreadSafe("FPS image processing", xValue, 1/(cars.First().getDeltaTime()));
-                            }
+                           // if (cars.Count != 0)
+                           // {
+                            //    sendDataThreadSafe("FPS image processing", xValue, 1/(cars.First().getDeltaTime()));
+                            //}
+                            sendDataThreadSafe("FPS image processing", xValue, (1.0 / (Program.imageProcess.getDeltaTime())));
                             sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
                             // Add more sendDataThreadSafe calls here.
                         }
