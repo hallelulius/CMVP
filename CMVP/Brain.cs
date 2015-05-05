@@ -24,7 +24,7 @@ namespace CMVP
 
         public void start()
         {
-            whBrain = Program.imageProcess.whBrain;
+            whBrain = Program.imageProcess.BRAIN_EVENT_HANDLE;
             thread = new Thread(run);
             thread.Name = "Brain";
             thread.Start();
