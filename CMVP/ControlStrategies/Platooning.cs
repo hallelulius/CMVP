@@ -17,10 +17,11 @@ namespace CMVP.ControlStrategies
         private int searchDistance = 56;
         private float desiredDistance = 73.0f;
         private int lastIndex = -1;
+        private float controlError;
 
         // Control Parameters
         private float Kp = 10.0f;
-        private float Ki = 0;
+        private float Ki = 0.005f;
         private float Kd = 0.7f;
         //private float Ti;
         //private float Td;
@@ -169,17 +170,19 @@ namespace CMVP.ControlStrategies
                     else
                     {
                         // Calculate reference speed
-                        float controlError = (float)Math.Sqrt(
-                            (car.getPosition().X - followed_car.getPosition().X) * (car.getPosition().X - followed_car.getPosition().X)
-                            + (car.getPosition().Y - followed_car.getPosition().Y) * (car.getPosition().Y - followed_car.getPosition().Y))
-                            - desiredDistance;
+                        float nx, ny, c, t;
+                        nx = followed_car.getDirection().X;
+                        ny = followed_car.getDirection().Y;
+                        c = -(nx * followed_car.getPosition().X + ny * followed_car.getPosition().Y);
+                        t = (nx * car.getPosition().X + ny * car.getPosition().Y + c) / (float)Math.Sqrt(nx * nx + ny * ny);
+                        controlError = t - desiredDistance;
 
                         // Proportional gain
                         float controlSignal = controlError * Kp;
 
                         // Integrator gain
                         integratorSum += controlError;
-                        controlSignal += Ki * integratorSum;
+                        controlSignal += Ki * integratorSum * (float)car.getDeltaTime();
 
                         // Derivative gain
                         controlSignal += Kd * (lastError - controlError) / (float)car.getDeltaTime();
@@ -200,6 +203,10 @@ namespace CMVP.ControlStrategies
         public bool isFollowingLeader
         {
             get { return following_leader; }
+        }
+        public float control_Error
+        {
+            get { return controlError; }
         }
 
         public List<AForge.IntPoint> newTrack
