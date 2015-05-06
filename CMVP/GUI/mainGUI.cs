@@ -212,11 +212,11 @@ namespace CMVP
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
                 }
-                if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
-                {
-                    ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
-                    tempCar.setControlStrategy(sr);
-                }
+                //if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
+                //{
+                //    ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
+                //    tempCar.setControlStrategy(sr);
+                //}
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Platooning")
                 {
                     //((PlatooningControlPanel)controlStrategyTypePanel.Controls[0]).apply(tempCar);
