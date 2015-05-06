@@ -49,7 +49,7 @@ namespace CMVP.ControlStrategies
                 {
                     following_leader = true;
                     Console.WriteLine("Following leader!");
-                    System.Windows.Forms.MessageBox.Show("Following leader!");
+                    //System.Windows.Forms.MessageBox.Show("Following leader!");
                 }
                 else // The car will follow the original reference signal using same algorithms as JustFollow()
                 {
@@ -191,8 +191,8 @@ namespace CMVP.ControlStrategies
 
                         // Add leaders speed to reference signal
                         controlSignal += (float)followed_car.getSpeed();
-
-                        setReference(track.getPoints().ElementAt(index), controlSignal);
+                        Console.WriteLine("Platooning!");
+                        setReference(new_track.ElementAt(index), controlSignal);
                         lastIndex = index;
                     }
                 }

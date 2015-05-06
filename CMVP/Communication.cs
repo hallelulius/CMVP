@@ -18,14 +18,15 @@ namespace CMVP
         //addresses for the DACs
         // DO NOT CHANGE!
         private const byte throttleA = 0;    // DAC A gain 1
-        private const byte throttleB = 2;    // DAC B gain 1
-        private const byte steeringA = 4;    // DAC C gain 1
+        private const byte throttleB = 4;    // DAC B gain 1
+        private const byte steeringA = 2;    // DAC C gain 1
         private const byte steeringB = 6;    // DAC D gain 1
         private const byte ERROR_CODE = 230;
 
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE! 
-        private const byte MAX_THROTTLE = 200;               //output = 2.58V
+        //private const byte MAX_THROTTLE = 200;               //output = 2.58V
+        private const byte MAX_THROTTLE = 175;              
         private const byte NEUTRAL_THROTTLE = 111;            //output = 1.44V
         private const byte MIN_THROTTLE = 7;                 //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
@@ -124,7 +125,6 @@ namespace CMVP
                 for (byte i = lastThrottle; i < NEUTRAL_THROTTLE; i++)
                 {
                     sendThrottle(convertCarIDToDAC(carID, "Throttle"), NEUTRAL_THROTTLE);
-                    System.Threading.Thread.Sleep(3);
                 }
             }
             else
@@ -188,11 +188,18 @@ namespace CMVP
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)
             {
                 byte[] bits = { DAC, value };
-                port.Write(bits, 0, 2);
+                try
+                {
+                    port.Write(bits, 0, 2);
+                }
+                catch (InvalidOperationException e){
+                    Console.WriteLine("Port is closed");
+                    Debug.WriteLine(e);
+                }
             }
             else
             {
-                System.Console.WriteLine("Error in steering");
+                Console.WriteLine("Error in steering");
             }
         }
         /// <summary>
@@ -279,7 +286,6 @@ namespace CMVP
                 {
                     sendThrottle(throttleA, NEUTRAL_THROTTLE);
                     sendThrottle(throttleB, NEUTRAL_THROTTLE);
-                    System.Threading.Thread.Sleep(3);
                 }
             }
             else

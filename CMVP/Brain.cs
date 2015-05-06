@@ -17,13 +17,14 @@ namespace CMVP
     {
 
         private List<Car> cars;
-        private static EventWaitHandle wh = new AutoResetEvent(false);
+        private static EventWaitHandle whBrain;
         public PerformanceAnalyzerWindow analyzer;
         private bool working;
         private Thread thread;
 
         public void start()
         {
+            whBrain = Program.imageProcess.whBrain;
             thread = new Thread(run);
             thread.Name = "Brain";
             thread.Start();
@@ -38,7 +39,9 @@ namespace CMVP
             time.Start();
             while (true)
             {
-                wh.WaitOne();
+                if (working)
+                {
+                    whBrain.WaitOne();
                 startTime = time.ElapsedMilliseconds;
 
                 foreach (Car car in cars)
@@ -89,6 +92,11 @@ namespace CMVP
                             sendDataThreadSafe(s + "reference position X-axis", xValue, car.getController().getRefPoint().X);
                             sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
                             sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
+                                if (car.getController() != null)
+                                {
+                                    sendDataThreadSafe(s + "ref position X-axis", xValue, car.getController().getRefPoint().X);
+                                    sendDataThreadSafe(s + "ref position Y-axis", xValue, car.getController().getRefPoint().Y);
+                                }
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
                             sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
                             sendDataThreadSafe(s + "Platooning control error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).controlError);
@@ -104,9 +112,7 @@ namespace CMVP
                     }
                 }
                 //Thread.Sleep(2);
-                if (working)
-                {
-                    wh.Set();
+
                 }
             }
         }
@@ -114,13 +120,11 @@ namespace CMVP
         public void StartWorking()
         {
             working = true;
-            wh.Set();
             
         }
         public void StopWorking()
         {
             working = false;
-            wh.Reset();
         }
 
         private void sendDataThreadSafe(string reciever, double x, double y)

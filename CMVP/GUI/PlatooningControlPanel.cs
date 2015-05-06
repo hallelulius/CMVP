@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CMVP
 {
@@ -64,9 +63,10 @@ namespace CMVP
             //thread.Start();
         }
 
+
         public int getCarToFollowID()
         {
-            return Convert.ToInt32(carToFollowIDDropDown.SelectedItem.ToString());
+            return (int) carToFollowIDDropDown.SelectedItem;
         }
     }
 }

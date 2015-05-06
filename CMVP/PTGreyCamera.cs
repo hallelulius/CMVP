@@ -24,10 +24,12 @@ namespace CMVP
         private ManagedImage m_processedImage;
         private bool m_grabImages;
         private AutoResetEvent newImgAvaiable; public AutoResetEvent NEW_IMG_AVAILABLE { get { return newImgAvaiable; } }
+        private AutoResetEvent timeMeasured; public AutoResetEvent TIME_MEASURED { get { return timeMeasured; } }
         private BackgroundWorker m_grabThread;
         private Bitmap image;
         private Panel panel;
         private double time;
+        private Stopwatch sw;
 
         public PTGreyCamera()
         {
@@ -35,6 +37,11 @@ namespace CMVP
             m_processedImage = new ManagedImage();
             m_camCtlDlg = new CameraControlDialog();
             newImgAvaiable = new AutoResetEvent(false);
+            timeMeasured = new AutoResetEvent(true);
+            time = 0;
+            sw = new Stopwatch();
+            sw.Start();
+
             Setup();
         }
         ~PTGreyCamera()
@@ -108,8 +115,9 @@ namespace CMVP
 
                 lock (this)
                 {
+                    
                     m_rawImage.Convert(PixelFormat.PixelFormatBgr, m_processedImage);
-                    time = (double)System.DateTime.Now.Ticks * Math.Pow(10, -7);
+                    time = +sw.Elapsed.Ticks*Math.Pow(10,-7);
                 }
 
                 try
@@ -122,6 +130,7 @@ namespace CMVP
                     Console.WriteLine("Worker report failed!");
                     continue;
                 }
+                TIME_MEASURED.WaitOne();
             }
         }
 
@@ -238,7 +247,7 @@ namespace CMVP
         {
             if (m_grabImages)
             {
-                return time;
+                return time; 
             }
             else
             {

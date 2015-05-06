@@ -68,13 +68,14 @@ namespace CMVP
                 this.direction.Add(dir);
                 this.position.Add(pos);
                 this.speed.Add(1.0);
-                this.speed2.Enqueue(1.0);
                 this.acceleration.Add(0);
                 this.angles.Add(0);
                 this.deltaTime.Add(0.001F);
                 this.lastPositions.Add(pos);
                 this.foundList.Add(true);
+                this.speed2.Enqueue(1.0);
             }
+                
             found=true;
         }
         /// <summary>
