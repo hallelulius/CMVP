@@ -91,7 +91,7 @@ namespace CMVP
                             sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
                             sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
-                            sendDataThreadSafe(s + "Platooning control error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).control_Error);
+                            sendDataThreadSafe(s + "Platooning control error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).controlError);
                             // Add more sendDataThreadSafe calls here.
                         }
                         // Give other values to analyzer:
