@@ -72,6 +72,7 @@
             "Car 1 ref position X-axis",
             "Car 1 position Y-axis",
             "Car 1 ref position Y-axis",
+            "Car 1 platooning error",
             "Car 1 found history",
             "Car 2 velocity",
             "Car 2 velocity reference signal",
@@ -84,6 +85,7 @@
             "Car 2 position Y-axis",
             "Car 2 ref position Y-axis",
             "Car 2 found history",
+            "Car 2 platooning error",
             "FPS image processing",
             "Brain execution time"});
             this.addSeriesDropDown.Location = new System.Drawing.Point(78, 10);

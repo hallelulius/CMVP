@@ -56,7 +56,7 @@ namespace CMVP
 
             //derivative part here, not fully tested but seems to work 
             derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-            //outThrottle += Kd_throttle * derivativeThrottle;
+            outThrottle += Kd_throttle * derivativeThrottle;
             prevSpeedError = errorSpeed;
 
 
@@ -76,7 +76,7 @@ namespace CMVP
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
-            outSteer += Kd_throttle * derivativeSteer;
+            outSteer += Kd_steer * derivativeSteer;
             prevHeadingError = errorHeading;
 
 

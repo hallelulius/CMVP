@@ -61,8 +61,8 @@ namespace CMVP.ControlStrategies
                    // if (angleToPoint > Math.PI / 2)
                     //    tempQuality = 9999;
                     //else
-                        tempQuality = 0.01f*lengthToPoint +  (float) Math.Pow(angleToPoint,2) + indexDistance;
-                    if(tempQuality < quality && lengthToPoint > 60 )
+                    tempQuality = 0.01f*lengthToPoint*lengthToPoint + 20f*angleToPoint*angleToPoint + indexDistance*indexDistance;
+                    if(tempQuality < quality && lengthToPoint > 45)
                     {
                         quality = tempQuality;
                         index = i;
