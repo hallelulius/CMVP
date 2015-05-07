@@ -110,7 +110,7 @@ namespace CMVP
         private void controllerTypeDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             controllerTypePanel.Controls.Clear();
-            //controllerApplyButton.Enabled = true;
+            applyButton.Enabled = true;
 
             if (controllerTypeDropDown.SelectedIndex != -1)
             {
@@ -164,126 +164,13 @@ namespace CMVP
             }
         }
 
-        private void trafficControlBasePanel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void controllerCarIDDropDown_DropDown(object sender, EventArgs e)
-        { 
-            //foreach (Car car in Program.cars)
-            //{
-            //    if (!controllerCarIDDropDown.Items.Contains(car.ID))
-            //        controllerCarIDDropDown.Items.Add(car.ID);
-            //}
-        }
-
-        private void trafficCarIDDropDown_DropDown(object sender, EventArgs e)
-        {
-            //foreach (Car car in Program.cars)
-            //{
-            //    if (!trafficCarIDDropDown.Items.Contains(car.ID))
-            //        trafficCarIDDropDown.Items.Add(car.ID);
-            //}
-        }
-
-        private void trafficApplyButton_Click(object sender, EventArgs e)
-        {
-            //if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
-            //{
-            //    int tempID = (int)trafficCarIDDropDown.SelectedItem;
-            //    Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
-            //    if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
-            //    {
-            //        ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
-            //        jf.setTrack(tempCar.getControlStrategy().getTrack());
-            //        tempCar.setControlStrategy(jf);
-            //    }
-            //    if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-            //    {
-            //        ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
-            //        ss.setTrack(tempCar.getControlStrategy().getTrack());
-            //        tempCar.setControlStrategy(ss);
-            //    }
-            //    if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
-            //    {
-            //        ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
-            //        ot.setTrack(tempCar.getControlStrategy().getTrack());
-            //        tempCar.setControlStrategy(ot);
-            //    }
-            //    if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Step response")
-            //    {
-            //        ControlStrategies.StepResponse sr = new ControlStrategies.StepResponse(tempCar);
-            //        tempCar.setControlStrategy(sr);
-            //    }
-            //    tempCar.setMaxSpeed((float) trafficMaxSpeedNumeric.Value);
-            //    trafficApplyButton.Enabled = false;
-            //}
-        }
-
-        private void trafficCancelButton_Click(object sender, EventArgs e)
-        {
-            //trafficCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
-            controlStrategyControlStrategyDropDown.SelectedIndex = -1;
-        }
-
         private void trackCarIDDropDown_DropDown(object sender, EventArgs e)
         {
             foreach (Car car in Program.cars)
             {
-                if (!trackCarIDDropDown.Items.Contains(car.ID))
-                    trackCarIDDropDown.Items.Add(car.ID);
+                if (!carIDDropDown.Items.Contains(car.ID))
+                    carIDDropDown.Items.Add(car.ID);
             }
-        }
-
-        private void controllerApplyButton_Click(object sender, EventArgs e)
-        {
-            //if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
-            //{
-            //    int tempID = (int)controllerCarIDDropDown.SelectedItem;
-            //    Car tempCar = Program.cars.Find(car => car.ID == tempID);
-
-            //    if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
-            //    {
-            //        PIDController controller = new PIDController(tempCar);
-
-            //        foreach (Control ctrl in controllerTypePanel.Controls)
-            //        {
-            //          controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-            //          controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-            //          controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-            //          controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-            //          controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-            //          controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
-            //          controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
-            //          controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
-                      
-            //        }
-            //        tempCar.setController(controller);
-            //        updateControllerParametersGUI(tempCar);
-            //        this.controllerApplyButton.Enabled = false;
-
-            //    }
-
-            //    if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
-            //    {
-            //        tempCar.setController(new KeyboardController(tempCar));
-            //    }
-            //}
-        }
-
-        private void controllerCancelButton_Click(object sender, EventArgs e)
-        {
-            //controllerCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
-            controllerTypeDropDown.SelectedIndex = -1;
-            controllerTypePanel.Controls.Clear();
-        }
-
-        private void trackCancelButton_Click(object sender, EventArgs e)
-        {
-            trackCarIDDropDown.SelectedIndex = -1; // -1 means nothing is selected
-            tracksDropDown.SelectedIndex = -1;
         }
 
         private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
@@ -291,38 +178,67 @@ namespace CMVP
             paw.Show();
         }
 
-        private void trackApplyButton_Click(object sender, EventArgs e)
+        private void applyButton_Click(object sender, EventArgs e)
         {
-            if (trackCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            if (carIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
             {
-                int tempID = (int)trackCarIDDropDown.SelectedItem;
+                int tempID = (int)carIDDropDown.SelectedItem;
                 Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                // Set track:
                 if(tracksDropDown.SelectedIndex != -1)
                     tempCar.getControlStrategy().setTrack(tracks.Find(t => t.name == tracksDropDown.SelectedItem.ToString()));
+
+                // Set controller
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                {
+                    PIDController controller = new PIDController(tempCar);
+
+                    foreach (Control ctrl in controllerTypePanel.Controls)
+                    {
+                        controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                        controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                        controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                        controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                        controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
+                        controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
+                        controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
+                        controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
+
+                    }
+                    tempCar.setController(controller);
+                    updateControllerParametersGUI(tempCar);
+
+                }
+
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
+                {
+                    tempCar.setController(new KeyboardController(tempCar));
+                }
+
+                // Set control strategy
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Follow track")
+                {
+                    ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
+                    jf.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(jf);
+                }
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Stand still")
+                {
+                    ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
+                    ss.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ss);
+                }
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
+                {
+                    ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
+                    ot.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ot);
+                }
+
+                // Set max speed
+                tempCar.setMaxSpeed((float)maxSpeedNumeric.Value);
             }
-        }
-
-        private void trafficCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
-            //{
-            //    int tempID = (int)trafficCarIDDropDown.SelectedItem;
-            //    Car tempCar = Program.cars.Find(car => car.ID == tempID);
-            //    trafficMaxSpeedNumeric.Value = (decimal)tempCar.getMaxSpeed();
-            //    controlStrategyControlStrategyDropDown.SelectedItem = tempCar.getControlStrategy().getStrategyName();
-            //}
-        }
-
-        private void controllerCarIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (controllerCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
-            //{
-            //    int tempID = (int)controllerCarIDDropDown.SelectedItem;
-            //    Car tempCar = Program.cars.Find(car => car.ID == tempID);
-            //    controllerTypeDropDown.SelectedItem = tempCar.getController().getName();
-            //    updateControllerParametersGUI(tempCar);
-            //    controllerApplyButton.Enabled = true;
-            //}
         }
 
         private void updateControllerParametersGUI(Car car)
@@ -362,12 +278,12 @@ namespace CMVP
 
         private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //trafficApplyButton.Enabled = true;
+            applyButton.Enabled = true;
         }
 
         private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
         {
-            //trafficApplyButton.Enabled = true;
+            applyButton.Enabled = true;
         }
 
         private void updateDataGrid(object sender, EventArgs e)
@@ -401,6 +317,31 @@ namespace CMVP
             }
         }
 
+        private void carIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (Car car in Program.cars)
+            {
+                if (!carIDDropDown.Items.Contains(car.ID))
+                    carIDDropDown.Items.Add(car.ID);
+            }
 
+            applyButton.Enabled = true;
+        }
+
+        private void maxSpeedUpdate_Click(object sender, EventArgs e)
+        {
+            if (carIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
+            {
+                int tempID = (int)carIDDropDown.SelectedItem;
+                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+
+                tempCar.setMaxSpeed((float)maxSpeedNumeric.Value);
+            }
+        }
+
+        private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            applyButton.Enabled = true;
+        }
     }
 }
