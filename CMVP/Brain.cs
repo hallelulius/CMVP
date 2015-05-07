@@ -87,7 +87,7 @@ namespace CMVP
                             sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
                             sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
                             sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
-                            sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle());
+                            sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle()*car.getMaxSpeed());
                             sendDataThreadSafe(s + "heading reference signal", xValue, car.getController().getRefHeading());
                             sendDataThreadSafe(s + "reference position X-axis", xValue, car.getController().getRefPoint().X);
                             sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
@@ -99,7 +99,7 @@ namespace CMVP
                                 }
                             sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
                             sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
-                            sendDataThreadSafe(s + "Platooning control error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).controlError);
+                            if (car.getControlStrategy().getStrategyName().Equals("Platooning")) { sendDataThreadSafe(s + "platooning error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).controlError); }
                             // Add more sendDataThreadSafe calls here.
                         }
                         // Give other values to analyzer:

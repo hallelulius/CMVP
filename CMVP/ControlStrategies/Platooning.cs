@@ -122,10 +122,11 @@ namespace CMVP.ControlStrategies
                 float quality = 9999;
                 if (followed_car.getPositionHistory() != null)
                 {
-                    int trackLength = followed_car.getPositionHistory().Count;
+                    List < IntPoint > pos_history= followed_car.getPositionHistory();
+                    int trackLength = pos_history.Count;
                     for (int i = 0; i < trackLength; i++)
                     {
-                        Point point = followed_car.getPositionHistory().ElementAt(i);
+                        Point point = pos_history.ElementAt(i);
 
                         float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
 
@@ -176,7 +177,7 @@ namespace CMVP.ControlStrategies
                         ny = followed_car.getDirection().Y;
                         c = -(nx * followed_car.getPosition().X + ny * followed_car.getPosition().Y);
                         t = (nx * car.getPosition().X + ny * car.getPosition().Y + c) / (float)Math.Sqrt(nx * nx + ny * ny);
-                        control_error = t - desiredDistance;
+                        control_error =desiredDistance -t;
 
                         // Proportional gain
                         float controlSignal = control_error * Kp;
@@ -192,7 +193,7 @@ namespace CMVP.ControlStrategies
                         // Add leaders speed to reference signal
                         controlSignal += (float)followed_car.getSpeed();
                         Console.WriteLine("Platooning!");
-                        setReference(new_track.ElementAt(index), controlSignal);
+                        setReference(pos_history.ElementAt(index), controlSignal);
                         lastIndex = index;
                     }
                 }
