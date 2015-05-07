@@ -32,14 +32,16 @@ namespace CMVP.ControlStrategies
             if (track != null)
             {
                 int trackLength = track.getPoints().Count;
+                IntPoint car_position = car.getPosition();
+                Point car_direction = car.getDirection();
                 for (int i = 0; i < trackLength; i++)
                 {
                     Point point = track.getPoints().ElementAt(i);
 
-                    float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
+                    float lengthToPoint = (point - car_position).EuclideanNorm();
 
-                    Point tempPoint = point - car.getPosition();
-                    float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
+                    Point tempPoint = point - car_position;
+                    float scalarProduct = (car_direction.X * tempPoint.X + car_direction.Y * tempPoint.Y) / (car_direction.EuclideanNorm() * tempPoint.EuclideanNorm());
                     float angleToPoint = (float) Math.Acos(scalarProduct);
 
                     float indexDistance = 0;

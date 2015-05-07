@@ -33,7 +33,7 @@ namespace CMVP
             paw = new PerformanceAnalyzerWindow();
             brain.analyzer = paw;
             System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            timer.Interval=1000;
+            timer.Interval=500;
             timer.Tick += new EventHandler(deltaTime);
             timer.Tick += new EventHandler(updateDataGrid);
             timer.Start();
@@ -48,8 +48,13 @@ namespace CMVP
         {
             brain.StopWorking();
             Program.com.stopCars();
-            Thread.Sleep(100);
-            //Environment.Exit(0);
+            Program.imageProcess.stop();
+            Program.com.stopCars();
+            Thread.Sleep(10);
+           // Program.com = null;
+            //Program.imageProcess = null;
+            Thread.Sleep(50);
+          //  Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
@@ -193,7 +198,7 @@ namespace CMVP
             if (trafficCarIDDropDown.SelectedIndex != -1) // -1 means nothing is selected
             {
                 int tempID = (int)trafficCarIDDropDown.SelectedItem;
-                Car tempCar = Program.cars.Find(car => car.ID == tempID);
+                Car tempCar = Program.cars.Find (car => car.ID == tempID);
 
                 if (controlStrategyControlStrategyDropDown.SelectedItem.ToString() == "Follow track")
                 {
@@ -350,11 +355,6 @@ namespace CMVP
             }
         }
 
-        private void ptgrey_Click(object sender, EventArgs e)
-        {
-            //GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
-            //ptgf.Show();
-        }
 
         private void Initiate_Click(object sender, EventArgs e)
         {

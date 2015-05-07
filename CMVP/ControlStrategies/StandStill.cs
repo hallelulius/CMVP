@@ -23,7 +23,7 @@ namespace CMVP.ControlStrategies
 
         public override void updateReferencePoint() // Find the next point in hte reference signal 
         {
-            setReference(new IntPoint(0, 0), 0);
+            setReference(new IntPoint(car.getPosition().X, car.getPosition().Y), 1);
         }
     }
 }

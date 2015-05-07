@@ -22,9 +22,9 @@ namespace CMVP.ControlStrategies
         private float control_error;
 
         // Control Parameters
-        private float Kp = 10.0f;
-        private float Ki = 0.005f;
-        private float Kd = 0.7f;
+        private float Kp = 0.007f;
+        private float Ki = 0.0001f;
+        private float Kd = 0.0f;
         //private float Ti;
         //private float Td;
         // Control Variables
@@ -176,8 +176,8 @@ namespace CMVP.ControlStrategies
                         nx = followed_car.getDirection().X;
                         ny = followed_car.getDirection().Y;
                         c = -(nx * followed_car.getPosition().X + ny * followed_car.getPosition().Y);
-                        t = (nx * car.getPosition().X + ny * car.getPosition().Y + c) / (float)Math.Sqrt(nx * nx + ny * ny);
-                        control_error =desiredDistance -t;
+                        t = Math.Abs((nx * car.getPosition().X + ny * car.getPosition().Y + c)) / (float)Math.Sqrt(nx * nx + ny * ny);
+                        control_error = t - desiredDistance;
 
                         // Proportional gain
                         float controlSignal = control_error * Kp;
@@ -188,11 +188,18 @@ namespace CMVP.ControlStrategies
 
                         // Derivative gain
                         controlSignal += Kd * (lastError - control_error) / (float)car.getDeltaTime();
+                        
+                        // Set minimum value of control signal 
+                        if (control_error<0)
+                        {
+                            control_error = 0;
+                        }
+
                         lastError = control_error;
 
                         // Add leaders speed to reference signal
-                        controlSignal += (float)followed_car.getSpeed();
-                        Console.WriteLine("Platooning!");
+                        //controlSignal += (float)followed_car.getSpeed();
+                        // Console.WriteLine("Platooning!");
                         setReference(pos_history.ElementAt(index), controlSignal);
                         lastIndex = index;
                     }
