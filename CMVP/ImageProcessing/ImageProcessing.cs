@@ -42,9 +42,11 @@ namespace CMVP
         private double prevTime;
 
         //to ensure proper workingflow
+        private bool working = true;
         private AutoResetEvent whCamera;
         private AutoResetEvent whTime;
         private AutoResetEvent whBrain; public AutoResetEvent BRAIN_EVENT_HANDLE { get { return whBrain; } }
+        private ManualResetEventSlim whDataUsed; public ManualResetEventSlim DATA_USED { get { return whDataUsed; } }
 
 
         //sets ideal triangle base and height
@@ -72,14 +74,17 @@ namespace CMVP
 
         public void start()
         {
+            working = true;
             whCamera = videoStream.NEW_IMG_AVAILABLE;
             whTime = videoStream.TIME_MEASURED;
             whBrain = new AutoResetEvent(false);
+            whDataUsed = new ManualResetEventSlim(true);
             prevTime = videoStream.getTime();
             Thread thread = new Thread(run);
             thread.Name = "Image Processing";
             thread.Priority = ThreadPriority.AboveNormal;
             thread.Start();
+
         }
         public void initiate()
         {
@@ -150,21 +155,24 @@ namespace CMVP
         {
             while (true)
             {
-                whBrain.Set();
-                whCamera.WaitOne();
+                if (working)
+                {
+                    whCamera.WaitOne();
                 processImage();
-                whBrain.Set();
+                    whBrain.Set();
+                }
+
 
             }
         }
         private void processImage()
         {
-            img = videoStream.getImage();
             double tempTime = videoStream.getTime();
             whTime.Set();
             deltaTime = tempTime - prevTime;
             prevTime = tempTime;
-
+            img = videoStream.getImage();
+            whTime.Set();
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos = car.getPosition();
@@ -234,6 +242,7 @@ namespace CMVP
                                 points.Remove(p);
                             foreach (AForge.IntPoint p in idPoints)
                                 points.Remove(p);
+                           // whDataUsed.Wait(8); //wait for data to being used timeout after 8 ms
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
@@ -453,21 +462,21 @@ namespace CMVP
         public List<Blob> getBlobsSlow(int minHeight, int maxHeight, Bitmap img)
         {
             lock (_locker)
-            {
-                BlobCounter blobCounter = new BlobCounter();
-                blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
-                blobCounter.MinHeight = minHeight;
-                blobCounter.MaxHeight = maxHeight;
-                blobCounter.FilterBlobs = true;
-                blobCounter.ProcessImage(img);
-                Blob[] blobs = blobCounter.GetObjectsInformation();
-                return blobs.ToList<Blob>();
-            }
+        {
+            BlobCounter blobCounter = new BlobCounter();
+            blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
+            blobCounter.MinHeight = minHeight;
+            blobCounter.MaxHeight = maxHeight;
+            blobCounter.FilterBlobs = true;
+            blobCounter.ProcessImage(img);
+            Blob[] blobs = blobCounter.GetObjectsInformation();
+            return blobs.ToList<Blob>();
+        }
 
         }
         public void stop()
         {
-            throw new NotImplementedException();
+            working = false;
         }
 
 
@@ -475,8 +484,8 @@ namespace CMVP
         {
             lock (_locker2)
             {
-                return videoStream.getImage();
-            }
+            return videoStream.getImage();
+        }
         }
         public double getTime()
         {

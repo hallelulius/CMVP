@@ -14,6 +14,7 @@ using AForge.Vision.Motion;
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
+using System.Diagnostics;
 
 namespace CMVP
 {
@@ -284,7 +285,16 @@ namespace CMVP
         } 
         private double crossProduct(AForge.IntPoint a, AForge.IntPoint b)
         {
-            return Math.Abs(a.X * b.Y - a.Y * b.X);
+            try
+            {
+                return Math.Abs(a.X * b.Y - a.Y * b.X);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception! Should be investigated");
+                Debug.WriteLine(e.ToString());
+                return 0;
+            }
         }
         private double angle(AForge.IntPoint a, AForge.IntPoint b)
         {

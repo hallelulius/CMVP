@@ -7,23 +7,24 @@ using AForge;
 using AForge.Math;
 using AForge.Math.Geometry;
 
+// The platooning class is used to make a vehicle follow a track until it find a pre determined vehicle to follow. 
+// Then it will set its speed and position steering to follow the leading vehicle with a desired distance between the cars. 
 namespace CMVP.ControlStrategies
 {
     class Platooning : ControlStrategy
     {
         private Car followed_car;
-        private List<AForge.IntPoint> new_track = new List<AForge.IntPoint>();
         private bool following_leader = false;
         private int searchDistance = 56;
-        private float desiredDistance = 73.0f;
+        private float desiredDistance = 73.0f; // Predetemined distance desired between the car and the leader in pixels. (73 pixels = 13 cm)
         private int lastIndex = -1;
+        private float control_error;
 
         // Control Parameters
-        private float Kp = 10.0f;
-        private float Ki = 0;
-        private float Kd = 0.7f;
-        //private float Ti;
-        //private float Td;
+        private float Kp = 0.007f;
+        private float Ki = 0.0001f;
+        private float Kd = 0.0f;
+        
         // Control Variables
         private float integratorSum = 0;
         private float lastError = 0;
@@ -33,28 +34,22 @@ namespace CMVP.ControlStrategies
 
         }
 
-        public Car followedCar
-        {
-            get { return followed_car; }
-            set { followed_car = value; }
-        }
-
         public override void updateReferencePoint()
         {
-            new_track.Add(followed_car.getPosition());
 
             if(!following_leader)  // decide which reference to follow. The old one or the platooning leader's
             {
                 if(searchDistance * searchDistance >= 
-                      ((new_track.First().X - car.getPosition().X) * (new_track.First().X - car.getPosition().X) 
-                    + (new_track.First().Y - car.getPosition().Y) * (new_track.First().Y - car.getPosition().Y))) // Search if the leaders track is close to current location 
+                      ((followed_car.getPosition().X - car.getPosition().X) * (followed_car.getPosition().X - car.getPosition().X) 
+                    + (followed_car.getPosition().Y - car.getPosition().Y) * (followed_car.getPosition().Y - car.getPosition().Y))) 
+                    // Search if the leader is close to current location 
                 {
                     following_leader = true;
                     Console.WriteLine("Following leader!");
-                    //System.Windows.Forms.MessageBox.Show("Following leader!");
                 }
-                else
+                else // The car will follow the original reference signal using same algorithms as JustFollow()
                 {
+                    // Start of JustFollow()
                     int index = -1;
                     float quality = 9999;
                     if (track != null)
@@ -86,9 +81,6 @@ namespace CMVP.ControlStrategies
                             }
 
                             float tempQuality;
-                            // if (angleToPoint > Math.PI / 2)
-                            //    tempQuality = 9999;
-                            //else
                             tempQuality = 0.01f * lengthToPoint + angleToPoint + indexDistance;
                             if (tempQuality < quality && lengthToPoint > 45)
                             {
@@ -99,7 +91,6 @@ namespace CMVP.ControlStrategies
 
                         if (index < 0)
                         {
-                            //setReference(new PointF(0, 0), 0);
                             Console.WriteLine("No referencepoints found");
                             lastIndex = -1;
                             return;
@@ -110,21 +101,24 @@ namespace CMVP.ControlStrategies
                             setReference(track.getPoints().ElementAt(index), track.getSpeeds().ElementAt(index));
                             lastIndex = index;
                         }
-                    }
+                    } 
+                    // End of JustFollow()
                 }
             }
-            else
+            else // else the car will follow the platooning leader's track using JustFollow()
             {
                 IntPoint refPoint = new IntPoint();
                 bool pointIsFound = false;
+                // Start of JustFollow(). The code is adjusted to suit platooning but it use JustFollow() as a base. 
                 int index = -1;
                 float quality = 9999;
-                if (new_track != null)
+                if (followed_car.getPositionHistory() != null)
                 {
-                    int trackLength = new_track.Count;
+                    List < IntPoint > pos_history= followed_car.getPositionHistory();
+                    int trackLength = pos_history.Count;
                     for (int i = 0; i < trackLength; i++)
                     {
-                        Point point = new_track.ElementAt(i);
+                        Point point = pos_history.ElementAt(i);
 
                         float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
 
@@ -148,9 +142,6 @@ namespace CMVP.ControlStrategies
                         }
 
                         float tempQuality;
-                        // if (angleToPoint > Math.PI / 2)
-                        //    tempQuality = 9999;
-                        //else
                         tempQuality = 0.01f * lengthToPoint + angleToPoint + indexDistance;
                         if (tempQuality < quality && lengthToPoint > 45)
                         {
@@ -161,50 +152,64 @@ namespace CMVP.ControlStrategies
 
                     if (index < 0)
                     {
-                        //setReference(new PointF(0, 0), 0);
                         Console.WriteLine("No referencepoints found");
                         lastIndex = -1;
                         return;
                     }
-                    else
+     
+                    else // The last loop of JustFollow() is adjusted to fit into platooning
                     {
                         // Calculate reference speed
-                        float controlError = (float)Math.Sqrt(
-                            (car.getPosition().X - followed_car.getPosition().X) * (car.getPosition().X - followed_car.getPosition().X)
-                            + (car.getPosition().Y - followed_car.getPosition().Y) * (car.getPosition().Y - followed_car.getPosition().Y))
-                            - desiredDistance;
+                        float nx, ny, c, t;
+                        nx = followed_car.getDirection().X;
+                        ny = followed_car.getDirection().Y;
+                        c = -(nx * followed_car.getPosition().X + ny * followed_car.getPosition().Y);
+                        t = Math.Abs((nx * car.getPosition().X + ny * car.getPosition().Y + c)) / (float)Math.Sqrt(nx * nx + ny * ny);
+                        control_error = t - desiredDistance;
 
                         // Proportional gain
-                        float controlSignal = controlError * Kp;
+                        float controlSignal = control_error * Kp;
 
                         // Integrator gain
-                        integratorSum += controlError;
-                        controlSignal += Ki * integratorSum;
+                        integratorSum += control_error;
+                        controlSignal += Ki * integratorSum * (float)car.getDeltaTime();
 
                         // Derivative gain
-                        controlSignal += Kd * (lastError - controlError) / (float)car.getDeltaTime();
-                        lastError = controlError;
+                        controlSignal += Kd * (lastError - control_error) / (float)car.getDeltaTime();
+                        
+                        // Scale control error with reference vehicles speed 
+                        controlSignal += (float)followed_car.getSpeed() / followed_car.getMaxSpeed();
 
-                        // Add leaders speed to reference signal
-                        controlSignal += (float)followed_car.getSpeed();
-                        Console.WriteLine("Platooning!");
-                        setReference(new_track.ElementAt(index), controlSignal);
+                        // Set minimum value of control signal 
+                        if (controlSignal<0)
+                        {
+                            controlSignal = 0;
+                        }
+
+                        // Update last error for the integrator i next execution 
+                        lastError = control_error;
+
+                        // Update the cars steering and velocity 
+                        setReference(pos_history.ElementAt(index), controlSignal);
                         lastIndex = index;
                     }
                 }
-            }
-
-            
+                // end of JustFollow()
+            }            
         }
 
         public bool isFollowingLeader
         {
             get { return following_leader; }
         }
-
-        public List<AForge.IntPoint> newTrack
+        public float controlError
         {
-            get { return new_track; }
+            get { return control_error; }
+        }
+        public Car followedCar
+        {
+            get { return followed_car; }
+            set { followed_car = value; }
         }
 
         public float ki

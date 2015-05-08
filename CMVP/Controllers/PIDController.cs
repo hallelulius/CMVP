@@ -50,16 +50,16 @@ namespace CMVP
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            outThrottle += Kp_throttle * errorSpeed;
+                outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed * dT;
-            outThrottle += throttleIntegratorSum * Ki_throttle;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
 
-            //derivative part here, not fully tested but seems to work 
-            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
-            //outThrottle += Kd_throttle * derivativeThrottle;
-            prevSpeedError = errorSpeed;
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+            outThrottle += Kd_throttle * derivativeThrottle;
+                prevSpeedError = errorSpeed;
 
-
+            
 
 
 
@@ -76,7 +76,7 @@ namespace CMVP
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
-            outSteer += Kd_throttle * derivativeSteer;
+            outSteer += Kd_steer * derivativeSteer;
             prevHeadingError = errorHeading;
 
 

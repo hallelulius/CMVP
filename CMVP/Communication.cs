@@ -24,9 +24,9 @@ namespace CMVP
         private const byte ERROR_CODE = 230;
 
         //Constants used to debug and trim  Vref=3.3V 
-        // DO NOT CHANGE! 
+        // DO NOT CHANGE! (if you dont know what you are doing)
         //private const byte MAX_THROTTLE = 200;               //output = 2.58V
-        private const byte MAX_THROTTLE = 175;              
+        private const byte MAX_THROTTLE = 180;              
         private const byte NEUTRAL_THROTTLE = 111;            //output = 1.44V
         private const byte MIN_THROTTLE = 7;                 //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
@@ -63,7 +63,7 @@ namespace CMVP
                     Console.WriteLine(e.ToString());
                 }
             }
-            // to ensure the settings on the car wont change
+            // to ensure the settings on the car wont change or bursting off when started.
             stopCars();
 
         }
@@ -190,8 +190,8 @@ namespace CMVP
                 byte[] bits = { DAC, value };
                 try
                 {
-                    port.Write(bits, 0, 2);
-                }
+                port.Write(bits, 0, 2);
+            }
                 catch (InvalidOperationException e){
                     Console.WriteLine("Port is closed");
                     Debug.WriteLine(e);
