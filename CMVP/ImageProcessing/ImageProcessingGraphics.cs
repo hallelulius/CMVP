@@ -45,7 +45,7 @@ namespace CMVP
             standardSettings();
             this.ip = ip;
             locker = new Object();
-            timer = new System.Timers.Timer(50);
+            timer = new System.Timers.Timer(60);
             timer.Elapsed += new System.Timers.ElapsedEventHandler(OnEvent);
             timer.Enabled = true;
         }
@@ -193,17 +193,18 @@ namespace CMVP
                 {
                     AForge.IntPoint pos = car.getPosition();
                     //bör ta hänsyn till riktningen för minimera fönstret
-                    int cropX = pos.X - 100;
-                    int cropY = pos.Y - 100;
+                    Size windowSize = new Size(150, 150);
+                    int cropX = pos.X - windowSize.Width / 2;
+                    int cropY = pos.Y - windowSize.Height / 2;
                     if (cropX < 0)
                         cropX = 0;
-                    else if (cropX > img.Width - 200)
-                        cropX = img.Width - 200;
+                    else if (cropX > img.Width - windowSize.Width)
+                        cropX = img.Width - windowSize.Width / 2;
                     if (cropY < 0)
                         cropY = 0;
-                    else if (cropY > img.Height - 200)
-                        cropY = img.Height - 200;
-                    g.DrawRectangle(redPen, new Rectangle(cropX, cropY, 200, 200));
+                    else if (cropY > img.Height - windowSize.Height)
+                        cropY = img.Height - windowSize.Height;
+                    g.DrawRectangle(redPen, new Rectangle(cropX, cropY, windowSize.Width, windowSize.Width));
                 }
             foreach (Car car in Program.cars)
             {

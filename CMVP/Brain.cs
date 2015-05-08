@@ -42,11 +42,11 @@ namespace CMVP
         public void run()
         {
             cars = Program.cars;
-
             while (true)
             {
                 whBrain.WaitOne(); //wait for imageprocessing to finish
                 whDataUsed.Reset(); // stop image processing
+
                 foreach (Car car in cars)
                 {
                     car.updateState();
@@ -79,10 +79,8 @@ namespace CMVP
                     }
                     whDataUsed.Set();
                 }
-
                 else
                 {
-                    whBrain.WaitOne();
                     whDataUsed.Set();
                 }
             }
@@ -145,8 +143,8 @@ namespace CMVP
                                 // Add more sendDataThreadSafe calls here.
                             }
                             // Give other values to analyzer:
-                           // if (cars.Count != 0)
-                           // {
+                            // if (cars.Count != 0)
+                            // {
                             //    sendDataThreadSafe("FPS image processing", xValue, 1/(cars.First().getDeltaTime()));
                             //}
                             sendDataThreadSafe("FPS image processing", xValue, (1.0 / (Program.imageProcess.getDeltaTime())));

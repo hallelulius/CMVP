@@ -27,11 +27,11 @@ namespace CMVP
             : base(car)
         {
             // I-controller constants:
-            Ki_steer = 0.0000F;
-            Ki_throttle = 0.001F;
+            Ki_steer = 0.0010F;
+            Ki_throttle = 0.061F;
             // P-controller constants:
-            Kp_steer = 0.6f;        //Ki_steer / Ti_steer
-            Kp_throttle = 0.1f;     // Ki_throttle / Ti_throttle
+            Kp_steer = 1.44f;        //Ki_steer / Ti_steer
+            Kp_throttle = 0.16f;     // Ki_throttle / Ti_throttle
             // D-controller constants:
             Kd_steer = 0.01f;
             Kd_throttle = 0.0f;

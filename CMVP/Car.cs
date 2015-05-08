@@ -62,6 +62,8 @@ namespace CMVP
             : base(pos, size)
         {
             this.id = id;
+            pos = posIP;
+            dir = dirIP;
             this.controlStrategy = new ControlStrategies.JustFollow(this);
             controller = new PIDController(this);
             this.directions = new List<AForge.Point>();
@@ -72,6 +74,7 @@ namespace CMVP
             this.deltaTimes = new ConcurrentQueue<double>();
             this.lastPositions = new List<IntPoint>();
             this.foundList = new List<bool>();
+            
 
             setMaxSpeed(120F);
             for (int i = 0; i < DATA_HISTORY_LENGTH; i++)
@@ -87,7 +90,7 @@ namespace CMVP
             }
             for (int i = 0; i < 150; i++)
             {
-                this.speeds.Enqueue(0);
+                this.speeds.Enqueue(1.0);
         }
                 found = true;
         }
@@ -169,9 +172,9 @@ namespace CMVP
         /// <param name="dir"> The new direction of the car. </param>
         public void setPositionAndOrientation(IntPoint pos, Point dir, double deltaTime)
         {
-            posIP = pos;
-            dirIP = dir;
-            deltaTimeIP = deltaTime;
+                posIP = pos;
+                dirIP = dir;
+                deltaTimeIP = deltaTime;
         }
         public void stop()
         {
