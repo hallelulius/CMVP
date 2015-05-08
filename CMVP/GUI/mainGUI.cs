@@ -198,67 +198,67 @@ namespace CMVP
                 // Set controller
                 if(controllerTypeDropDown.SelectedIndex != -1)
                 {
-                    if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                if (controllerTypeDropDown.SelectedItem.ToString() == "PID")
+                {
+                    PIDController controller = new PIDController(tempCar);
+
+                    foreach (Control ctrl in controllerTypePanel.Controls)
                     {
-                        PIDController controller = new PIDController(tempCar);
-
-                        foreach (Control ctrl in controllerTypePanel.Controls)
-                        {
-                            controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-                            controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-                            controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-                            controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                            controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
-                            controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
-
-                        }
-                        tempCar.setController(controller);
-                        updateControllerParametersGUI(tempCar);
+                      controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                      controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                      controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                      controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                      controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
+                      controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
+                      
                     }
+                    tempCar.setController(controller);
+                    updateControllerParametersGUI(tempCar);
+                }
 
-                    if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
-                    {
-                        tempCar.setController(new KeyboardController(tempCar));
-                    }
+                if (controllerTypeDropDown.SelectedItem.ToString() == "Manual keyboard")
+                {
+                    tempCar.setController(new KeyboardController(tempCar));
+                }
                 }
 
                 // Set control strategy
                 if (controlStrategyDropDown.SelectedIndex != -1)
                 {
-                    if (controlStrategyDropDown.SelectedItem.ToString() == "Follow track")
-                    {
-                        ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
-                        jf.setTrack(tempCar.getControlStrategy().getTrack());
-                        tempCar.setControlStrategy(jf);
-                    }
-                    if (controlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-                    {
-                        ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
-                        ss.setTrack(tempCar.getControlStrategy().getTrack());
-                        tempCar.setControlStrategy(ss);
-                    }
-                    if (controlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
-                    {
-                        ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
-                        ot.setTrack(tempCar.getControlStrategy().getTrack());
-                        tempCar.setControlStrategy(ot);
-                    }
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Follow track")
+                {
+                    ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
+                    jf.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(jf);
+                }
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Stand still")
+                {
+                    ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
+                    ss.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ss);
+                }
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
+                {
+                    ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
+                    ot.setTrack(tempCar.getControlStrategy().getTrack());
+                    tempCar.setControlStrategy(ot);
+                }
                     if (controlStrategyDropDown.SelectedItem.ToString() == "Platooning")
+                {
+                    ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
+                    pl.setTrack(tempCar.getControlStrategy().getTrack());
+
+                    foreach (Control ctrl in controlStrategyPanel.Controls)
                     {
-                        ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
-                        pl.setTrack(tempCar.getControlStrategy().getTrack());
-
-                        foreach (Control ctrl in controlStrategyPanel.Controls)
-                        {
-                            pl.followedCar = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)ctrl).followedCarID);
-                            pl.distance = ((PlatooningControlPanel)ctrl).distance;
-                            pl.kp = ((PlatooningControlPanel)ctrl).kp;
-                            pl.ki = ((PlatooningControlPanel)ctrl).ki;
-                            pl.kd = ((PlatooningControlPanel)ctrl).kd;
-                        }
-
-                        tempCar.setControlStrategy(pl);
+                        pl.followedCar = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)ctrl).followedCarID);
+                        pl.distance = ((PlatooningControlPanel)ctrl).distance;
+                        pl.kp = ((PlatooningControlPanel)ctrl).kp;
+                        pl.ki = ((PlatooningControlPanel)ctrl).ki;
+                        pl.kd = ((PlatooningControlPanel)ctrl).kd;
                     }
+
+                    tempCar.setControlStrategy(pl);
+                }
                 }
 
                 // Set max speed
