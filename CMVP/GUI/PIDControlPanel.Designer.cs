@@ -241,7 +241,7 @@
             // 
             // saveSettings
             // 
-            this.saveSettings.Location = new System.Drawing.Point(6, 123);
+            this.saveSettings.Location = new System.Drawing.Point(6, 104);
             this.saveSettings.Name = "saveSettings";
             this.saveSettings.Size = new System.Drawing.Size(75, 23);
             this.saveSettings.TabIndex = 23;
@@ -251,7 +251,7 @@
             // 
             // loadSettings
             // 
-            this.loadSettings.Location = new System.Drawing.Point(107, 123);
+            this.loadSettings.Location = new System.Drawing.Point(107, 104);
             this.loadSettings.Name = "loadSettings";
             this.loadSettings.Size = new System.Drawing.Size(75, 23);
             this.loadSettings.TabIndex = 24;
@@ -262,7 +262,7 @@
             // settingsText
             // 
             this.settingsText.AutoSize = true;
-            this.settingsText.Location = new System.Drawing.Point(9, 101);
+            this.settingsText.Location = new System.Drawing.Point(3, 88);
             this.settingsText.Name = "settingsText";
             this.settingsText.Size = new System.Drawing.Size(165, 13);
             this.settingsText.TabIndex = 25;

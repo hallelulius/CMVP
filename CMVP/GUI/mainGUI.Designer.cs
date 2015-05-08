@@ -32,38 +32,25 @@
             this.simulationBasePanel = new System.Windows.Forms.Panel();
             this.openPerformanceAnalyzerButton = new System.Windows.Forms.Button();
             this.openCameraControlButton = new System.Windows.Forms.Button();
-            this.numberOfCarsNumeric = new System.Windows.Forms.NumericUpDown();
-            this.numberOfCarsLabel = new System.Windows.Forms.Label();
             this.simulationPanelLabel = new System.Windows.Forms.Label();
             this.trackPanelLabel = new System.Windows.Forms.Label();
             this.trackBasePanel = new System.Windows.Forms.Panel();
-            this.trackCancelButton = new System.Windows.Forms.Button();
-            this.trackApplyButton = new System.Windows.Forms.Button();
+            this.maxSpeedUpdate = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.controllerTypePanel = new System.Windows.Forms.Panel();
+            this.applyButton = new System.Windows.Forms.Button();
+            this.controllerTypeLabel = new System.Windows.Forms.Label();
             this.trackCarIDLabel = new System.Windows.Forms.Label();
-            this.trackCarIDDropDown = new System.Windows.Forms.ComboBox();
+            this.controllerTypeDropDown = new System.Windows.Forms.ComboBox();
+            this.controlStrategyPanel = new System.Windows.Forms.Panel();
+            this.carIDDropDown = new System.Windows.Forms.ComboBox();
+            this.maxSpeedNumeric = new System.Windows.Forms.NumericUpDown();
+            this.controlStrategyLabel = new System.Windows.Forms.Label();
+            this.maxSpeedLabel = new System.Windows.Forms.Label();
+            this.controlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.importTrackButton = new System.Windows.Forms.Button();
             this.trackTrackLabel = new System.Windows.Forms.Label();
             this.tracksDropDown = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.controllerBasePanel = new System.Windows.Forms.Panel();
-            this.controllerCancelButton = new System.Windows.Forms.Button();
-            this.controllerApplyButton = new System.Windows.Forms.Button();
-            this.controllerTypePanel = new System.Windows.Forms.Panel();
-            this.controllerTypeLabel = new System.Windows.Forms.Label();
-            this.controllerTypeDropDown = new System.Windows.Forms.ComboBox();
-            this.controllerCarIDLabel = new System.Windows.Forms.Label();
-            this.controllerCarIDDropDown = new System.Windows.Forms.ComboBox();
-            this.trafficControlPanelLabel = new System.Windows.Forms.Label();
-            this.trafficControlBasePanel = new System.Windows.Forms.Panel();
-            this.trafficCarIDLabel = new System.Windows.Forms.Label();
-            this.trafficCancelButton = new System.Windows.Forms.Button();
-            this.trafficCarIDDropDown = new System.Windows.Forms.ComboBox();
-            this.trafficApplyButton = new System.Windows.Forms.Button();
-            this.trafficMaxSpeedNumeric = new System.Windows.Forms.NumericUpDown();
-            this.trafficMaxSpeedLabel = new System.Windows.Forms.Label();
-            this.controlStrategyTypePanel = new System.Windows.Forms.Panel();
-            this.controlStrategyControlStrategyLabel = new System.Windows.Forms.Label();
-            this.controlStrategyControlStrategyDropDown = new System.Windows.Forms.ComboBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.CarID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -77,14 +64,11 @@
             this.Initiate = new System.Windows.Forms.Button();
             this.dataGridTimeNumeric = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.calibration = new System.Windows.Forms.Button();
             this.deltaTimeLabel = new System.Windows.Forms.Label();
+            this.calibration = new System.Windows.Forms.Button();
             this.simulationBasePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).BeginInit();
             this.trackBasePanel.SuspendLayout();
-            this.controllerBasePanel.SuspendLayout();
-            this.trafficControlBasePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSpeedNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTimeNumeric)).BeginInit();
             this.SuspendLayout();
@@ -111,8 +95,6 @@
             this.simulationBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.simulationBasePanel.Controls.Add(this.openPerformanceAnalyzerButton);
             this.simulationBasePanel.Controls.Add(this.openCameraControlButton);
-            this.simulationBasePanel.Controls.Add(this.numberOfCarsNumeric);
-            this.simulationBasePanel.Controls.Add(this.numberOfCarsLabel);
             this.simulationBasePanel.Location = new System.Drawing.Point(12, 111);
             this.simulationBasePanel.Name = "simulationBasePanel";
             this.simulationBasePanel.Size = new System.Drawing.Size(200, 276);
@@ -120,7 +102,7 @@
             // 
             // openPerformanceAnalyzerButton
             // 
-            this.openPerformanceAnalyzerButton.Location = new System.Drawing.Point(21, 73);
+            this.openPerformanceAnalyzerButton.Location = new System.Drawing.Point(16, 40);
             this.openPerformanceAnalyzerButton.Name = "openPerformanceAnalyzerButton";
             this.openPerformanceAnalyzerButton.Size = new System.Drawing.Size(157, 23);
             this.openPerformanceAnalyzerButton.TabIndex = 8;
@@ -130,7 +112,7 @@
             // 
             // openCameraControlButton
             // 
-            this.openCameraControlButton.Location = new System.Drawing.Point(38, 46);
+            this.openCameraControlButton.Location = new System.Drawing.Point(33, 13);
             this.openCameraControlButton.Name = "openCameraControlButton";
             this.openCameraControlButton.Size = new System.Drawing.Size(122, 23);
             this.openCameraControlButton.TabIndex = 7;
@@ -138,32 +120,15 @@
             this.openCameraControlButton.UseVisualStyleBackColor = true;
             this.openCameraControlButton.Click += new System.EventHandler(this.openCameraControlButton_Click);
             // 
-            // numberOfCarsNumeric
-            // 
-            this.numberOfCarsNumeric.Enabled = false;
-            this.numberOfCarsNumeric.Location = new System.Drawing.Point(91, 14);
-            this.numberOfCarsNumeric.Name = "numberOfCarsNumeric";
-            this.numberOfCarsNumeric.Size = new System.Drawing.Size(43, 20);
-            this.numberOfCarsNumeric.TabIndex = 6;
-            // 
-            // numberOfCarsLabel
-            // 
-            this.numberOfCarsLabel.AutoSize = true;
-            this.numberOfCarsLabel.Location = new System.Drawing.Point(3, 17);
-            this.numberOfCarsLabel.Name = "numberOfCarsLabel";
-            this.numberOfCarsLabel.Size = new System.Drawing.Size(82, 13);
-            this.numberOfCarsLabel.TabIndex = 5;
-            this.numberOfCarsLabel.Text = "Number of cars:";
-            // 
             // simulationPanelLabel
             // 
             this.simulationPanelLabel.AutoSize = true;
             this.simulationPanelLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.simulationPanelLabel.Location = new System.Drawing.Point(16, 102);
             this.simulationPanelLabel.Name = "simulationPanelLabel";
-            this.simulationPanelLabel.Size = new System.Drawing.Size(73, 17);
+            this.simulationPanelLabel.Size = new System.Drawing.Size(116, 17);
             this.simulationPanelLabel.TabIndex = 3;
-            this.simulationPanelLabel.Text = "Simulation";
+            this.simulationPanelLabel.Text = "System Overview";
             // 
             // trackPanelLabel
             // 
@@ -171,44 +136,77 @@
             this.trackPanelLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.trackPanelLabel.Location = new System.Drawing.Point(222, 102);
             this.trackPanelLabel.Name = "trackPanelLabel";
-            this.trackPanelLabel.Size = new System.Drawing.Size(44, 17);
+            this.trackPanelLabel.Size = new System.Drawing.Size(85, 17);
             this.trackPanelLabel.TabIndex = 5;
-            this.trackPanelLabel.Text = "Track";
+            this.trackPanelLabel.Text = "Car Settings";
             // 
             // trackBasePanel
             // 
             this.trackBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.trackBasePanel.Controls.Add(this.trackCancelButton);
-            this.trackBasePanel.Controls.Add(this.trackApplyButton);
+            this.trackBasePanel.Controls.Add(this.maxSpeedUpdate);
+            this.trackBasePanel.Controls.Add(this.panel1);
+            this.trackBasePanel.Controls.Add(this.controllerTypePanel);
+            this.trackBasePanel.Controls.Add(this.applyButton);
+            this.trackBasePanel.Controls.Add(this.controllerTypeLabel);
             this.trackBasePanel.Controls.Add(this.trackCarIDLabel);
-            this.trackBasePanel.Controls.Add(this.trackCarIDDropDown);
+            this.trackBasePanel.Controls.Add(this.controllerTypeDropDown);
+            this.trackBasePanel.Controls.Add(this.controlStrategyPanel);
+            this.trackBasePanel.Controls.Add(this.carIDDropDown);
+            this.trackBasePanel.Controls.Add(this.maxSpeedNumeric);
+            this.trackBasePanel.Controls.Add(this.controlStrategyLabel);
+            this.trackBasePanel.Controls.Add(this.maxSpeedLabel);
+            this.trackBasePanel.Controls.Add(this.controlStrategyDropDown);
             this.trackBasePanel.Controls.Add(this.importTrackButton);
             this.trackBasePanel.Controls.Add(this.trackTrackLabel);
             this.trackBasePanel.Controls.Add(this.tracksDropDown);
             this.trackBasePanel.Location = new System.Drawing.Point(218, 111);
             this.trackBasePanel.Name = "trackBasePanel";
-            this.trackBasePanel.Size = new System.Drawing.Size(200, 276);
+            this.trackBasePanel.Size = new System.Drawing.Size(409, 276);
             this.trackBasePanel.TabIndex = 4;
             // 
-            // trackCancelButton
+            // maxSpeedUpdate
             // 
-            this.trackCancelButton.Location = new System.Drawing.Point(69, 248);
-            this.trackCancelButton.Name = "trackCancelButton";
-            this.trackCancelButton.Size = new System.Drawing.Size(60, 23);
-            this.trackCancelButton.TabIndex = 10;
-            this.trackCancelButton.Text = "Clear";
-            this.trackCancelButton.UseVisualStyleBackColor = true;
-            this.trackCancelButton.Click += new System.EventHandler(this.trackCancelButton_Click);
+            this.maxSpeedUpdate.Location = new System.Drawing.Point(125, 71);
+            this.maxSpeedUpdate.Name = "maxSpeedUpdate";
+            this.maxSpeedUpdate.Size = new System.Drawing.Size(70, 23);
+            this.maxSpeedUpdate.TabIndex = 11;
+            this.maxSpeedUpdate.Text = "Update";
+            this.maxSpeedUpdate.UseVisualStyleBackColor = true;
+            this.maxSpeedUpdate.Click += new System.EventHandler(this.maxSpeedUpdate_Click);
             // 
-            // trackApplyButton
+            // panel1
             // 
-            this.trackApplyButton.Location = new System.Drawing.Point(135, 248);
-            this.trackApplyButton.Name = "trackApplyButton";
-            this.trackApplyButton.Size = new System.Drawing.Size(60, 23);
-            this.trackApplyButton.TabIndex = 9;
-            this.trackApplyButton.Text = "Apply";
-            this.trackApplyButton.UseVisualStyleBackColor = true;
-            this.trackApplyButton.Click += new System.EventHandler(this.trackApplyButton_Click);
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(205, 14);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1, 248);
+            this.panel1.TabIndex = 9;
+            // 
+            // controllerTypePanel
+            // 
+            this.controllerTypePanel.Location = new System.Drawing.Point(206, 40);
+            this.controllerTypePanel.Name = "controllerTypePanel";
+            this.controllerTypePanel.Size = new System.Drawing.Size(200, 159);
+            this.controllerTypePanel.TabIndex = 6;
+            // 
+            // applyButton
+            // 
+            this.applyButton.Location = new System.Drawing.Point(317, 248);
+            this.applyButton.Name = "applyButton";
+            this.applyButton.Size = new System.Drawing.Size(87, 23);
+            this.applyButton.TabIndex = 9;
+            this.applyButton.Text = "Apply Settings";
+            this.applyButton.UseVisualStyleBackColor = true;
+            this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
+            // 
+            // controllerTypeLabel
+            // 
+            this.controllerTypeLabel.AutoSize = true;
+            this.controllerTypeLabel.Location = new System.Drawing.Point(210, 16);
+            this.controllerTypeLabel.Name = "controllerTypeLabel";
+            this.controllerTypeLabel.Size = new System.Drawing.Size(77, 13);
+            this.controllerTypeLabel.TabIndex = 5;
+            this.controllerTypeLabel.Text = "Controller type:";
             // 
             // trackCarIDLabel
             // 
@@ -219,23 +217,98 @@
             this.trackCarIDLabel.TabIndex = 6;
             this.trackCarIDLabel.Text = "Car ID:";
             // 
-            // trackCarIDDropDown
+            // controllerTypeDropDown
             // 
-            this.trackCarIDDropDown.FormattingEnabled = true;
-            this.trackCarIDDropDown.Location = new System.Drawing.Point(49, 14);
-            this.trackCarIDDropDown.Name = "trackCarIDDropDown";
-            this.trackCarIDDropDown.Size = new System.Drawing.Size(42, 21);
-            this.trackCarIDDropDown.TabIndex = 5;
-            this.trackCarIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
-            this.trackCarIDDropDown.SelectedIndexChanged += new System.EventHandler(this.trackCarIDDropDown_SelectedIndexChanged);
+            this.controllerTypeDropDown.FormattingEnabled = true;
+            this.controllerTypeDropDown.Items.AddRange(new object[] {
+            "PID",
+            "Manual keyboard"});
+            this.controllerTypeDropDown.Location = new System.Drawing.Point(293, 13);
+            this.controllerTypeDropDown.Name = "controllerTypeDropDown";
+            this.controllerTypeDropDown.Size = new System.Drawing.Size(108, 21);
+            this.controllerTypeDropDown.TabIndex = 4;
+            this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
+            // 
+            // controlStrategyPanel
+            // 
+            this.controlStrategyPanel.Location = new System.Drawing.Point(0, 126);
+            this.controlStrategyPanel.Name = "controlStrategyPanel";
+            this.controlStrategyPanel.Size = new System.Drawing.Size(200, 138);
+            this.controlStrategyPanel.TabIndex = 7;
+            // 
+            // carIDDropDown
+            // 
+            this.carIDDropDown.FormattingEnabled = true;
+            this.carIDDropDown.Location = new System.Drawing.Point(49, 14);
+            this.carIDDropDown.Name = "carIDDropDown";
+            this.carIDDropDown.Size = new System.Drawing.Size(42, 21);
+            this.carIDDropDown.TabIndex = 5;
+            this.carIDDropDown.DropDown += new System.EventHandler(this.trackCarIDDropDown_DropDown);
+            this.carIDDropDown.SelectedIndexChanged += new System.EventHandler(this.carIDDropDown_SelectedIndexChanged);
+            // 
+            // maxSpeedNumeric
+            // 
+            this.maxSpeedNumeric.DecimalPlaces = 1;
+            this.maxSpeedNumeric.Location = new System.Drawing.Point(71, 73);
+            this.maxSpeedNumeric.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.maxSpeedNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.maxSpeedNumeric.Name = "maxSpeedNumeric";
+            this.maxSpeedNumeric.Size = new System.Drawing.Size(48, 20);
+            this.maxSpeedNumeric.TabIndex = 9;
+            this.maxSpeedNumeric.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.maxSpeedNumeric.ValueChanged += new System.EventHandler(this.trafficMaxSpeedNumeric_ValueChanged);
+            // 
+            // controlStrategyLabel
+            // 
+            this.controlStrategyLabel.AutoSize = true;
+            this.controlStrategyLabel.Location = new System.Drawing.Point(3, 102);
+            this.controlStrategyLabel.Name = "controlStrategyLabel";
+            this.controlStrategyLabel.Size = new System.Drawing.Size(85, 13);
+            this.controlStrategyLabel.TabIndex = 5;
+            this.controlStrategyLabel.Text = "Control Strategy:";
+            // 
+            // maxSpeedLabel
+            // 
+            this.maxSpeedLabel.AutoSize = true;
+            this.maxSpeedLabel.Location = new System.Drawing.Point(3, 75);
+            this.maxSpeedLabel.Name = "maxSpeedLabel";
+            this.maxSpeedLabel.Size = new System.Drawing.Size(62, 13);
+            this.maxSpeedLabel.TabIndex = 8;
+            this.maxSpeedLabel.Text = "Max speed:";
+            // 
+            // controlStrategyDropDown
+            // 
+            this.controlStrategyDropDown.FormattingEnabled = true;
+            this.controlStrategyDropDown.Items.AddRange(new object[] {
+            "Stand still",
+            "Follow track",
+            "Overtaking",
+            "Step response"});
+            this.controlStrategyDropDown.Location = new System.Drawing.Point(94, 99);
+            this.controlStrategyDropDown.Name = "controlStrategyDropDown";
+            this.controlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
+            this.controlStrategyDropDown.TabIndex = 4;
+            this.controlStrategyDropDown.SelectedIndexChanged += new System.EventHandler(this.controlStrategyControlStrategyDropDown_SelectedIndexChanged);
             // 
             // importTrackButton
             // 
-            this.importTrackButton.Location = new System.Drawing.Point(107, 72);
+            this.importTrackButton.Location = new System.Drawing.Point(148, 44);
             this.importTrackButton.Name = "importTrackButton";
-            this.importTrackButton.Size = new System.Drawing.Size(88, 23);
+            this.importTrackButton.Size = new System.Drawing.Size(47, 23);
             this.importTrackButton.TabIndex = 4;
-            this.importTrackButton.Text = "Import from file";
+            this.importTrackButton.Text = "Import";
             this.importTrackButton.UseVisualStyleBackColor = true;
             this.importTrackButton.Click += new System.EventHandler(this.importTrackButton_Click);
             // 
@@ -253,232 +326,9 @@
             this.tracksDropDown.FormattingEnabled = true;
             this.tracksDropDown.Location = new System.Drawing.Point(47, 45);
             this.tracksDropDown.Name = "tracksDropDown";
-            this.tracksDropDown.Size = new System.Drawing.Size(148, 21);
+            this.tracksDropDown.Size = new System.Drawing.Size(95, 21);
             this.tracksDropDown.TabIndex = 2;
             this.tracksDropDown.SelectedIndexChanged += new System.EventHandler(this.tracksDropDown_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(428, 102);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 17);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "Controller";
-            // 
-            // controllerBasePanel
-            // 
-            this.controllerBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.controllerBasePanel.Controls.Add(this.controllerCancelButton);
-            this.controllerBasePanel.Controls.Add(this.controllerApplyButton);
-            this.controllerBasePanel.Controls.Add(this.controllerTypePanel);
-            this.controllerBasePanel.Controls.Add(this.controllerTypeLabel);
-            this.controllerBasePanel.Controls.Add(this.controllerTypeDropDown);
-            this.controllerBasePanel.Controls.Add(this.controllerCarIDLabel);
-            this.controllerBasePanel.Controls.Add(this.controllerCarIDDropDown);
-            this.controllerBasePanel.Location = new System.Drawing.Point(424, 111);
-            this.controllerBasePanel.Name = "controllerBasePanel";
-            this.controllerBasePanel.Size = new System.Drawing.Size(200, 276);
-            this.controllerBasePanel.TabIndex = 4;
-            // 
-            // controllerCancelButton
-            // 
-            this.controllerCancelButton.Location = new System.Drawing.Point(69, 248);
-            this.controllerCancelButton.Name = "controllerCancelButton";
-            this.controllerCancelButton.Size = new System.Drawing.Size(60, 23);
-            this.controllerCancelButton.TabIndex = 8;
-            this.controllerCancelButton.Text = "Clear";
-            this.controllerCancelButton.UseVisualStyleBackColor = true;
-            this.controllerCancelButton.Click += new System.EventHandler(this.controllerCancelButton_Click);
-            // 
-            // controllerApplyButton
-            // 
-            this.controllerApplyButton.Location = new System.Drawing.Point(135, 248);
-            this.controllerApplyButton.Name = "controllerApplyButton";
-            this.controllerApplyButton.Size = new System.Drawing.Size(60, 23);
-            this.controllerApplyButton.TabIndex = 7;
-            this.controllerApplyButton.Text = "Apply";
-            this.controllerApplyButton.UseVisualStyleBackColor = true;
-            this.controllerApplyButton.Click += new System.EventHandler(this.controllerApplyButton_Click);
-            // 
-            // controllerTypePanel
-            // 
-            this.controllerTypePanel.Location = new System.Drawing.Point(-1, 72);
-            this.controllerTypePanel.Name = "controllerTypePanel";
-            this.controllerTypePanel.Size = new System.Drawing.Size(200, 159);
-            this.controllerTypePanel.TabIndex = 6;
-            // 
-            // controllerTypeLabel
-            // 
-            this.controllerTypeLabel.AutoSize = true;
-            this.controllerTypeLabel.Location = new System.Drawing.Point(3, 48);
-            this.controllerTypeLabel.Name = "controllerTypeLabel";
-            this.controllerTypeLabel.Size = new System.Drawing.Size(77, 13);
-            this.controllerTypeLabel.TabIndex = 5;
-            this.controllerTypeLabel.Text = "Controller type:";
-            // 
-            // controllerTypeDropDown
-            // 
-            this.controllerTypeDropDown.FormattingEnabled = true;
-            this.controllerTypeDropDown.Items.AddRange(new object[] {
-            "PID",
-            "Manual keyboard"});
-            this.controllerTypeDropDown.Location = new System.Drawing.Point(86, 45);
-            this.controllerTypeDropDown.Name = "controllerTypeDropDown";
-            this.controllerTypeDropDown.Size = new System.Drawing.Size(108, 21);
-            this.controllerTypeDropDown.TabIndex = 4;
-            this.controllerTypeDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerTypeDropDown_SelectedIndexChanged);
-            // 
-            // controllerCarIDLabel
-            // 
-            this.controllerCarIDLabel.AutoSize = true;
-            this.controllerCarIDLabel.Location = new System.Drawing.Point(4, 17);
-            this.controllerCarIDLabel.Name = "controllerCarIDLabel";
-            this.controllerCarIDLabel.Size = new System.Drawing.Size(40, 13);
-            this.controllerCarIDLabel.TabIndex = 1;
-            this.controllerCarIDLabel.Text = "Car ID:";
-            // 
-            // controllerCarIDDropDown
-            // 
-            this.controllerCarIDDropDown.FormattingEnabled = true;
-            this.controllerCarIDDropDown.Location = new System.Drawing.Point(50, 14);
-            this.controllerCarIDDropDown.Name = "controllerCarIDDropDown";
-            this.controllerCarIDDropDown.Size = new System.Drawing.Size(42, 21);
-            this.controllerCarIDDropDown.TabIndex = 0;
-            this.controllerCarIDDropDown.DropDown += new System.EventHandler(this.controllerCarIDDropDown_DropDown);
-            this.controllerCarIDDropDown.SelectedIndexChanged += new System.EventHandler(this.controllerCarIDDropDown_SelectedIndexChanged);
-            // 
-            // trafficControlPanelLabel
-            // 
-            this.trafficControlPanelLabel.AutoSize = true;
-            this.trafficControlPanelLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.trafficControlPanelLabel.Location = new System.Drawing.Point(634, 102);
-            this.trafficControlPanelLabel.Name = "trafficControlPanelLabel";
-            this.trafficControlPanelLabel.Size = new System.Drawing.Size(97, 17);
-            this.trafficControlPanelLabel.TabIndex = 5;
-            this.trafficControlPanelLabel.Text = "Traffic Control";
-            // 
-            // trafficControlBasePanel
-            // 
-            this.trafficControlBasePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.trafficControlBasePanel.Controls.Add(this.trafficCarIDLabel);
-            this.trafficControlBasePanel.Controls.Add(this.trafficCancelButton);
-            this.trafficControlBasePanel.Controls.Add(this.trafficCarIDDropDown);
-            this.trafficControlBasePanel.Controls.Add(this.trafficApplyButton);
-            this.trafficControlBasePanel.Controls.Add(this.trafficMaxSpeedNumeric);
-            this.trafficControlBasePanel.Controls.Add(this.trafficMaxSpeedLabel);
-            this.trafficControlBasePanel.Controls.Add(this.controlStrategyTypePanel);
-            this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyLabel);
-            this.trafficControlBasePanel.Controls.Add(this.controlStrategyControlStrategyDropDown);
-            this.trafficControlBasePanel.Location = new System.Drawing.Point(630, 111);
-            this.trafficControlBasePanel.Name = "trafficControlBasePanel";
-            this.trafficControlBasePanel.Size = new System.Drawing.Size(200, 276);
-            this.trafficControlBasePanel.TabIndex = 4;
-            this.trafficControlBasePanel.Paint += new System.Windows.Forms.PaintEventHandler(this.trafficControlBasePanel_Paint);
-            // 
-            // trafficCarIDLabel
-            // 
-            this.trafficCarIDLabel.AutoSize = true;
-            this.trafficCarIDLabel.Location = new System.Drawing.Point(3, 16);
-            this.trafficCarIDLabel.Name = "trafficCarIDLabel";
-            this.trafficCarIDLabel.Size = new System.Drawing.Size(40, 13);
-            this.trafficCarIDLabel.TabIndex = 10;
-            this.trafficCarIDLabel.Text = "Car ID:";
-            // 
-            // trafficCancelButton
-            // 
-            this.trafficCancelButton.Location = new System.Drawing.Point(69, 248);
-            this.trafficCancelButton.Name = "trafficCancelButton";
-            this.trafficCancelButton.Size = new System.Drawing.Size(60, 23);
-            this.trafficCancelButton.TabIndex = 9;
-            this.trafficCancelButton.Text = "Clear";
-            this.trafficCancelButton.UseVisualStyleBackColor = true;
-            this.trafficCancelButton.Click += new System.EventHandler(this.trafficCancelButton_Click);
-            // 
-            // trafficCarIDDropDown
-            // 
-            this.trafficCarIDDropDown.FormattingEnabled = true;
-            this.trafficCarIDDropDown.Location = new System.Drawing.Point(49, 13);
-            this.trafficCarIDDropDown.Name = "trafficCarIDDropDown";
-            this.trafficCarIDDropDown.Size = new System.Drawing.Size(42, 21);
-            this.trafficCarIDDropDown.TabIndex = 9;
-            this.trafficCarIDDropDown.DropDown += new System.EventHandler(this.trafficCarIDDropDown_DropDown);
-            this.trafficCarIDDropDown.SelectedIndexChanged += new System.EventHandler(this.trafficCarIDDropDown_SelectedIndexChanged);
-            // 
-            // trafficApplyButton
-            // 
-            this.trafficApplyButton.Location = new System.Drawing.Point(135, 248);
-            this.trafficApplyButton.Name = "trafficApplyButton";
-            this.trafficApplyButton.Size = new System.Drawing.Size(60, 23);
-            this.trafficApplyButton.TabIndex = 9;
-            this.trafficApplyButton.Text = "Apply";
-            this.trafficApplyButton.UseVisualStyleBackColor = true;
-            this.trafficApplyButton.Click += new System.EventHandler(this.trafficApplyButton_Click);
-            // 
-            // trafficMaxSpeedNumeric
-            // 
-            this.trafficMaxSpeedNumeric.DecimalPlaces = 1;
-            this.trafficMaxSpeedNumeric.Location = new System.Drawing.Point(94, 67);
-            this.trafficMaxSpeedNumeric.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.trafficMaxSpeedNumeric.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.trafficMaxSpeedNumeric.Name = "trafficMaxSpeedNumeric";
-            this.trafficMaxSpeedNumeric.Size = new System.Drawing.Size(101, 20);
-            this.trafficMaxSpeedNumeric.TabIndex = 9;
-            this.trafficMaxSpeedNumeric.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            this.trafficMaxSpeedNumeric.ValueChanged += new System.EventHandler(this.trafficMaxSpeedNumeric_ValueChanged);
-            // 
-            // trafficMaxSpeedLabel
-            // 
-            this.trafficMaxSpeedLabel.AutoSize = true;
-            this.trafficMaxSpeedLabel.Location = new System.Drawing.Point(3, 69);
-            this.trafficMaxSpeedLabel.Name = "trafficMaxSpeedLabel";
-            this.trafficMaxSpeedLabel.Size = new System.Drawing.Size(62, 13);
-            this.trafficMaxSpeedLabel.TabIndex = 8;
-            this.trafficMaxSpeedLabel.Text = "Max speed:";
-            // 
-            // controlStrategyTypePanel
-            // 
-            this.controlStrategyTypePanel.Location = new System.Drawing.Point(-1, 93);
-            this.controlStrategyTypePanel.Name = "controlStrategyTypePanel";
-            this.controlStrategyTypePanel.Size = new System.Drawing.Size(200, 138);
-            this.controlStrategyTypePanel.TabIndex = 7;
-            // 
-            // controlStrategyControlStrategyLabel
-            // 
-            this.controlStrategyControlStrategyLabel.AutoSize = true;
-            this.controlStrategyControlStrategyLabel.Location = new System.Drawing.Point(3, 43);
-            this.controlStrategyControlStrategyLabel.Name = "controlStrategyControlStrategyLabel";
-            this.controlStrategyControlStrategyLabel.Size = new System.Drawing.Size(85, 13);
-            this.controlStrategyControlStrategyLabel.TabIndex = 5;
-            this.controlStrategyControlStrategyLabel.Text = "Control Strategy:";
-            // 
-            // controlStrategyControlStrategyDropDown
-            // 
-            this.controlStrategyControlStrategyDropDown.FormattingEnabled = true;
-            this.controlStrategyControlStrategyDropDown.Items.AddRange(new object[] {
-            "Stand still",
-            "Follow track",
-            "Overtaking",
-            "Step response",
-            "Platooning"});
-            this.controlStrategyControlStrategyDropDown.Location = new System.Drawing.Point(94, 40);
-            this.controlStrategyControlStrategyDropDown.Name = "controlStrategyControlStrategyDropDown";
-            this.controlStrategyControlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
-            this.controlStrategyControlStrategyDropDown.TabIndex = 4;
-            this.controlStrategyControlStrategyDropDown.SelectedIndexChanged += new System.EventHandler(this.controlStrategyControlStrategyDropDown_SelectedIndexChanged);
             // 
             // openFileDialog
             // 
@@ -502,7 +352,7 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowTemplate.ReadOnly = true;
-            this.dataGridView.Size = new System.Drawing.Size(819, 153);
+            this.dataGridView.Size = new System.Drawing.Size(705, 153);
             this.dataGridView.TabIndex = 6;
             // 
             // CarID
@@ -599,21 +449,6 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "Data grid update time (ms):";
             // 
-            // calibration
-            // 
-            this.calibration.BackColor = System.Drawing.Color.DodgerBlue;
-            this.calibration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.calibration.Enabled = false;
-            this.calibration.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.calibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.calibration.Location = new System.Drawing.Point(435, 12);
-            this.calibration.Name = "calibration";
-            this.calibration.Size = new System.Drawing.Size(135, 38);
-            this.calibration.TabIndex = 11;
-            this.calibration.Text = "Calibration";
-            this.calibration.UseVisualStyleBackColor = false;
-            this.calibration.Click += new System.EventHandler(this.calibration_Click);
-            // 
             // deltaTimeLabel
             // 
             this.deltaTimeLabel.AutoSize = true;
@@ -623,22 +458,34 @@
             this.deltaTimeLabel.TabIndex = 13;
             this.deltaTimeLabel.Text = "Delta time : 0";
             // 
+            // calibration
+            // 
+            this.calibration.BackColor = System.Drawing.Color.DodgerBlue;
+            this.calibration.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.calibration.FlatAppearance.BorderColor = System.Drawing.Color.GreenYellow;
+            this.calibration.FlatAppearance.BorderSize = 0;
+            this.calibration.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.calibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.calibration.Location = new System.Drawing.Point(435, 12);
+            this.calibration.Name = "calibration";
+            this.calibration.Size = new System.Drawing.Size(135, 38);
+            this.calibration.TabIndex = 14;
+            this.calibration.Text = "Calibration";
+            this.calibration.UseVisualStyleBackColor = false;
+            this.calibration.Click += new System.EventHandler(this.calibration_Click);
+            // 
             // mainGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 584);
-            this.Controls.Add(this.deltaTimeLabel);
+            this.ClientSize = new System.Drawing.Size(728, 584);
             this.Controls.Add(this.calibration);
+            this.Controls.Add(this.deltaTimeLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridTimeNumeric);
             this.Controls.Add(this.Initiate);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.trafficControlPanelLabel);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.trafficControlBasePanel);
             this.Controls.Add(this.trackPanelLabel);
-            this.Controls.Add(this.controllerBasePanel);
             this.Controls.Add(this.trackBasePanel);
             this.Controls.Add(this.simulationPanelLabel);
             this.Controls.Add(this.stopSimulationButton);
@@ -650,15 +497,9 @@
             this.Text = "CMVP";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.mainGUI_FormClosed);
             this.simulationBasePanel.ResumeLayout(false);
-            this.simulationBasePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numberOfCarsNumeric)).EndInit();
             this.trackBasePanel.ResumeLayout(false);
             this.trackBasePanel.PerformLayout();
-            this.controllerBasePanel.ResumeLayout(false);
-            this.controllerBasePanel.PerformLayout();
-            this.trafficControlBasePanel.ResumeLayout(false);
-            this.trafficControlBasePanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trafficMaxSpeedNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.maxSpeedNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTimeNumeric)).EndInit();
             this.ResumeLayout(false);
@@ -674,37 +515,19 @@
         private System.Windows.Forms.Label simulationPanelLabel;
         private System.Windows.Forms.Label trackPanelLabel;
         private System.Windows.Forms.Panel trackBasePanel;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel controllerBasePanel;
-        private System.Windows.Forms.Label trafficControlPanelLabel;
-        private System.Windows.Forms.Panel trafficControlBasePanel;
-        private System.Windows.Forms.Button controllerCancelButton;
-        private System.Windows.Forms.Button controllerApplyButton;
-        private System.Windows.Forms.Panel controllerTypePanel;
-        private System.Windows.Forms.Label controllerTypeLabel;
-        private System.Windows.Forms.ComboBox controllerTypeDropDown;
-        private System.Windows.Forms.Label controllerCarIDLabel;
-        private System.Windows.Forms.ComboBox controllerCarIDDropDown;
-        private System.Windows.Forms.NumericUpDown numberOfCarsNumeric;
-        private System.Windows.Forms.Label numberOfCarsLabel;
         private System.Windows.Forms.Label trackTrackLabel;
         private System.Windows.Forms.ComboBox tracksDropDown;
-        private System.Windows.Forms.Panel controlStrategyTypePanel;
-        private System.Windows.Forms.Label controlStrategyControlStrategyLabel;
-        private System.Windows.Forms.ComboBox controlStrategyControlStrategyDropDown;
+        private System.Windows.Forms.Panel controlStrategyPanel;
+        private System.Windows.Forms.Label controlStrategyLabel;
+        private System.Windows.Forms.ComboBox controlStrategyDropDown;
         private System.Windows.Forms.Button openCameraControlButton;
-        private System.Windows.Forms.NumericUpDown trafficMaxSpeedNumeric;
-        private System.Windows.Forms.Label trafficMaxSpeedLabel;
+        private System.Windows.Forms.NumericUpDown maxSpeedNumeric;
+        private System.Windows.Forms.Label maxSpeedLabel;
         private System.Windows.Forms.Button importTrackButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.Label trafficCarIDLabel;
-        private System.Windows.Forms.Button trafficCancelButton;
-        private System.Windows.Forms.ComboBox trafficCarIDDropDown;
-        private System.Windows.Forms.Button trafficApplyButton;
         private System.Windows.Forms.Label trackCarIDLabel;
-        private System.Windows.Forms.ComboBox trackCarIDDropDown;
-        private System.Windows.Forms.Button trackCancelButton;
-        private System.Windows.Forms.Button trackApplyButton;
+        private System.Windows.Forms.ComboBox carIDDropDown;
+        private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Button openPerformanceAnalyzerButton;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button stopSimulationButton;
@@ -718,7 +541,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Heading;
         private System.Windows.Forms.DataGridViewTextBoxColumn SteeringControlSignal;
         private System.Windows.Forms.DataGridViewTextBoxColumn ThrottleControlSignal;
-        private System.Windows.Forms.Button calibration;
         private System.Windows.Forms.Label deltaTimeLabel;
+        private System.Windows.Forms.Button calibration;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel controllerTypePanel;
+        private System.Windows.Forms.Label controllerTypeLabel;
+        private System.Windows.Forms.ComboBox controllerTypeDropDown;
+        private System.Windows.Forms.Button maxSpeedUpdate;
     }
 }
