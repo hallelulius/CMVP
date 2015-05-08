@@ -120,9 +120,9 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="ControlStrategies\Overtaking.cs" />
+    <Compile Include="ControlStrategies\Platooning.cs" />
     <Compile Include="ControlStrategies\StandStill.cs" />
     <Compile Include="ControlStrategies\JustFollow.cs" />
-    <Compile Include="ControlStrategies\StepResponse.cs" />
     <Compile Include="ControlStrategy.cs" />
     <Compile Include="Controllers\PIDController.cs" />
     <Compile Include="Communication.cs" />
@@ -134,6 +134,12 @@
       <DependentUpon>PerformanceAnalyzerWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Item.cs" />
+    <Compile Include="GUI\PlatooningControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\PlatooningControlPanel.Designer.cs">
+      <DependentUpon>PlatooningControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="PTGreyCamera.cs" />
     <Compile Include="GUI\SeriesControl.cs">
       <SubType>UserControl</SubType>
@@ -292,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\PIDControlPanel.resx">
       <DependentUpon>PIDControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\PlatooningControlPanel.resx">
+      <DependentUpon>PlatooningControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SeriesControl.resx">
       <DependentUpon>SeriesControl.cs</DependentUpon>

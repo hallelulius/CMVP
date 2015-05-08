@@ -79,8 +79,6 @@ namespace CMVP
             lock(locker){
                 if (panel != null)
                 {
-
-                    //drawImg = (Bitmap)drawFeaturesOnImg().Clone();
                     panel.BackgroundImage = drawFeaturesOnImg();
 
                 }
@@ -95,25 +93,11 @@ namespace CMVP
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(img);
-            /*
-            int k = 0;
-            foreach (Quadrilateral q in squares)
-            {
-                g.DrawLines(penArray[k % 4], q.getDrawingPoints());
-                k++;
-            }
-            System.Drawing.Point[] dp = idealTriangle.getDrawingPoints();
-            dp[0].Offset(600, 600);
-            dp[1].Offset(600, 600);
-            dp[2].Offset(600, 600);
-            dp[3].Offset(600, 600);
-            g.DrawLines(yellowPen, dp);
-            */
             foreach (Car car in Program.cars)
             {
                 if (drawCirclesOnImg)
                 {
-                    List<Blob> cirkels = ip.getBlobs(blobMin, blobMax, img);
+                    List<Blob> cirkels = ip.getBlobsSlow(blobMin, blobMax, img);
                     drawCircles(cirkels);
                 }
                 if (drawTailsOnImg)

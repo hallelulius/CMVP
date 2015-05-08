@@ -28,6 +28,7 @@ namespace CMVP
         private Bitmap img;
         private Bitmap croppedImg;
         private object _locker = new object();
+        private object _locker2 = new object();
 
         private byte threshold;
 
@@ -39,7 +40,11 @@ namespace CMVP
         //variables used for calculating time difference between updates
         private double deltaTime;
         private double prevTime;
-        private AutoResetEvent wh;
+
+        //to ensure proper workingflow
+        private AutoResetEvent whCamera;
+        private AutoResetEvent whTime;
+        private AutoResetEvent whBrain; public AutoResetEvent BRAIN_EVENT_HANDLE { get { return whBrain; } }
 
 
         //sets ideal triangle base and height
@@ -67,7 +72,9 @@ namespace CMVP
 
         public void start()
         {
-            wh = videoStream.NEW_IMG_AVAILABLE;
+            whCamera = videoStream.NEW_IMG_AVAILABLE;
+            whTime = videoStream.TIME_MEASURED;
+            whBrain = new AutoResetEvent(false);
             prevTime = videoStream.getTime();
             Thread thread = new Thread(run);
             thread.Name = "Image Processing";
@@ -143,8 +150,10 @@ namespace CMVP
         {
             while (true)
             {
-                wh.WaitOne();
+                whBrain.Set();
+                whCamera.WaitOne();
                 processImage();
+                whBrain.Set();
 
             }
         }
@@ -152,8 +161,8 @@ namespace CMVP
         {
             img = videoStream.getImage();
             double tempTime = videoStream.getTime();
+            whTime.Set();
             deltaTime = tempTime - prevTime;
-            //Console.WriteLine(deltaTime);
             prevTime = tempTime;
 
             foreach (Car car in objects)
@@ -426,16 +435,35 @@ namespace CMVP
             }
             return idPoints;
         }
-        public List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
+        public  List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
         {
-            BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
-            blobCounter.MinHeight = minHeight;
-            blobCounter.MaxHeight = maxHeight;
-            blobCounter.FilterBlobs = true;
-            blobCounter.ProcessImage(img);
-            Blob[] blobs = blobCounter.GetObjectsInformation();
-            return blobs.ToList<Blob>();
+            lock (_locker)
+            {
+                BlobCounter blobCounter = new BlobCounter();
+                blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
+                blobCounter.MinHeight = minHeight;
+                blobCounter.MaxHeight = maxHeight;
+                blobCounter.FilterBlobs = true;
+                blobCounter.ProcessImage(img);
+                Blob[] blobs = blobCounter.GetObjectsInformation();
+                return blobs.ToList<Blob>();
+            }
+
+        }
+        public List<Blob> getBlobsSlow(int minHeight, int maxHeight, Bitmap img)
+        {
+            lock (_locker)
+            {
+                BlobCounter blobCounter = new BlobCounter();
+                blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
+                blobCounter.MinHeight = minHeight;
+                blobCounter.MaxHeight = maxHeight;
+                blobCounter.FilterBlobs = true;
+                blobCounter.ProcessImage(img);
+                Blob[] blobs = blobCounter.GetObjectsInformation();
+                return blobs.ToList<Blob>();
+            }
+
         }
         public void stop()
         {
@@ -445,7 +473,10 @@ namespace CMVP
 
         public Bitmap getImage()
         {
-            return videoStream.getImage();
+            lock (_locker2)
+            {
+                return videoStream.getImage();
+            }
         }
         public double getTime()
         {

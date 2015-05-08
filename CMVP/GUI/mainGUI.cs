@@ -48,7 +48,8 @@ namespace CMVP
         {
             brain.StopWorking();
             Program.com.stopCars();
-            Environment.Exit(0);
+            Thread.Sleep(100);
+            //Environment.Exit(0);
         }
         private void loadTracks() // Searches for .txt files in the "Tracks" folder and adds them to the tracks menu.
         {
@@ -176,7 +177,7 @@ namespace CMVP
         private void openPerformanceAnalyzerButton_Click(object sender, EventArgs e)
         {
             paw.Show();
-        }
+            }
 
         private void applyButton_Click(object sender, EventArgs e)
         {
@@ -196,15 +197,13 @@ namespace CMVP
 
                     foreach (Control ctrl in controllerTypePanel.Controls)
                     {
-                        controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
-                        controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
-                        controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
-                        controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
-                        controller.TiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value);
-                        controller.TiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value);
-                        controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
-                        controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
-
+                      controller.KpSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpSteerNumeric", true)[0])).Value);
+                      controller.KpThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value);
+                      controller.KiSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value);
+                      controller.KiThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value);
+                      controller.KdSteer = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value);
+                      controller.KdThrottle = (float)Convert.ToDouble(((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value);
+                      
                     }
                     tempCar.setController(controller);
                     updateControllerParametersGUI(tempCar);
@@ -218,23 +217,23 @@ namespace CMVP
 
                 // Set control strategy
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Follow track")
-                {
+        {
                     ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
                     jf.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(jf);
-                }
+        }
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-                {
+            {
                     ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
-                }
+        }
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
-                {
+            {
                     ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
-                }
+        }
 
                 // Set max speed
                 tempCar.setMaxSpeed((float)maxSpeedNumeric.Value);
@@ -251,8 +250,6 @@ namespace CMVP
                     ((NumericUpDown)(ctrl.Controls.Find("kpThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KpThrottle);
                     ((NumericUpDown)(ctrl.Controls.Find("kiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiSteer);
                     ((NumericUpDown)(ctrl.Controls.Find("kiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KiThrottle);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiSteer);
-                    ((NumericUpDown)(ctrl.Controls.Find("tiThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).TiThrottle);
                     ((NumericUpDown)(ctrl.Controls.Find("kdSteerNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdSteer);
                     ((NumericUpDown)(ctrl.Controls.Find("kdThrottleNumeric", true)[0])).Value = Convert.ToDecimal(((PIDController)car.getController()).KdThrottle);
                 }
@@ -262,7 +259,7 @@ namespace CMVP
         private void ptgrey_Click(object sender, EventArgs e)
         {
             //GUI.PTGreyForm ptgf = new GUI.PTGreyForm();
-           // ptgf.Show();
+            //ptgf.Show();
         }
 
         private void Initiate_Click(object sender, EventArgs e)
@@ -278,7 +275,14 @@ namespace CMVP
 
         private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
+            controlStrategyPanel.Controls.Clear();
             applyButton.Enabled = true;
+
+            if (controlStrategyDropDown.SelectedIndex != -1)
+            {
+                if (controlStrategyDropDown.SelectedItem.ToString() == "Platooning")
+                    controlStrategyPanel.Controls.Add(new PlatooningControlPanel());
+            }
         }
 
         private void trafficMaxSpeedNumeric_ValueChanged(object sender, EventArgs e)
@@ -310,10 +314,10 @@ namespace CMVP
 
         private void calibration_Click(object sender, EventArgs e)
         {
-            foreach(Car c in Program.cars)
+            foreach (Car c in Program.cars)
             {
                 Program.com.calibrationMode(c.ID);
-                MessageBox.Show("Calibrate the controller for car: "+c.ID+".\n Read the instructions in the manual chapter 6,4. \n Remember to always run the platform with external power source.");
+                MessageBox.Show("Calibrate the controller for car: " + c.ID + ".\n Read the instructions in the manual chapter 6,4. \n Remember to always run the platform with external power source.");
             }
         }
 

@@ -45,11 +45,9 @@ namespace CMVP
                 file.WriteLine(kpSteerNumeric.Value);
                 file.WriteLine(kiSteerNumeric.Value);
                 file.WriteLine(kdSteerNumeric.Value);
-                //file.WriteLine(tiSteerNumeric.Value);
                 file.WriteLine(kpThrottleNumeric.Value);
                 file.WriteLine(kiThrottleNumeric.Value);
                 file.WriteLine(kdThrottleNumeric.Value);
-                //file.WriteLine(tiThrottleNumeric.Value);
                 file.Close();
             }
             catch (Exception ex)
@@ -81,11 +79,9 @@ namespace CMVP
                         kpSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kiSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kdSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
-                        //tiSteerNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kpThrottleNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kiThrottleNumeric.Value = decimal.Parse(sReader.ReadLine());
                         kdThrottleNumeric.Value = decimal.Parse(sReader.ReadLine());
-                        //tiThrottleNumeric.Value = decimal.Parse(sReader.ReadLine());
                         sReader.Close();
                         stream.Close();
                     }
