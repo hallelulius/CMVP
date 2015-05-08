@@ -244,7 +244,7 @@ namespace CMVP
                     ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
                     pl.setTrack(tempCar.getControlStrategy().getTrack());
 
-                    foreach (Control ctrl in controllerTypePanel.Controls)
+                    foreach (Control ctrl in controlStrategyPanel.Controls)
                     {
                         pl.followedCar = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)ctrl).followedCarID);
                         pl.distance = ((PlatooningControlPanel)ctrl).distance;

@@ -25,7 +25,7 @@ namespace CMVP
             foreach (Car car in Program.cars)
             {      
                 if (!carToFollowIDDropDown.Items.Contains(car.ID) &&
-                   (((ComboBox)this.ParentForm.Controls.Find("trafficCarIDDropDown", true)[0]).SelectedItem.ToString() != Convert.ToString(car.ID)))
+                   (((ComboBox)this.ParentForm.Controls.Find("carIDDropDown", true)[0]).SelectedItem.ToString() != Convert.ToString(car.ID)))
                     carToFollowIDDropDown.Items.Add(car.ID);
             }
         }
@@ -50,7 +50,7 @@ namespace CMVP
         private void carToFollowIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            activeCar = Program.cars.Find(car => car.ID == Convert.ToInt32(((ComboBox)this.ParentForm.Controls.Find("trafficCarIDDropDown", true)[0]).SelectedItem.ToString()));
+            //activeCar = Program.cars.Find(car => car.ID == Convert.ToInt32(((ComboBox)this.ParentForm.Controls.Find("trafficCarIDDropDown", true)[0]).SelectedItem.ToString()));
         }
 
         public void startStatusLabelThread()
