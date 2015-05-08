@@ -225,6 +225,7 @@ namespace CMVP
                     i.Add(getIdPoints(t, points).Count);
                 }
                 bool carFoundThisTime = false;
+                whDataUsed.Wait(8); //ensure data is passed to the cars
                 foreach (Triangle triangle in triangles)
                 {
                     //Unknown if comparing to idealTriangle is nescesarry.
@@ -242,7 +243,6 @@ namespace CMVP
                                 points.Remove(p);
                             foreach (AForge.IntPoint p in idPoints)
                                 points.Remove(p);
-                           // whDataUsed.Wait(8); //wait for data to being used timeout after 8 ms
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;

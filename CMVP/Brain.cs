@@ -45,9 +45,8 @@ namespace CMVP
 
             while (true)
             {
-                whDataUsed.Reset();
-
                 whBrain.WaitOne(); //wait for imageprocessing to finish
+                whDataUsed.Reset(); // stop image processing
                 foreach (Car car in cars)
                 {
                     car.updateState();
@@ -55,32 +54,30 @@ namespace CMVP
                 foreach (Car car in cars)
                 {
                     if (car.getControlStrategy() != null)
-                        {
+                    {
                         car.getControlStrategy().updateReferencePoint();
                     }
                 }
                 if (working)
                 {
-                foreach (Car car in cars)
-                {
-                    car.getController().updateController();
-                }
+                    foreach (Car car in cars)
+                    {
+                        car.getController().updateController();
+                    }
+                    foreach (Car car in cars)
+                    {
+                        if (car.found)
+                        {
+                            car.send();
+                        }
+                        else
+                        {
+                            // car.stop();
+                            car.send();
+                            Console.WriteLine("Car not found");
+                        }
+                    }
                     whDataUsed.Set();
-                foreach (Car car in cars)
-                {
-                    if (car.found)
-                    {
-                        car.send();
-                    }
-                    else
-                    {
-                       // car.stop();
-                        car.send();
-                        Console.WriteLine("Car not found");
-                    }
-                    }
-
-
                 }
 
                 else
@@ -104,7 +101,7 @@ namespace CMVP
         private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             throw new NotImplementedException();
-                }
+        }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -119,46 +116,46 @@ namespace CMVP
                 if (working)
                 {
                     dt = time.ElapsedMilliseconds - startTime;
-                // Give values to analyzer
-                if (analyzer != null) // Check if the analyzer is created. OBS: If it is created and destroyed it is not garantued to be null, thus the next if-statement.
-                {
-                    if (!analyzer.IsDisposed)
+                    // Give values to analyzer
+                    if (analyzer != null) // Check if the analyzer is created. OBS: If it is created and destroyed it is not garantued to be null, thus the next if-statement.
                     {
-                        // Give car values to analyzer:
-                        double xValue = Convert.ToDouble(time.ElapsedMilliseconds) / 1000;
-                        foreach (Car car in cars)
+                        if (!analyzer.IsDisposed)
                         {
-                            string s = "Car " + car.ID + " ";
-                            sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
-                            sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
-                            sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
+                            // Give car values to analyzer:
+                            double xValue = Convert.ToDouble(time.ElapsedMilliseconds) / 1000;
+                            foreach (Car car in cars)
+                            {
+                                string s = "Car " + car.ID + " ";
+                                sendDataThreadSafe(s + "velocity", xValue, car.getSpeed());
+                                sendDataThreadSafe(s + "velocity reference signal", xValue, car.getController().getRefSpeed() * (double)car.getMaxSpeed());
+                                sendDataThreadSafe(s + "steer control signal", xValue, car.getController().getSteer());
                                 sendDataThreadSafe(s + "throttle control signal", xValue, car.getController().getThrottle() * car.getMaxSpeed());
-                            sendDataThreadSafe(s + "heading reference signal", xValue, car.getController().getRefHeading());
-                            sendDataThreadSafe(s + "reference position X-axis", xValue, car.getController().getRefPoint().X);
-                            sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
-                            sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
+                                sendDataThreadSafe(s + "heading reference signal", xValue, car.getController().getRefHeading());
+                                sendDataThreadSafe(s + "reference position X-axis", xValue, car.getController().getRefPoint().X);
+                                sendDataThreadSafe(s + "reference position Y-axis", xValue, car.getController().getRefPoint().Y);
+                                sendDataThreadSafe(s + "position X-axis", xValue, car.getPosition().X);
                                 if (car.getController() != null)
                                 {
                                     sendDataThreadSafe(s + "ref position X-axis", xValue, car.getController().getRefPoint().X);
                                     sendDataThreadSafe(s + "ref position Y-axis", xValue, car.getController().getRefPoint().Y);
                                 }
-                            sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
-                            sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
+                                sendDataThreadSafe(s + "position Y-axis", xValue, car.getPosition().Y);
+                                sendDataThreadSafe(s + "found history", xValue, Convert.ToDouble((car.found)));
                                 if (car.getControlStrategy().getStrategyName().Equals("Platooning")) { sendDataThreadSafe(s + "platooning error", xValue, ((ControlStrategies.Platooning)car.getControlStrategy()).controlError); }
-                            // Add more sendDataThreadSafe calls here.
-                        }
-                        // Give other values to analyzer:
+                                // Add more sendDataThreadSafe calls here.
+                            }
+                            // Give other values to analyzer:
                            // if (cars.Count != 0)
                            // {
                             //    sendDataThreadSafe("FPS image processing", xValue, 1/(cars.First().getDeltaTime()));
                             //}
                             sendDataThreadSafe("FPS image processing", xValue, (1.0 / (Program.imageProcess.getDeltaTime())));
-                        sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
-                        // Add more sendDataThreadSafe calls here.
+                            sendDataThreadSafe("Brain execution time", Convert.ToDouble(time.ElapsedMilliseconds) / 1000.0, Convert.ToDouble(dt) / 1000.0);
+                            // Add more sendDataThreadSafe calls here.
+                        }
                     }
                 }
             }
-        }
 
         }
         private void sendDataThreadSafe(string reciever, double x, double y)
