@@ -352,7 +352,7 @@ namespace CMVP
         private void carIDDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (Car car in Program.cars)
-        {
+            {
                 if (!carIDDropDown.Items.Contains(car.ID))
                     carIDDropDown.Items.Add(car.ID);
             }
@@ -361,7 +361,9 @@ namespace CMVP
             {
                 Car selectedCar = Program.cars.Find(car => car.ID == Convert.ToInt32(carIDDropDown.SelectedItem.ToString()));
                 updateControllerParametersGUI(selectedCar);
-                updateControlStrategyParametersGUI(selectedCar);    
+                updateControlStrategyParametersGUI(selectedCar);
+                tracksDropDown.SelectedItem = selectedCar.getControlStrategy().getTrack().name;
+                maxSpeedNumeric.Value = Convert.ToDecimal(selectedCar.getMaxSpeed());
             }
            
 
