@@ -206,5 +206,29 @@ namespace CMVP.ControlStrategies
         {
             get { return new_track; }
         }
+
+        public float ki
+        {
+            get { return Ki; }
+            set { Ki = value; }
+        }
+
+        public float kp
+        {
+            get { return Kp; }
+            set { Kp = value; }
+        }
+
+        public float kd
+        {
+            get { return Kd; }
+            set { Kd = value; }
+        }
+
+        public float distance
+        {
+            get { return desiredDistance; }
+            set { desiredDistance = Math.Abs(value); }
+        }
     }
 }

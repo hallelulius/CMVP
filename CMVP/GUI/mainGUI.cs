@@ -217,23 +217,39 @@ namespace CMVP
 
                 // Set control strategy
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Follow track")
-        {
+                {
                     ControlStrategies.JustFollow jf = new ControlStrategies.JustFollow(tempCar);
                     jf.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(jf);
-        }
+                }
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Stand still")
-            {
+                {
                     ControlStrategies.StandStill ss = new ControlStrategies.StandStill(tempCar);
                     ss.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ss);
-        }
+                }
                 if (controlStrategyDropDown.SelectedItem.ToString() == "Overtaking")
-            {
+                {
                     ControlStrategies.Overtaking ot = new ControlStrategies.Overtaking(tempCar);
                     ot.setTrack(tempCar.getControlStrategy().getTrack());
                     tempCar.setControlStrategy(ot);
-        }
+                }
+                if(controlStrategyDropDown.SelectedItem.ToString() == "Platooning")
+                {
+                    ControlStrategies.Platooning pl = new ControlStrategies.Platooning(tempCar);
+                    pl.setTrack(tempCar.getControlStrategy().getTrack());
+
+                    foreach (Control ctrl in controllerTypePanel.Controls)
+                    {
+                        pl.followedCar = Program.cars.Find(car => car.ID == ((PlatooningControlPanel)ctrl).followedCarID);
+                        pl.distance = ((PlatooningControlPanel)ctrl).distance;
+                        pl.kp = ((PlatooningControlPanel)ctrl).kp;
+                        pl.ki = ((PlatooningControlPanel)ctrl).ki;
+                        pl.kd = ((PlatooningControlPanel)ctrl).kd;
+                    }
+
+                    tempCar.setControlStrategy(pl);
+                }
 
                 // Set max speed
                 tempCar.setMaxSpeed((float)maxSpeedNumeric.Value);
@@ -271,6 +287,13 @@ namespace CMVP
             dataGridView.Rows.Clear();
             if (Program.cars.Count > 0)
                 dataGridView.Rows.Add(Program.cars.Count);
+            if (tracks.Where(track => track.name == "smallCircle").Count() > 0)
+            {
+                foreach (Car car in Program.cars)
+                {
+                    car.getControlStrategy().setTrack(tracks.Find(track => track.name == "smallCircle"));
+                }
+            }
         }
 
         private void controlStrategyControlStrategyDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -329,6 +352,14 @@ namespace CMVP
                     carIDDropDown.Items.Add(car.ID);
             }
 
+            if (carIDDropDown.SelectedIndex != -1)
+            {
+                Car selectedCar = Program.cars.Find(car => car.ID == Convert.ToInt32(carIDDropDown.SelectedItem.ToString()));
+                updateControllerParametersGUI(selectedCar);
+                updateControlStrategyParametersGUI(selectedCar);    
+            }
+           
+
             applyButton.Enabled = true;
         }
 
@@ -346,6 +377,21 @@ namespace CMVP
         private void tracksDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
             applyButton.Enabled = true;
+        }
+
+        private void updateControlStrategyParametersGUI(Car car)
+        {
+            foreach (Control ctrl in controlStrategyPanel.Controls)
+            {
+                if (car.getControlStrategy().getStrategyName() == "Platooning")
+                {
+                    ((ComboBox)(ctrl.Controls.Find("carToFollowDropDown", true)[0])).SelectedItem = ((ControlStrategies.Platooning)car.getControlStrategy()).followedCar.ID;
+                    ((NumericUpDown)(ctrl.Controls.Find("distanceNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).distance);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).kp);
+                    ((NumericUpDown)(ctrl.Controls.Find("kpNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).ki);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).kd);
+                }
+            }
         }
     }
 }

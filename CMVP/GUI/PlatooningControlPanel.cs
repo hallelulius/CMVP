@@ -37,10 +37,6 @@ namespace CMVP
                 //try
                 {
                     Car activeCar = Program.cars.Find(car => car.ID == Convert.ToInt32(((ComboBox)this.ParentForm.Controls.Find("trafficCarIDDropDown", true)[0]).SelectedItem.ToString()));
-                    if (((ControlStrategies.Platooning)activeCar.getControlStrategy()).isFollowingLeader)
-                        statusLabel.Text = "following";
-                    else
-                        statusLabel.Text = "searching";
                 }
                 //catch(Exception e)
                 {
@@ -68,5 +64,12 @@ namespace CMVP
         {
             return (int) carToFollowIDDropDown.SelectedItem;
         }
+
+        public float distance { get { return (float)distanceNumeric.Value; } }
+        public float kp { get { return (float)kpNumeric.Value; } }
+        public float ki { get { return (float)kiNumeric.Value; } }
+        public float kd { get { return (float)kdNumeric.Value; } }
+        public int followedCarID { get { return Convert.ToInt32(carToFollowIDDropDown.SelectedItem.ToString()); } }
+        
     }
 }

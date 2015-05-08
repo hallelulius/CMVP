@@ -168,7 +168,7 @@
             // 
             this.maxSpeedUpdate.Location = new System.Drawing.Point(125, 71);
             this.maxSpeedUpdate.Name = "maxSpeedUpdate";
-            this.maxSpeedUpdate.Size = new System.Drawing.Size(70, 23);
+            this.maxSpeedUpdate.Size = new System.Drawing.Size(71, 23);
             this.maxSpeedUpdate.TabIndex = 11;
             this.maxSpeedUpdate.Text = "Update";
             this.maxSpeedUpdate.UseVisualStyleBackColor = true;
@@ -184,7 +184,7 @@
             // 
             // controllerTypePanel
             // 
-            this.controllerTypePanel.Location = new System.Drawing.Point(206, 40);
+            this.controllerTypePanel.Location = new System.Drawing.Point(205, 40);
             this.controllerTypePanel.Name = "controllerTypePanel";
             this.controllerTypePanel.Size = new System.Drawing.Size(200, 159);
             this.controllerTypePanel.TabIndex = 6;
@@ -231,7 +231,7 @@
             // 
             // controlStrategyPanel
             // 
-            this.controlStrategyPanel.Location = new System.Drawing.Point(0, 126);
+            this.controlStrategyPanel.Location = new System.Drawing.Point(-2, 126);
             this.controlStrategyPanel.Name = "controlStrategyPanel";
             this.controlStrategyPanel.Size = new System.Drawing.Size(200, 138);
             this.controlStrategyPanel.TabIndex = 7;
@@ -295,7 +295,8 @@
             "Stand still",
             "Follow track",
             "Overtaking",
-            "Step response"});
+            "Step response",
+            "Platooning"});
             this.controlStrategyDropDown.Location = new System.Drawing.Point(94, 99);
             this.controlStrategyDropDown.Name = "controlStrategyDropDown";
             this.controlStrategyDropDown.Size = new System.Drawing.Size(101, 21);
@@ -306,7 +307,7 @@
             // 
             this.importTrackButton.Location = new System.Drawing.Point(148, 44);
             this.importTrackButton.Name = "importTrackButton";
-            this.importTrackButton.Size = new System.Drawing.Size(47, 23);
+            this.importTrackButton.Size = new System.Drawing.Size(48, 23);
             this.importTrackButton.TabIndex = 4;
             this.importTrackButton.Text = "Import";
             this.importTrackButton.UseVisualStyleBackColor = true;
