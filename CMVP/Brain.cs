@@ -45,9 +45,8 @@ namespace CMVP
 
             while (true)
             {
-                whDataUsed.Reset();
-
                 whBrain.WaitOne(); //wait for imageprocessing to finish
+                whDataUsed.Reset(); // stop image processing
                 foreach (Car car in cars)
                 {
                     car.updateState();
@@ -65,7 +64,6 @@ namespace CMVP
                     {
                         car.getController().updateController();
                     }
-                    whDataUsed.Set();
                     foreach (Car car in cars)
                     {
                         if (car.found)
@@ -79,8 +77,7 @@ namespace CMVP
                             Console.WriteLine("Car not found");
                         }
                     }
-
-
+                    whDataUsed.Set();
                 }
 
                 else
