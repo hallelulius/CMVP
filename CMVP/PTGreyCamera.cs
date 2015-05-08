@@ -130,7 +130,7 @@ namespace CMVP
                     Console.WriteLine("Worker report failed!");
                     continue;
                 }
-                TIME_MEASURED.WaitOne();
+                TIME_MEASURED.WaitOne(); //wait for imageprocessing
             }
         }
 

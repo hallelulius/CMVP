@@ -54,7 +54,6 @@ namespace CMVP
                 try
                 {
                     port.Open();
-                    //port.bu
                     System.Console.WriteLine("Communication OK");
                 }
                 catch (Exception e)

@@ -16,15 +16,19 @@ namespace CMVP.ControlStrategies
         private Car followed_car;
         private bool following_leader = false;
         private int searchDistance = 56;
-        private float desiredDistance = 73.0f; // Predetemined distance desired between the car and the leader in pixels. (73 pixels = 13 cm)
+        private float desiredDistance = 2*73.0f; // Predetemined distance desired between the car and the leader in pixels. (73 pixels = 13 cm)
         private int lastIndex = -1;
         private float control_error;
 
         // Control Parameters
-        private float Kp = 0.007f;
-        private float Ki = 0.0001f;
-        private float Kd = 0.0f;
+        //private float Kp = 0.01f;
+        //private float Ki = 0.0006f;
+        //private float Kd = 0.0006f;
+        private float Kp = 0.03f;
+        private float Ki = 0.0000f;
+        private float Kd = 0.0000f;
         
+
         // Control Variables
         private float integratorSum = 0;
         private float lastError = 0;
@@ -178,10 +182,11 @@ namespace CMVP.ControlStrategies
                         controlSignal += Kd * (lastError - control_error) / (float)car.getDeltaTime();
                         
                         // Scale control error with reference vehicles speed 
-                        controlSignal += (float)followed_car.getSpeed() / followed_car.getMaxSpeed();
+                        //controlSignal += (float)followed_car.getSpeed() / followed_car.getMaxSpeed()*0.3F;
+                        controlSignal += (float)followed_car.getController().getThrottle();
 
                         // Set minimum value of control signal 
-                        if (controlSignal<0)
+                        if (controlSignal<-0.2)
                         {
                             controlSignal = 0;
                         }

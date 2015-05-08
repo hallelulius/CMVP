@@ -158,7 +158,7 @@ namespace CMVP
                 if (working)
                 {
                     whCamera.WaitOne();
-                processImage();
+                    processImage();
                     whBrain.Set();
                 }
 
@@ -168,7 +168,6 @@ namespace CMVP
         private void processImage()
         {
             double tempTime = videoStream.getTime();
-            whTime.Set();
             deltaTime = tempTime - prevTime;
             prevTime = tempTime;
             img = videoStream.getImage();
@@ -177,7 +176,7 @@ namespace CMVP
             {
                 AForge.IntPoint pos = car.getPosition();
                 //bör ta hänsyn till riktningen för minimera fönstret
-                Size windowSize = new Size(200, 200);
+                Size windowSize = new Size(150, 150);
 
                 int cropX, cropY;
                 if (car.found)
@@ -225,6 +224,7 @@ namespace CMVP
                     i.Add(getIdPoints(t, points).Count);
                 }
                 bool carFoundThisTime = false;
+                whDataUsed.Wait(); //ensure data is passed to the cars
                 foreach (Triangle triangle in triangles)
                 {
                     //Unknown if comparing to idealTriangle is nescesarry.
@@ -242,7 +242,6 @@ namespace CMVP
                                 points.Remove(p);
                             foreach (AForge.IntPoint p in idPoints)
                                 points.Remove(p);
-                           // whDataUsed.Wait(8); //wait for data to being used timeout after 8 ms
                             car.setPositionAndOrientation(triangle.CENTER + translation, triangle.DIRECTION, deltaTime);
                             car.found = true;
                             carFoundThisTime = true;
@@ -444,7 +443,7 @@ namespace CMVP
             }
             return idPoints;
         }
-        public  List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
+        public List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
         {
             lock (_locker)
             {
@@ -462,16 +461,16 @@ namespace CMVP
         public List<Blob> getBlobsSlow(int minHeight, int maxHeight, Bitmap img)
         {
             lock (_locker)
-        {
-            BlobCounter blobCounter = new BlobCounter();
-            blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
-            blobCounter.MinHeight = minHeight;
-            blobCounter.MaxHeight = maxHeight;
-            blobCounter.FilterBlobs = true;
-            blobCounter.ProcessImage(img);
-            Blob[] blobs = blobCounter.GetObjectsInformation();
-            return blobs.ToList<Blob>();
-        }
+            {
+                BlobCounter blobCounter = new BlobCounter();
+                blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
+                blobCounter.MinHeight = minHeight;
+                blobCounter.MaxHeight = maxHeight;
+                blobCounter.FilterBlobs = true;
+                blobCounter.ProcessImage(img);
+                Blob[] blobs = blobCounter.GetObjectsInformation();
+                return blobs.ToList<Blob>();
+            }
 
         }
         public void stop()
@@ -484,8 +483,8 @@ namespace CMVP
         {
             lock (_locker2)
             {
-            return videoStream.getImage();
-        }
+                return videoStream.getImage();
+            }
         }
         public double getTime()
         {
