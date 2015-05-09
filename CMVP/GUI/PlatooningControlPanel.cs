@@ -69,7 +69,7 @@ namespace CMVP
         public float kp { get { return (float)kpNumeric.Value; } }
         public float ki { get { return (float)kiNumeric.Value; } }
         public float kd { get { return (float)kdNumeric.Value; } }
-        public int followedCarID { get { return Convert.ToInt32(carToFollowIDDropDown.SelectedItem.ToString()); } }
+        public int followedCarID { get { return Convert.ToInt32(carToFollowIDDropDown.SelectedItem); } }
         
     }
 }

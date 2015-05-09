@@ -26,10 +26,10 @@ namespace CMVP
         public static void Main()
         {
             // Test
-            Car car1 = new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
-            Car car2 = new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
-            cars.Add(car1); // endast för att testa en imaginär bil 
-            cars.Add(car2); // endast för att testa en imaginär bil 
+            //Car car1 = new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
+            //Car car2 = new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
+            //cars.Add(car1); // endast för att testa en imaginär bil 
+            //cars.Add(car2); // endast för att testa en imaginär bil 
             //if (tracks.Where(track => track.name == "smallCircle").Count() > 0)
             //{
             //    foreach (Car car in Program.cars)

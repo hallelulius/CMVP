@@ -43,7 +43,7 @@ namespace CMVP.ControlStrategies
 
             if(!following_leader )  // decide which reference to follow. The old one or the platooning leader's
             {
-                if(desiredDistance * desiredDistance >= 
+                if(desiredDistance * desiredDistance * 1.2f >= 
                       ((followed_car.getPosition().X - car.getPosition().X) * (followed_car.getPosition().X - car.getPosition().X) 
                     + (followed_car.getPosition().Y - car.getPosition().Y) * (followed_car.getPosition().Y - car.getPosition().Y))) 
                     // Search if the leader is close to current location 

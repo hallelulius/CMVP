@@ -410,8 +410,8 @@ namespace CMVP
                     ((ComboBox)(ctrl.Controls.Find("carToFollowIDDropDown", true)[0])).SelectedItem = ((ControlStrategies.Platooning)car.getControlStrategy()).followedCar.ID;
                     ((NumericUpDown)(ctrl.Controls.Find("distanceNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).distance);
                     ((NumericUpDown)(ctrl.Controls.Find("kpNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).kp);
-                    ((NumericUpDown)(ctrl.Controls.Find("kpNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).ki);
-                    ((NumericUpDown)(ctrl.Controls.Find("kiNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).kd);
+                    ((NumericUpDown)(ctrl.Controls.Find("kiNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).ki);
+                    ((NumericUpDown)(ctrl.Controls.Find("kdNumeric", true)[0])).Value = Convert.ToDecimal(((ControlStrategies.Platooning)car.getControlStrategy()).kd);
                 }
             }
         }
