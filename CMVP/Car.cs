@@ -88,7 +88,7 @@ namespace CMVP
                 this.deltaTimes.Enqueue(0.001F);
                 this.angles2.Enqueue(0);
             }
-            for (int i = 0; i < 150; i++)
+            for (int i = 0; i < 50; i++)
             {
                 this.speeds.Enqueue(1.0);
         }

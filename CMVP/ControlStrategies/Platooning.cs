@@ -183,10 +183,10 @@ namespace CMVP.ControlStrategies
                         
                         // Scale control error with reference vehicles speed 
                         //controlSignal += (float)followed_car.getSpeed() / followed_car.getMaxSpeed()*0.3F;
-                        controlSignal += (float)followed_car.getController().getThrottle();
+                        //controlSignal += (float)followed_car.getController().getThrottle();
 
                         // Set minimum value of control signal 
-                        if (controlSignal<-0.2)
+                        if (controlSignal<0)
                         {
                             controlSignal = 0;
                         }
