@@ -15,8 +15,8 @@ namespace CMVP.ControlStrategies
     {
         private Car followed_car;
         private bool following_leader = false;
-        private int searchDistance = 56;
         private float desiredDistance = 2*73.0f; // Predetemined distance desired between the car and the leader in pixels. (73 pixels = 13 cm)
+        // private int searchDistance = 200;
         private int lastIndex = -1;
         private float control_error;
 
@@ -24,7 +24,7 @@ namespace CMVP.ControlStrategies
         //private float Kp = 0.01f;
         //private float Ki = 0.0006f;
         //private float Kd = 0.0006f;
-        private float Kp = 0.03f;
+        private float Kp = 0.002f;
         private float Ki = 0.0000f;
         private float Kd = 0.0000f;
         
@@ -41,9 +41,9 @@ namespace CMVP.ControlStrategies
         public override void updateReferencePoint()
         {
 
-            if(!following_leader)  // decide which reference to follow. The old one or the platooning leader's
+            if(!following_leader )  // decide which reference to follow. The old one or the platooning leader's
             {
-                if(searchDistance * searchDistance >= 
+                if(desiredDistance * desiredDistance * 1.2f >= 
                       ((followed_car.getPosition().X - car.getPosition().X) * (followed_car.getPosition().X - car.getPosition().X) 
                     + (followed_car.getPosition().Y - car.getPosition().Y) * (followed_car.getPosition().Y - car.getPosition().Y))) 
                     // Search if the leader is close to current location 
@@ -111,6 +111,15 @@ namespace CMVP.ControlStrategies
             }
             else // else the car will follow the platooning leader's track using JustFollow()
             {
+                if (desiredDistance * desiredDistance*4 <=
+                     ((followed_car.getPosition().X - car.getPosition().X) * (followed_car.getPosition().X - car.getPosition().X)
+                   + (followed_car.getPosition().Y - car.getPosition().Y) * (followed_car.getPosition().Y - car.getPosition().Y)))
+                // Search if the leader is close else start follow the track instead.   
+                {
+                    following_leader = false;
+                    Console.WriteLine("Track follower!");
+                }
+
                 IntPoint refPoint = new IntPoint();
                 bool pointIsFound = false;
                 // Start of JustFollow(). The code is adjusted to suit platooning but it use JustFollow() as a base. 
@@ -215,6 +224,30 @@ namespace CMVP.ControlStrategies
         {
             get { return followed_car; }
             set { followed_car = value; }
+        }
+
+        public float ki
+        {
+            get { return Ki; }
+            set { Ki = value; }
+        }
+
+        public float kp
+        {
+            get { return Kp; }
+            set { Kp = value; }
+        }
+
+        public float kd
+        {
+            get { return Kd; }
+            set { Kd = value; }
+        }
+
+        public float distance
+        {
+            get { return desiredDistance; }
+            set { desiredDistance = Math.Abs(value); }
         }
     }
 }

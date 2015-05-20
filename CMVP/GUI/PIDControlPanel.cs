@@ -21,7 +21,7 @@ namespace CMVP
 
         private void numericValueChanged(object sender, EventArgs e)
         {
-            ((Button)this.ParentForm.Controls.Find("controllerApplyButton", true)[0]).Enabled = true;
+            ((Button)this.ParentForm.Controls.Find("applyButton", true)[0]).Enabled = true;
         }
 
         private void PIDControlPanel_Load(object sender, EventArgs e)
