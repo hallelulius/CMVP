@@ -24,7 +24,7 @@ namespace CMVP.ControlStrategies
         //private float Kp = 0.01f;
         //private float Ki = 0.0006f;
         //private float Kd = 0.0006f;
-        private float Kp = 0.03f;
+        private float Kp = 0.002f;
         private float Ki = 0.0000f;
         private float Kd = 0.0000f;
         
@@ -111,7 +111,7 @@ namespace CMVP.ControlStrategies
             }
             else // else the car will follow the platooning leader's track using JustFollow()
             {
-                if (desiredDistance * desiredDistance*2 <=
+                if (desiredDistance * desiredDistance*4 <=
                      ((followed_car.getPosition().X - car.getPosition().X) * (followed_car.getPosition().X - car.getPosition().X)
                    + (followed_car.getPosition().Y - car.getPosition().Y) * (followed_car.getPosition().Y - car.getPosition().Y)))
                 // Search if the leader is close else start follow the track instead.   
@@ -192,10 +192,10 @@ namespace CMVP.ControlStrategies
                         
                         // Scale control error with reference vehicles speed 
                         //controlSignal += (float)followed_car.getSpeed() / followed_car.getMaxSpeed()*0.3F;
-                        controlSignal += (float)followed_car.getController().getThrottle();
+                        //controlSignal += (float)followed_car.getController().getThrottle();
 
                         // Set minimum value of control signal 
-                        if (controlSignal<-0.2)
+                        if (controlSignal<0)
                         {
                             controlSignal = 0;
                         }
