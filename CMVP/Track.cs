@@ -25,7 +25,10 @@ namespace CMVP
         private int _size;          //The number of vertices in the matrix being read.
         //private float[,] _m;      //The matrix containing the track.
         private List<IntPoint> points;      //The matrix containing the track position.
-        private List<float> speeds;         //The list containing the track speed.
+        private List<float> speeds;         //The list containing the track speed.-
+
+        private const int WIDTH = 1280;
+        private const int HEIGHT = 1024;
 
         /// <summary>
         /// TrackImporter is used to import tracks stored as .txt files.
@@ -44,28 +47,24 @@ namespace CMVP
             //Get size of the matrix and create an array accordingly:
             _size = Convert.ToInt32(getNextWord());
             //_m = new float[3, _size];
-            points  = new List<IntPoint>();
+            points = new List<IntPoint>();
             speeds = new List<float>();
-                
+
 
             //Extract data from matrix:
-            for(int i = 0; i < _size; i++)
+            for (int i = 0; i < _size; i++)
             {
-                points.Add(new IntPoint(int.Parse(getNextWord()),int.Parse(getNextWord())));
+                points.Add(new IntPoint(int.Parse(getNextWord()), int.Parse(getNextWord())));
                 speeds.Add(float.Parse(getNextWord(), CultureInfo.InvariantCulture));
                 //_m[0, i] = (float) float.Parse(getNextWord());
                 //_m[1, i] = (float) float.Parse(getNextWord());
                 //_m[2, i] = (float)float.Parse(getNextWord(), CultureInfo.InvariantCulture);
                 //Console.WriteLine(_m[0, i] + "\t" + _m[1, i] + "\t" + _m[2, i]);
             }
-            
-        }
-
-        public Track()
-        {
 
         }
-        
+
+
         /// <summary>
         /// Returns the next word following the character pointed to by 'p'. This will also advance 'p' to the beginning of the next word.
         /// </summary>
@@ -121,7 +120,8 @@ namespace CMVP
         }
          * */
 
-        public List<IntPoint> getPoints(){
+        public List<IntPoint> getPoints()
+        {
             return new List<IntPoint>(points);
         }
         public List<float> getSpeeds()

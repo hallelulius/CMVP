@@ -10,8 +10,6 @@ namespace CMVP
         // Controller parameters 
         private float Ki_steer;
         private float Ki_throttle;
-        private float Ti_steer;
-        private float Ti_throttle;
         private float Kp_steer;
         private float Kp_throttle;
         private float Kd_steer;
@@ -24,25 +22,21 @@ namespace CMVP
         private float derivativeSteer;
         private float prevSpeedError;
         private float prevHeadingError;
-        private const int DATA_HISTORY_LENGTH = 5;
 
         public PIDController(Car car)
             : base(car)
         {
             // I-controller constants:
-            Ki_steer = 0.1689F;
-            Ki_throttle = 0.001F;
-            // Integral time constants:
-            Ti_steer = 2.3397F;
-            Ti_throttle = 10.5179F;
+            Ki_steer = 0.0010F;
+            Ki_throttle = 0.061F;
             // P-controller constants:
-            Kp_steer = 0.6f; //Ki_steer / Ti_steer;
-            Kp_throttle = 0.1f; // Ki_throttle / Ti_throttle;
+            Kp_steer = 1.44f;        //Ki_steer / Ti_steer
+            Kp_throttle = 0.16f;     // Ki_throttle / Ti_throttle
             // D-controller constants:
             Kd_steer = 0.01f;
             Kd_throttle = 0.0f;
             // Set variables 
-            throttleIntegratorSum = -0.5f; // This is to prevent that the car will fly away. There is probably some problem in communication.
+            throttleIntegratorSum = 0;
             steerIntegratorSum = 0;
             // Set controler name:
             controllerName = "PID";
@@ -50,20 +44,22 @@ namespace CMVP
             prevSpeedError = 0;
         }
 
-        public override void updateController()      //PI-controller 
+        public override void updateController()
         {
             //Throttle part
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-            outThrottle += Kp_throttle * errorSpeed;
-            throttleIntegratorSum += errorSpeed*dT;
-            outThrottle += throttleIntegratorSum * Ki_throttle;
-            
-            //derivative part here, not fully tested but seems to work 
-            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+                outThrottle += Kp_throttle * errorSpeed;
+            throttleIntegratorSum += errorSpeed * dT;
+                outThrottle += throttleIntegratorSum * Ki_throttle;
+
+                //derivative part here, not fully tested but seems to work 
+                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
             outThrottle += Kd_throttle * derivativeThrottle;
-            prevSpeedError = errorSpeed;
+                prevSpeedError = errorSpeed;
+
+            
 
 
 
@@ -75,53 +71,37 @@ namespace CMVP
             else if (errorHeading < -Math.PI)
                 errorHeading += 2f * (float)Math.PI;
             outSteer += -Kp_steer * errorHeading;
-            steerIntegratorSum += errorHeading;
-            //outSteer += -Ki_steer * steerIntegratorSum *dT;
+            steerIntegratorSum += errorHeading * dT;
+            outSteer += -Ki_steer * steerIntegratorSum;
 
             //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
-            outSteer += Kd_throttle * derivativeSteer;
+            outSteer += Kd_steer * derivativeSteer;
             prevHeadingError = errorHeading;
 
 
             outThrottle = capThrottleOutput(outThrottle);
             outSteer = capSteerOutput(outSteer);
         }
-
         public float KiSteer
         {
             get { return Ki_steer; }
             set { Ki_steer = value; }
         }
-
         public float KiThrottle
         {
             get { return Ki_throttle; }
             set { Ki_throttle = value; }
         }
-
         public float KpSteer
         {
             get { return Kp_steer; }
             set { Kp_steer = value; }
         }
-
         public float KpThrottle
         {
             get { return Kp_throttle; }
             set { Kp_throttle = value; }
-        }
-
-        public float TiSteer
-        {
-            get { return Ti_steer; }
-            set { Ti_steer = value; }
-        }
-
-        public float TiThrottle
-        {
-            get { return Ti_throttle; }
-            set { Ti_throttle = value; }
         }
         public float KdSteer
         {

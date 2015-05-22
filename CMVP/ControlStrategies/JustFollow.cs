@@ -32,14 +32,16 @@ namespace CMVP.ControlStrategies
             if (track != null)
             {
                 int trackLength = track.getPoints().Count;
+                IntPoint car_position = car.getPosition();
+                Point car_direction = car.getDirection();
                 for (int i = 0; i < trackLength; i++)
                 {
                     Point point = track.getPoints().ElementAt(i);
 
-                    float lengthToPoint = (point - car.getPosition()).EuclideanNorm();
+                    float lengthToPoint = (point - car_position).EuclideanNorm();
 
-                    Point tempPoint = point - car.getPosition();
-                    float scalarProduct = (car.getDirection().X * tempPoint.X + car.getDirection().Y * tempPoint.Y) / (car.getDirection().EuclideanNorm() * tempPoint.EuclideanNorm());
+                    Point tempPoint = point - car_position;
+                    float scalarProduct = (car_direction.X * tempPoint.X + car_direction.Y * tempPoint.Y) / (car_direction.EuclideanNorm() * tempPoint.EuclideanNorm());
                     float angleToPoint = (float) Math.Acos(scalarProduct);
 
                     float indexDistance = 0;
@@ -61,8 +63,10 @@ namespace CMVP.ControlStrategies
                    // if (angleToPoint > Math.PI / 2)
                     //    tempQuality = 9999;
                     //else
-                        tempQuality = 0.01f*lengthToPoint +  angleToPoint + indexDistance;
-                    if(tempQuality < quality && lengthToPoint > 45)
+                    //tempQuality = 0.01f*lengthToPoint*lengthToPoint + 20f*angleToPoint*angleToPoint + indexDistance*indexDistance;
+                    //if(tempQuality < quality && lengthToPoint > 45)
+                    tempQuality = 0.05f*lengthToPoint +  angleToPoint + indexDistance;
+                    if(tempQuality < quality && lengthToPoint > 60 )
                     {
                         quality = tempQuality;
                         index = i;
@@ -72,7 +76,6 @@ namespace CMVP.ControlStrategies
 
             if (index < 0)
             {
-                //setReference(new PointF(0, 0), 0);
                 Console.WriteLine("No referencepoints found");
                 lastIndex = -1;
                 return;

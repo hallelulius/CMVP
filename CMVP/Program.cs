@@ -8,8 +8,6 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
 using System.Drawing; // Anvnänds då man skapar en egen bil i Program
-using System.Runtime.InteropServices;
-using AForge;
 
 namespace CMVP
 {
@@ -22,19 +20,33 @@ namespace CMVP
 
         public static PTGreyCamera videoStream;
         public static ImageProcessing imageProcess;
+        public static ImageProcessingGraphics ipd;
 
         [STAThread]
         public static void Main()
         {
-            //cars.Add(new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
-            //cars.Add(new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0))); // endast för att testa en imaginär bil 
-            mainGUI mainFrame = new mainGUI();
+            // Test
+            //Car car1 = new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
+            //Car car2 = new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
+            //cars.Add(car1); // endast för att testa en imaginär bil 
+            //cars.Add(car2); // endast för att testa en imaginär bil 
+            //if (tracks.Where(track => track.name == "smallCircle").Count() > 0)
+            //{
+            //    foreach (Car car in Program.cars)
+            //    {
+            //        car.getControlStrategy().setTrack(tracks.Find(track => track.name == "smallCircle"));
+            //    }
+            //}
+            //Program.com.reverseSetting(2, "Throttle");
             videoStream = new PTGreyCamera();
             videoStream.start();
-            System.Threading.Thread.Sleep(1000);
             imageProcess = new ImageProcessing(videoStream, cars);
+            ipd = new ImageProcessingGraphics(imageProcess);
+            imageProcess.start();
+            mainGUI mainFrame = new mainGUI();
             Application.Run(mainFrame);
-   
         }
     }
+
 }
+

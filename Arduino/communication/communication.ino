@@ -19,8 +19,8 @@ const int loadPin = 9;
 
 //addresses for the DACs
 const byte throttleA = 0b00000000;    // DAC A gain 1
-const byte throttleB = 0b00000010;    // DAC B gain 1
-const byte steeringA = 0b00000100;    // DAC C gain 1
+const byte throttleB = 0b00000100;    // DAC B gain 1
+const byte steeringA = 0b00000010;    // DAC C gain 1
 const byte steeringB = 0b00000110;    // DAC D gain 1
 
 //alternative addressing not used
@@ -69,7 +69,7 @@ void changeDAC(byte DAC, byte value){
   SPI.transfer(DAC);
   SPI.transfer(value);
   digitalWrite(loadPin,LOW);
-  delay(1);
+  delayMicroseconds(1);
   digitalWrite(loadPin,HIGH);
 }
 
