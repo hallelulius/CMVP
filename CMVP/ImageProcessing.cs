@@ -62,6 +62,9 @@ namespace CMVP
         private double deltaTime;
         private double prevTime;
 
+        private int  startTime;
+        private int endTime;
+
 
         //sets ideal triangle base and height
         static private double idealHeight = 35; // 44 on table 35 on floor
@@ -127,26 +130,29 @@ namespace CMVP
             this.g = Graphics.FromImage(canvas);
 
             int k = 0;
-            foreach (Quadrilateral q in squares)
-            {
-                g.DrawLines(penArray[k%4], q.getDrawingPoints());
-                k++;
-            }
-            System.Drawing.Point[] dp = idealTriangle.getDrawingPoints();
-            dp[0].Offset(600,600);
-            dp[1].Offset(600,600);
-            dp[2].Offset(600,600);
-            dp[3].Offset(600, 600);
-            g.DrawLines(yellowPen,dp);
+            //foreach (Quadrilateral q in squares)
+            //{
+             //   g.DrawLines(penArray[k%4], q.getDrawingPoints());
+              //  k++;
+            //}
+            //System.Drawing.Point[] dp = idealTriangle.getDrawingPoints();
+            //dp[0].Offset(600,600);
+            //dp[1].Offset(600,600);
+            //dp[2].Offset(600,600);
+            //dp[3].Offset(600, 600);
+            //g.DrawLines(yellowPen,dp);
 
             foreach(Car car in objects)
             {
-                List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
-                foreach(AForge.IntPoint p in car.getPositionHistory())
+                if (drawTailsOnImg)
                 {
-                    positionHistory.Add(new System.Drawing.Point(p.X,p.Y));
+                    List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
+                    foreach (AForge.IntPoint p in car.getPositionHistory())
+                    {
+                        positionHistory.Add(new System.Drawing.Point(p.X, p.Y));
+                    }
+                    g.DrawLines(turkosPen, positionHistory.ToArray());
                 }
-                g.DrawLines(turkosPen,positionHistory.ToArray());
 
 
                 Controller controller = car.getController();
@@ -309,6 +315,7 @@ namespace CMVP
         }
         private void processImage(object sender, EventArgs e)
         {
+            startTime = System.DateTime.Now.Millisecond;
             //Console.WriteLine("ImgProcess Start: " + System.DateTime.Now.Millisecond);
             img = videoStream.getImage();
             double tempTime = videoStream.getTime();
@@ -400,6 +407,10 @@ namespace CMVP
                     car.found = false;
             }
            // Console.WriteLine("ImgProcess end: " + System.DateTime.Now.Millisecond);
+            endTime = System.DateTime.Now.Millisecond;
+            Console.WriteLine("ImgProcess StartTime: " + startTime);
+            Console.WriteLine("ImgProcess EndTime: " + endTime);
+            Console.WriteLine("ImgProcess Excecution time: " + (endTime-startTime));
         }
 
         private Boolean pointInTriangle(AForge.IntPoint p, Triangle t,double errorMargin)
