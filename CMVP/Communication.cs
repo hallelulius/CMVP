@@ -10,7 +10,7 @@ using System.Windows.Forms;
 namespace CMVP
 {
     /// <summary>
-    /// This class sends the right steering and throttle parametres to the arduino 
+    /// This class sends the steering and throttle signals to the Arduino 
     /// </summary>
     /// 
     class Communication

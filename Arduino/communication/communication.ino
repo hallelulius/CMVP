@@ -8,7 +8,7 @@
  * Make sure to check the output voltages with a multimeter or something to prevent burning the transmitter
  * 
  * Circuit info: 
- * TODO
+ * See Manual
  */
 
 #include <SPI.h>

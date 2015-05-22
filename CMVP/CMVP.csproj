@@ -150,18 +150,11 @@
     <Compile Include="ImageProcessing\Quadrilateral.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="ImageProcessing\Triangle.cs" />
-    <Compile Include="VideoStream.cs" />
     <Compile Include="GUI\CameraControlWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\CameraControlWindow.Designer.cs">
       <DependentUpon>CameraControlWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\KeyboardControlPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUI\KeyboardControlPanel.Designer.cs">
-      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\mainGUI.cs">
       <SubType>Form</SubType>

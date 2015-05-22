@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
-
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
 using AForge;
 
-//using Math;
 
 namespace CMVP
 {

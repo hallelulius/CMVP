@@ -164,9 +164,9 @@
             this.checkBoxDrawWindows.AutoSize = true;
             this.checkBoxDrawWindows.Location = new System.Drawing.Point(6, 111);
             this.checkBoxDrawWindows.Name = "checkBoxDrawWindows";
-            this.checkBoxDrawWindows.Size = new System.Drawing.Size(98, 17);
+            this.checkBoxDrawWindows.Size = new System.Drawing.Size(95, 17);
             this.checkBoxDrawWindows.TabIndex = 8;
-            this.checkBoxDrawWindows.Text = "Draw Windows";
+            this.checkBoxDrawWindows.Text = "Draw windows";
             this.checkBoxDrawWindows.UseVisualStyleBackColor = true;
             this.checkBoxDrawWindows.CheckedChanged += new System.EventHandler(this.checkBoxDrawWindows_CheckedChanged);
             // 
@@ -188,7 +188,7 @@
             this.checkBoxDrawCirkels.Name = "checkBoxDrawCirkels";
             this.checkBoxDrawCirkels.Size = new System.Drawing.Size(129, 17);
             this.checkBoxDrawCirkels.TabIndex = 6;
-            this.checkBoxDrawCirkels.Text = "Draw detected cirkels";
+            this.checkBoxDrawCirkels.Text = "Draw detected circles";
             this.checkBoxDrawCirkels.UseVisualStyleBackColor = true;
             this.checkBoxDrawCirkels.CheckedChanged += new System.EventHandler(this.checkBoxDrawCirkels_CheckedChanged);
             // 

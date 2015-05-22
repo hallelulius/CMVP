@@ -15,7 +15,7 @@ using FlyCapture2Managed.Gui;
 namespace CMVP
 {
 
-    public class PTGreyCamera : VideoStream
+    public class PTGreyCamera
     {
 
         private FlyCapture2Managed.Gui.CameraControlDialog m_camCtlDlg;

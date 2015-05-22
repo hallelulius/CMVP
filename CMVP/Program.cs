@@ -25,7 +25,6 @@ namespace CMVP
         [STAThread]
         public static void Main()
         {
-            // Test
             //Car car1 = new Car(1, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
             //Car car2 = new Car(2, new AForge.IntPoint(0, 0), new AForge.Point(1, 0), 1);
             //cars.Add(car1); // endast för att testa en imaginär bil 
