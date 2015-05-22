@@ -17,17 +17,17 @@ using AForge.Math;
 
 namespace CMVP
 {
+    //The quadraliteral class represent a figure that has four corners.
     
     class Quadrilateral
     {
-        private AForge.IntPoint[] corners = new AForge.IntPoint[4]; public AForge.IntPoint[] CORNERS {get{ return corners; } }
-        private double[] lengths = new double[4]; public double[] LENGTHS { get { return lengths;} }
-        private double[] angles = new double[4]; public double[] ANGLES { get { return angles; } }
-        private AForge.IntPoint center; public AForge.IntPoint CENTER { get { return center; } }
-        private double size; public double SIZE { get { return size; } }
-
-
-
+        private AForge.IntPoint[] corners = new AForge.IntPoint[4]; public AForge.IntPoint[] CORNERS {get{ return corners; } }  //  Array containing points for the corners.
+        private double[] lengths = new double[4]; public double[] LENGTHS { get { return lengths;} }                            //  Array containing the length of each side.
+        private double[] angles = new double[4]; public double[] ANGLES { get { return angles; } }                              //  Array containing the angle for each corner.
+        private AForge.IntPoint center; public AForge.IntPoint CENTER { get { return center; } }                                //  The center point.
+        private double size; public double SIZE { get { return size; } }                                                        //  A variable to describe its size. It is not in use Yet.
+        
+        //Creat a quadraliteral of 4 corners.
         public Quadrilateral(AForge.IntPoint[] corners) 
         {
             List<AForge.IntPoint> cornerList = new List<AForge.IntPoint>();
@@ -38,13 +38,17 @@ namespace CMVP
             sortCorners(cornerList);
             initiateValues();
         }
+        //Creates a quadraliteral of an array of 4 points
         public Quadrilateral(List<AForge.IntPoint> corners)
         {
             sortCorners(corners);
             initiateValues();
         }
+        //Creates a quadraliteral of a list of points
         private void sortCorners(List<AForge.IntPoint> corners)
         {
+            //The corners are sort according to their possitions in the X,Y plane.
+            //Lower Y first and then X.
             corners.Sort(delegate(AForge.IntPoint p1, AForge.IntPoint p2)
             {
                 if (p1.Y == p2.Y)
@@ -52,6 +56,7 @@ namespace CMVP
                 else
                     return p1.Y - p2.Y;
             });
+            //To prevent bowties the points have to be reordered again.
             this.corners[0] = corners[0];
             corners.RemoveAt(0);
             this.corners[1] = shortestPath(this.corners[0], corners);
@@ -60,6 +65,7 @@ namespace CMVP
             corners.Remove(this.corners[2]);
             this.corners[3] = corners[0];
         }
+        //Return the point that is closest to the point p.
         private AForge.IntPoint shortestPath(AForge.IntPoint p, List<AForge.IntPoint> goals)
         {
             AForge.IntPoint shortestSoFar = goals[0];
@@ -74,6 +80,7 @@ namespace CMVP
             }
             return shortestSoFar;
         }
+        //Initiate corners, angles, length etc.
         private void initiateValues()
         {
             angles[0] = angle(corners[3] - corners[0], corners[1] - corners[0]);
@@ -100,7 +107,7 @@ namespace CMVP
             size = corners[0].DistanceTo(corners[2]);
         }
 
-
+        //Checks if two quadraliterals is equal to each other.
         public bool Equals(Quadrilateral q)
         {
             for(int k=0; k < q.CORNERS.Length;k++)
@@ -110,6 +117,7 @@ namespace CMVP
             }
             return true;
         }
+        // Return true if the quadraliteral is considered square.
         public bool square(double errorMargin)
         {
             double diff1 = Math.Abs(lengths[0] - lengths[2]);
@@ -131,27 +139,34 @@ namespace CMVP
             return error1 < errorMargin && error2 < errorMargin && angleError0 < errorMargin && angleError1 < errorMargin && angleError2 < errorMargin && angleError3 < errorMargin;
 
         }
+        //Return a set of points that can be used to draw the quadraliteral.
         public System.Drawing.Point[] getDrawingPoints()
         {
             return new System.Drawing.Point[] { convert(corners[0]),convert(corners[1]),convert(corners[2]),convert(corners[3]),convert(corners[0])};
         }
+        //NOT USED!
+        //Return the size of the square.
         public AForge.IntPoint[] getSize()
         {
             return corners;
         }
+        //Returns the area using the crossproduct.
         public double getArea()
         {
             return crossProduct(corners[3]-corners[0],corners[1]-corners[0]);
         }
+        // A small function to convert a AForgepoint to a Drawing point.
         private System.Drawing.Point convert(AForge.IntPoint p)
         {
             return new System.Drawing.Point(p.X,p.Y);
-        } 
+        }
+        // A smal function that returns the angle between three point.
         private double angle(AForge.IntPoint a, AForge.IntPoint b)
         {
             double scalarProduct = (a.X * b.X + a.Y * b.Y)/a.EuclideanNorm() / b.EuclideanNorm();
             return Math.Acos(scalarProduct);
         }
+        //Returns the crossproduct.
         private double crossProduct(AForge.IntPoint a, AForge.IntPoint b)
         {
             return Math.Abs(a.X * b.Y - a.Y * b.X);
