@@ -187,7 +187,39 @@ namespace CMVP
         {
             return top.Equals(t.TOP) && base1.Equals(t.BASE1) && base2.Equals(t.BASE2);
         }
+        //Compare if the triangle should be considered equal to the ideal triangle.
+        public bool compare(Triangle ideal)
+        {
+            double diffHeight = Math.Abs(this.HEIGHT - ideal.HEIGHT);
+            double diffLength = Math.Abs(this.LENGTH - ideal.LENGTH);
 
+            double topAngleDiff = Math.Abs(this.TOP_ANGLE - ideal.TOP_ANGLE);
+            double baseAngleDiff1 = Math.Abs(this.baseAngle1 - ideal.baseAngle1);
+            double baseAngleDiff2 = Math.Abs(this.baseAngle1 - ideal.baseAngle2);
+
+
+            double sideDiff0 = Math.Abs(this.SIDES[0] - ideal.SIDES[0]);
+            double sideDiff1 = Math.Abs(this.SIDES[1] - ideal.SIDES[1]);
+            double sideDiff2 = Math.Abs(this.SIDES[2] - ideal.SIDES[2]);
+
+            double errorHeight = diffHeight / ideal.HEIGHT;
+            double errorLength = diffLength / ideal.LENGTH;
+
+            double errorTopAngle = topAngleDiff / ideal.TOP_ANGLE;
+            double errorBaseAngle1 = baseAngleDiff1 / ideal.baseAngle1;
+            double errorBaseAngle2 = baseAngleDiff2 / ideal.baseAngle2;
+
+            double errorSide0 = sideDiff0 / ideal.SIDES[0];
+            double errorSide1 = sideDiff1 / ideal.SIDES[1];
+            double errorSide2 = sideDiff2 / ideal.SIDES[2];
+
+
+            if (errorHeight < 0.1 && errorLength < 0.1 && errorTopAngle < 1 && errorBaseAngle1 < 0.1 && errorBaseAngle2 < 0.1 && errorSide0 < 0.17 && errorSide1 < 0.17 && errorSide2 < 0.17)
+            {
+                return true;
+            }
+            return false;
+        }
         //compare to returns a value that is based on the error of points, sides, height and angles.
         //The error is the power of the e function to get a more stable value.
         public double compareTo(Triangle t)
@@ -243,41 +275,7 @@ namespace CMVP
             return new AForge.Point(-p.Y, p.X);
         }
     }
-    /*
-//Compare if the triangle should be considered equal to the ideal triangle.
-//Is not in use.
-public bool compare( Triangle ideal)
-{
-
-    double diffHeight = Math.Abs(this.HEIGHT - ideal.HEIGHT);
-    double diffLength = Math.Abs(this.LENGTH - ideal.LENGTH);
-
-    double topAngleDiff = Math.Abs(this.TOP_ANGLE - ideal.TOP_ANGLE);
-    double baseAngleDiff1 = Math.Abs(this.baseAngle1 - ideal.baseAngle1);
-    double baseAngleDiff2 = Math.Abs(this.baseAngle1 - ideal.baseAngle2);
 
 
-    double sideDiff0 = Math.Abs(this.SIDES[0] - ideal.SIDES[0]);
-    double sideDiff1 = Math.Abs(this.SIDES[1] - ideal.SIDES[1]);
-    double sideDiff2 = Math.Abs(this.SIDES[2] - ideal.SIDES[2]);
 
-    double errorHeight = diffHeight / ideal.HEIGHT;
-    double errorLength = diffLength / ideal.LENGTH;
-
-    double errorTopAngle = topAngleDiff / ideal.TOP_ANGLE;
-    double errorBaseAngle1 = baseAngleDiff1 / ideal.baseAngle1;
-    double errorBaseAngle2 = baseAngleDiff2 / ideal.baseAngle2;
-
-    double errorSide0 = sideDiff0 / ideal.SIDES[0];
-    double errorSide1 = sideDiff1 / ideal.SIDES[1];
-    double errorSide2 = sideDiff2 / ideal.SIDES[2];
-
-
-    if (errorHeight < 0.1 && errorLength < 0.1 && errorTopAngle < 1 && errorBaseAngle1 < 0.1 && errorBaseAngle2 < 0.1 && errorSide0 < 0.17 && errorSide1 < 0.17 && errorSide2 < 0.17)
-    {
-        return true;
-    }
-    return false;
-}
-*/
 }
