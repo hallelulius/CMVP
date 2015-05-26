@@ -23,20 +23,22 @@ namespace CMVP
 {
     class ImageProcessing
     {
+        //The pupruse of this class is to retain position and direction information from the picture that comes from the camera.
 
-        private PTGreyCamera videoStream;
-        private Bitmap img;
-        private Bitmap croppedImg;
+
+        private PTGreyCamera videoStream;       //Videosource
+        private Bitmap img;                     //The image retained from the videostream.
+        private Bitmap croppedImg;              //The croped image which has to be analyzed.
         private object _locker = new object();
         private object _locker2 = new object();
 
-        private byte threshold;
+        private byte threshold; //The threshold value determine how light a pixel need to be to be counted as a part of a blob.
 
-        List<Blob> cirkels;
-        List<Car> objects;
-        List<Quadrilateral> squares = new List<Quadrilateral>();
-        Dictionary<Car, Triangle> prevTriangles = new Dictionary<Car, Triangle>();
-
+        List<Blob> cirkels;     //The list of circels that is retained from the blobCounter
+        List<Car> objects;      //The list of cars that is stored in the program.
+        List<Quadrilateral> squares = new List<Quadrilateral>();    //A list of squares or in other terms obstacles.
+        Dictionary<Car, Triangle> prevTriangles = new Dictionary<Car, Triangle>(); //When a car is found its triangle is stored in this dictonary.
+        
         //variables used for calculating time difference between updates
         private double deltaTime;
         private double prevTime;
@@ -49,21 +51,19 @@ namespace CMVP
         private ManualResetEventSlim whDataUsed; public ManualResetEventSlim DATA_USED { get { return whDataUsed; } }
 
 
-        //sets ideal triangle base and height
+        //sets ideal triangle base and height.
+        //The ideal triangle is used when there is no prev triangle to compare with.
         static private double idealHeight = 35; // 44 on table 35 on floor
         static private double idealBase = 12;  //  18 on table 12 on the floor.
 
-        //static private double heightError = 4;
-        //static private double baseError = 4;
-        static private int blobMin = 2;
-        static private int blobMax = 6;
-        static private Triangle idealTriangle = new Triangle(idealHeight, idealBase);
-        static private double worstAccepted = 0;
-
-
+        static private int blobMin = 2;         //Determine how big blobs should be accepted. Do not forgett to change in both ImageProcessing and ImageProcessingGraphics.
+        static private int blobMax = 6;         //Determine how big blobs should be accepted. Do not forgett to change in both ImageProcessing and ImageProcessingGraphics.
+        static private Triangle idealTriangle = new Triangle(idealHeight, idealBase); // Creates the ideal triangle
+        static private double worstAccepted = 0; // A variable to debug the system. Used to se which was the worst triangle that was used during a simulation.
+        
+        //Constructs the image process
         public ImageProcessing(PTGreyCamera videoStream, List<Car> objects)
         {
-
             this.objects = objects;
             this.videoStream = videoStream;
             this.threshold = 180;
@@ -84,11 +84,13 @@ namespace CMVP
             thread.Name = "Image Processing";
             thread.Priority = ThreadPriority.AboveNormal;
             thread.Start();
-
+                    
+         
         }
+        //Before the simulation is started it has to initiate which cars is on the track. It is done with this function.
         public void initiate()
         {
-
+            
             img = videoStream.getImage();
             List<Blob> cirkels = getBlobs(blobMin, blobMax, img);
             List<AForge.IntPoint> points = getPoints(cirkels);
@@ -103,6 +105,7 @@ namespace CMVP
             }
             MessageBox.Show("The following cars where found: " + String.Join(",", intList.ToArray()) + " \n " + Program.obstacle.Count + " obstacles was found");
         }
+        //This function initiate the cars and assign them a ID number.
         private void initiateCars(List<AForge.IntPoint> points)
         {
             objects.Clear();
@@ -127,7 +130,7 @@ namespace CMVP
                     foreach (AForge.IntPoint p in triangle.getPoints())
                         points.Remove(p);
                     foreach (AForge.IntPoint p in idPoints)
-                        points.Remove(p);
+                       points.Remove(p);
                     Console.WriteLine("ID: " + triangleId);
                     //Size need to be calculated implement later.
                     Car car = new Car(triangleId, triangle.CENTER, triangle.DIRECTION, 50);
@@ -136,8 +139,9 @@ namespace CMVP
                 }
             }
         }
+        //This function initiate the blocks on the course.
         private void initiateBlocks(List<AForge.IntPoint> points)
-        {
+            {
             List<Quadrilateral> tempSquares = getQuadrilaterals(points);
             tempSquares = filterQuadrilateralDubblets(tempSquares);
             squares = new List<Quadrilateral>();
@@ -147,8 +151,8 @@ namespace CMVP
                 {
                     squares.Add(q);
                     Program.obstacle.Add(new Item(q.CENTER, (int)Math.Round(q.SIZE)));
-                }
             }
+        }
         }
 
         private void run()
@@ -165,20 +169,24 @@ namespace CMVP
 
             }
         }
+        //This is the main proess where the image is processed and the information i retained to the cars
         private void processImage()
         {
             double tempTime = videoStream.getTime();
             deltaTime = tempTime - prevTime;
             prevTime = tempTime;
+
             img = videoStream.getImage();
             whTime.Set();
             foreach (Car car in objects)
             {
                 AForge.IntPoint pos = car.getPosition();
-                //bör ta hänsyn till riktningen för minimera fönstret
+
+                //This is the size of the window that is croped
                 Size windowSize = new Size(150, 150);
 
                 int cropX, cropY;
+                //If the car is found crop the image otherwise search through the whole picture.
                 if (car.found)
                 {
                     cropX = pos.X - windowSize.Width / 2;
@@ -195,7 +203,7 @@ namespace CMVP
                 }
                 else
                 {
-                    cropX = 0;
+                    cropX = 0;  
                     cropY = 0;
                     croppedImg = img;
                 }
@@ -211,23 +219,26 @@ namespace CMVP
                 Triangle prevTriangle = null;
                 prevTriangles.TryGetValue(car, out prevTriangle);
 
+                //Sort the triangles according to their quality value.
                 triangles.Sort(delegate(Triangle t1, Triangle t2)
                 {
-
                     return (t1.compareTo(prevTriangle).CompareTo(t2.compareTo(prevTriangle)));
                 });
                 List<double> d = new List<double>();
                 List<int> i = new List<int>();
+
                 foreach (Triangle t in triangles)
                 {
                     d.Add(t.compareTo(prevTriangle) + t.compareTo(idealTriangle));
                     i.Add(getIdPoints(t, points).Count);
                 }
+
                 bool carFoundThisTime = false;
                 whDataUsed.Wait(); //ensure data is passed to the cars
                 foreach (Triangle triangle in triangles)
                 {
                     //Unknown if comparing to idealTriangle is nescesarry.
+                    //Answeare: If it is not. It will have a hard time to find the car when it is lost.
                     if (triangle.compareTo(prevTriangle) + triangle.compareTo(idealTriangle) < 200000)
                     {
                         AForge.IntPoint translation = new AForge.IntPoint(cropX, cropY);
@@ -248,7 +259,7 @@ namespace CMVP
                             prevTriangles.Remove(car);
                             triangle.offset(translation);
                             prevTriangles.Add(car, triangle);
-                            break;
+                            break;      
                         }
                     }
                 }
@@ -293,7 +304,7 @@ namespace CMVP
                         }
                     }
                 }
-
+                    
             }
             return filteredPoints;
         }
@@ -394,7 +405,7 @@ namespace CMVP
                     {
                         if (t.Equals(ft))
                             add = false;
-                    }
+                        }
                     if (add)
                     {
                         filteredQuadrilaterals.Add(t);
@@ -407,7 +418,7 @@ namespace CMVP
         {
             List<AForge.IntPoint> idPoints = new List<AForge.IntPoint>();
             Quadrilateral boundarySquare = triangle.getRectangle();
-            if (squares.Count == 0)
+            if (squares.Count == 0) 
                 squares.Add(boundarySquare);
             AForge.IntPoint[] boundary = boundarySquare.CORNERS;
             double bArea = boundarySquare.getArea();
@@ -446,22 +457,22 @@ namespace CMVP
         public List<Blob> getBlobs(int minHeight, int maxHeight, Bitmap img)
         {
             lock (_locker)
-            {
-                BlobCounter blobCounter = new BlobCounter();
-                blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
-                blobCounter.MinHeight = minHeight;
-                blobCounter.MaxHeight = maxHeight;
-                blobCounter.FilterBlobs = true;
-                blobCounter.ProcessImage(img);
-                Blob[] blobs = blobCounter.GetObjectsInformation();
-                return blobs.ToList<Blob>();
-            }
+        {
+            BlobCounter blobCounter = new BlobCounter();
+            blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
+            blobCounter.MinHeight = minHeight;
+            blobCounter.MaxHeight = maxHeight;
+            blobCounter.FilterBlobs = true;
+            blobCounter.ProcessImage(img);
+            Blob[] blobs = blobCounter.GetObjectsInformation();
+            return blobs.ToList<Blob>();
+        }
 
         }
         public List<Blob> getBlobsSlow(int minHeight, int maxHeight, Bitmap img)
         {
             lock (_locker)
-            {
+        {
                 BlobCounter blobCounter = new BlobCounter();
                 blobCounter.BackgroundThreshold = new RGB(threshold, threshold, threshold).Color;
                 blobCounter.MinHeight = minHeight;
@@ -470,26 +481,26 @@ namespace CMVP
                 blobCounter.ProcessImage(img);
                 Blob[] blobs = blobCounter.GetObjectsInformation();
                 return blobs.ToList<Blob>();
-            }
+        }
 
         }
         public void stop()
-        {
+                {
             working = false;
-        }
+                }
 
 
         public Bitmap getImage()
-        {
+                {
             lock (_locker2)
             {
                 return videoStream.getImage();
             }
-        }
+                }
         public double getTime()
-        {
+                {
             return videoStream.getTime();
-        }
+                }
         public byte getThreshold()
         {
             return threshold;

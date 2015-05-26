@@ -17,6 +17,7 @@ namespace CMVP
         public delegate void sendDataDelegate(string text, double x, double y);
         public sendDataDelegate myDelegate;
         private int maxValuesStored = 300;
+        private Dictionary<Series, Series> seriesOfAllDataPoints;
 
         public PerformanceAnalyzerWindow()
         {
@@ -45,6 +46,11 @@ namespace CMVP
                 s.Points.AddXY(x, y);
                 performanceChart.ChartAreas[0].RecalculateAxesScale();
                 //Console.WriteLine("Adding data point: " + y);
+                Series allDataPoints;
+                if(seriesOfAllDataPoints.TryGetValue(s,out allDataPoints))
+                {
+                    allDataPoints.Points.AddXY(x, y);
+                }
             }
         }
 
@@ -67,6 +73,7 @@ namespace CMVP
                     string name = addSeriesDropDown.SelectedItem.ToString();
 
                     Series series = new Series(name);
+                    seriesOfAllDataPoints.Add(series, new Series(name));
                     performanceChart.Series.Add(series);
                     series.ChartType = SeriesChartType.FastLine;
                     SeriesControl sc = new SeriesControl(name, performanceChart);
@@ -112,12 +119,17 @@ namespace CMVP
 
                     StringBuilder xValues = new StringBuilder();
                     StringBuilder yValues = new StringBuilder();
-                    foreach (DataPoint p in performanceChart.Series.FindByName(c.ToString()).Points)
-                    {
-                        xValues.Append(" " + p.XValue);
-                        yValues.Append(" " + p.YValues[0]);
-                    }
 
+
+                    Series allDataPoints;
+                    if (seriesOfAllDataPoints.TryGetValue(performanceChart.Series.FindByName(c.ToString()), out allDataPoints))
+                    {
+                        foreach (DataPoint p in allDataPoints.Points)
+                        {
+                            xValues.Append(" " + p.XValue);
+                            yValues.Append(" " + p.YValues[0]);
+                        }
+                    }
                     file.WriteLine("X" + seriesCount + " = [" + xValues.ToString().Replace(',', '.') + " ];");
                     file.WriteLine("Y" + seriesCount + " = [" + yValues.ToString().Replace(',', '.') + " ];");
                     file.WriteLine("plot(X" + seriesCount + ", Y" + seriesCount + ");\n");
