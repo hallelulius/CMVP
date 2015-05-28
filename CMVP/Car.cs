@@ -11,7 +11,6 @@ using AForge;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 
-//using Math;
 
 namespace CMVP
 {
@@ -33,7 +32,7 @@ namespace CMVP
         
         //states history
         private ConcurrentQueue<double> speeds;
-        private ConcurrentQueue<double> angles2;
+        private ConcurrentQueue<double> angles;
         private ConcurrentQueue<double> deltaTimes; //time between updates
         private double s, a, d; // output from dequeue, values not used right now
         //The first element in the lists is the last one logged, ie. the current one. (Except speed and angles which is vice versa)
@@ -41,7 +40,6 @@ namespace CMVP
         private List<IntPoint> lastPositions; //A list to prevent flickering.
         private List<bool> foundList; //A list that stores if the car is found or not
         private List<Point> directions; //The direction of the car as a normalized 2D vector.
-        private List<float> angles;//angles
         
         //imageprocessing varibles
         private IntPoint posIP;
@@ -68,9 +66,8 @@ namespace CMVP
             controller = new PIDController(this);
             this.directions = new List<AForge.Point>();
             this.positions = new List<AForge.IntPoint>();
-            this.angles = new List<float>();
             this.speeds = new ConcurrentQueue<double>();
-            this.angles2 = new ConcurrentQueue<double>();
+            this.angles = new ConcurrentQueue<double>();
             this.deltaTimes = new ConcurrentQueue<double>();
             this.lastPositions = new List<IntPoint>();
             this.foundList = new List<bool>();
@@ -81,13 +78,13 @@ namespace CMVP
             {
                 this.directions.Add(dir);
                 this.positions.Add(pos);
-                this.angles.Add(0);
                 this.lastPositions.Add(pos);
                 this.foundList.Add(true);
                 //this.speeds.Enqueue(1.0);
                 this.deltaTimes.Enqueue(0.001F);
-                this.angles2.Enqueue(0);
+                this.angles.Enqueue(0);
             }
+            //to get a smoother average velocity, but a kalman Filter or similar whoud be better
             for (int i = 0; i < 150; i++)
             {
                 this.speeds.Enqueue(1.0);
@@ -136,10 +133,8 @@ namespace CMVP
 
             //angle
             double tempAngle = Math.Atan2(dirIP.Y, dirIP.X);
-            //angles.Insert(0, tempAngle);
-            //angles.Remove(angles.Last());
-            angles2.Enqueue(tempAngle);
-            angles2.TryDequeue(out a);
+            angles.Enqueue(tempAngle);
+            angles.TryDequeue(out a);
 
             //speed
             //Calculate horizontal and vertical movement using the last two elements in the position list.
@@ -154,12 +149,13 @@ namespace CMVP
             lastPosition = lastPositions.First();
             direction = directions.Last();
             deltaTime = deltaTimes.Last();
-            angle = angles2.Last();
+            angle = angles.Last();
             speed = speeds.Last();
 
             if (controller != null)
             {
-                //fixes here!
+                //reference values to the controllers
+                //investigate this, should the meausured speed or the avereage speed be used?
                 controller.setHeading((float)angle);
                 controller.setSpeed((float)getSpeed());
                 
@@ -195,11 +191,11 @@ namespace CMVP
             return (float)angle;
         }
 
-        public override IntPoint getPosition() // Return the cars current position 
+        public override IntPoint getPosition() 
         {
             return position;
         }
-        public Controller getController() // Return the cars controller
+        public Controller getController()
         {
             return controller;
         }
@@ -224,7 +220,7 @@ namespace CMVP
             double tempSpeed = 0;
             lock (this)
             {
-                ConcurrentQueue<double> tempSpeeds = new ConcurrentQueue<double>(speeds); //Copy to prevent exceptions in foreach 
+                ConcurrentQueue<double> tempSpeeds = new ConcurrentQueue<double>(speeds); //Copy to prevent exceptions in foreach, may not be needed anymore
 
                 foreach (double s in tempSpeeds)
                 {

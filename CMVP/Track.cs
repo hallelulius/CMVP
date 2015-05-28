@@ -16,14 +16,17 @@ using AForge.Math;
 
 
 namespace CMVP
-{
+{   
+    /// <summary>
+    /// Load and use tracks from track files created in the MATLAB-script
+    /// </summary>
+
     public class Track
     {
         private string _name;       //Name of the track.
         private string _s;          //The string extracted from the file.
         private int _p = 0;         //A pointer to a character in the string.
         private int _size;          //The number of vertices in the matrix being read.
-        //private float[,] _m;      //The matrix containing the track.
         private List<IntPoint> points;      //The matrix containing the track position.
         private List<float> speeds;         //The list containing the track speed.-
 
@@ -45,8 +48,7 @@ namespace CMVP
             _name = getNextLine();
 
             //Get size of the matrix and create an array accordingly:
-            _size = Convert.ToInt32(getNextWord());
-            //_m = new float[3, _size];
+            _size = Convert.ToInt32(getNextWord()); 
             points = new List<IntPoint>();
             speeds = new List<float>();
 
@@ -56,10 +58,6 @@ namespace CMVP
             {
                 points.Add(new IntPoint(int.Parse(getNextWord()), int.Parse(getNextWord())));
                 speeds.Add(float.Parse(getNextWord(), CultureInfo.InvariantCulture));
-                //_m[0, i] = (float) float.Parse(getNextWord());
-                //_m[1, i] = (float) float.Parse(getNextWord());
-                //_m[2, i] = (float)float.Parse(getNextWord(), CultureInfo.InvariantCulture);
-                //Console.WriteLine(_m[0, i] + "\t" + _m[1, i] + "\t" + _m[2, i]);
             }
 
         }
@@ -108,18 +106,6 @@ namespace CMVP
 
             return sb.ToString();
         }
-
-        /// <summary>
-        /// The matrix representing the track as an 3 * X int array, where X is the number of vertices in the track.
-        /// </summary>
-        /// 
-        /*
-        public float[,] m
-        {
-            get { return _m; }
-        }
-         * */
-
         public List<IntPoint> getPoints()
         {
             return new List<IntPoint>(points);

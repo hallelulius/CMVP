@@ -11,6 +11,9 @@ using AForge;
 
 namespace CMVP
 {
+    /// <summary>
+    /// Not finsihed yet but should be a superclass for items like cars, obtsticles etc.
+    /// </summary>
     public class Item
     {
         AForge.IntPoint position;

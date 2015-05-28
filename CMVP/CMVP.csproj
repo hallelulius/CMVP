@@ -126,6 +126,12 @@
     <Compile Include="ControlStrategy.cs" />
     <Compile Include="Controllers\PIDController.cs" />
     <Compile Include="Communication.cs" />
+    <Compile Include="GUI\KeyboardControlPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\KeyboardControlPanel.Designer.cs">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageProcessing\ImageProcessingGraphics.cs" />
     <Compile Include="GUI\PerformanceAnalyzerWindow.cs">
       <SubType>Form</SubType>
@@ -282,6 +288,9 @@
   <ItemGroup>
     <EmbeddedResource Include="GUI\CameraControlWindow.resx">
       <DependentUpon>CameraControlWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\KeyboardControlPanel.resx">
+      <DependentUpon>KeyboardControlPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\mainGUI.resx">
       <DependentUpon>mainGUI.cs</DependentUpon>

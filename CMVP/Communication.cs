@@ -26,7 +26,7 @@ namespace CMVP
         //Constants used to debug and trim  Vref=3.3V 
         // DO NOT CHANGE! (if you dont know what you are doing)
         //private const byte MAX_THROTTLE = 200;               //output = 2.58V
-        private const byte MAX_THROTTLE = 180;              
+        private const byte MAX_THROTTLE = 180;                 // lower max value used to prevent car slipping
         private const byte NEUTRAL_THROTTLE = 111;            //output = 1.44V
         private const byte MIN_THROTTLE = 7;                 //output = 0.09V
         private const byte NEUTRAL_STEERING = 114;           //output = 1.47V
@@ -160,7 +160,7 @@ namespace CMVP
         /// Used for setting steering angle on a car
         /// </summary>
         /// <param name="carID">The car that should be updated</param>
-        /// <param name="value">Steering value</param>
+        /// <param name="value">Steering value from the controller</param>
         public void updateSteering(int carID, float value)
         {
             float val = 0;
@@ -181,7 +181,7 @@ namespace CMVP
         /// Sends the steering value of a car to the arduino
         /// </summary>
         /// <param name="carID">The car that should be updated</param>
-        /// <param name="value">Steering value</param>
+        /// <param name="value">Steering value from the controller</param>
         private void sendSteering(byte DAC, byte value)
         {
             if (port != null && DAC != ERROR_CODE && value < VOLTAGE_CAP)

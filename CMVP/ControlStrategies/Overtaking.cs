@@ -21,8 +21,8 @@ namespace CMVP.ControlStrategies
 
 
         
-        float smallRadius = 50; //Ska vara adaptiv
-        float bigRadius = 180; //Ska vara adaptiv
+        float smallRadius = 50; //Should be adaptive
+        float bigRadius = 180;  //Should be adaptive
 
         public Overtaking(Car car) : base(car, null, "Overtaking")
         {
@@ -152,7 +152,6 @@ namespace CMVP.ControlStrategies
                 }
 
                 //Find closest point along track, (x,y)=(a+b*t, c+d*t)
-                //float a = tempTrack[0, secClosestIndex]; 
                 float a = modifiedTrack.ElementAt(secClosestIndex).X;
                 float c = modifiedTrack.ElementAt(secClosestIndex).Y;
 

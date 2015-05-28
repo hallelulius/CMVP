@@ -30,8 +30,8 @@ namespace CMVP
             Ki_steer = 0.0010F;
             Ki_throttle = 0.061F;
             // P-controller constants:
-            Kp_steer = 1.44f;        //Ki_steer / Ti_steer
-            Kp_throttle = 0.16f;     // Ki_throttle / Ti_throttle
+            Kp_steer = 1.44f;
+            Kp_throttle = 0.16f;
             // D-controller constants:
             Kd_steer = 0.01f;
             Kd_throttle = 0.0f;
@@ -50,16 +50,14 @@ namespace CMVP
             outThrottle = 0;
             float dT = (float)car.getDeltaTime();
             float errorSpeed = refSpeed - speed / maxSpeed;
-                outThrottle += Kp_throttle * errorSpeed;
+            outThrottle += Kp_throttle * errorSpeed;
             throttleIntegratorSum += errorSpeed * dT;
-                outThrottle += throttleIntegratorSum * Ki_throttle;
-
-                //derivative part here, not fully tested but seems to work 
-                derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
+            outThrottle += throttleIntegratorSum * Ki_throttle;
+            derivativeThrottle = (errorSpeed - prevSpeedError) / dT;
             outThrottle += Kd_throttle * derivativeThrottle;
-                prevSpeedError = errorSpeed;
+            prevSpeedError = errorSpeed;
 
-            
+
 
 
 
@@ -73,8 +71,6 @@ namespace CMVP
             outSteer += -Kp_steer * errorHeading;
             steerIntegratorSum += errorHeading * dT;
             outSteer += -Ki_steer * steerIntegratorSum;
-
-            //derivative part here, not fully tested but seems to work 
             derivativeSteer = (errorHeading - prevHeadingError) / dT;
             outSteer += Kd_steer * derivativeSteer;
             prevHeadingError = errorHeading;

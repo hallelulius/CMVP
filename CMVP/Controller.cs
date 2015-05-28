@@ -15,7 +15,9 @@ using AForge.Math;
 
 namespace CMVP
 {
-
+    /// <summary>
+    /// Superclass for controllers
+    /// </summary>
     public abstract class Controller
     {
         protected float heading;          //heading in angle to x-axis 

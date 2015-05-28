@@ -14,7 +14,9 @@ using FlyCapture2Managed.Gui;
 
 namespace CMVP
 {
-
+    /// <summary>
+    /// Implementation of the Flea3 camera
+    /// </summary>
     public class PTGreyCamera
     {
 
@@ -39,9 +41,8 @@ namespace CMVP
             newImgAvaiable = new AutoResetEvent(false);
             timeMeasured = new AutoResetEvent(true);
             time = 0;
-            sw = new Stopwatch();
+            sw = new Stopwatch(); //used to get time between images, but should be switched to the internal camera timestamp instead
             sw.Start();
-
             Setup();
         }
         ~PTGreyCamera()
