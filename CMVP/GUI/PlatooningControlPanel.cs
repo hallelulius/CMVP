@@ -13,8 +13,6 @@ namespace CMVP
 {
     public partial class PlatooningControlPanel : UserControl
     {
-        Car activeCar;
-
         public PlatooningControlPanel()
         {
             InitializeComponent();

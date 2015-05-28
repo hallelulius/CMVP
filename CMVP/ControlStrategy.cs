@@ -15,6 +15,9 @@ using AForge.Math;
 
 namespace CMVP
 {
+    /// <summary>
+    /// Superclass for control strategies
+    /// </summary>
     public abstract class ControlStrategy
     {
         protected Track track;

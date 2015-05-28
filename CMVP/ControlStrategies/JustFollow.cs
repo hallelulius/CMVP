@@ -17,7 +17,9 @@ namespace CMVP.ControlStrategies
 {
     class JustFollow : ControlStrategy
     {
-
+        /// <summary>
+        /// Control strategy that just follows the selected track
+        /// </summary>
         int lastIndex = -1;
         
         public JustFollow(Car car) : base(car,null, "Follow track")
@@ -65,7 +67,7 @@ namespace CMVP.ControlStrategies
                     //else
                     //tempQuality = 0.01f*lengthToPoint*lengthToPoint + 20f*angleToPoint*angleToPoint + indexDistance*indexDistance;
                     //if(tempQuality < quality && lengthToPoint > 45)
-                    tempQuality = 0.05f*lengthToPoint +  angleToPoint + indexDistance;
+                    tempQuality = 0.05f*lengthToPoint +  angleToPoint + indexDistance; //These values could be tuned for better results
                     if(tempQuality < quality && lengthToPoint > 60 )
                     {
                         quality = tempQuality;

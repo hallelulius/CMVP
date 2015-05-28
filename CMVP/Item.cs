@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-
-
 using AForge.Imaging;
 using AForge.Math.Geometry;
 using AForge.Math;
 using AForge;
 
-//using Math;
 
 namespace CMVP
 {
+    /// <summary>
+    /// Not finsihed yet but should be a superclass for items like cars, obtsticles etc.
+    /// </summary>
     public class Item
     {
         AForge.IntPoint position;

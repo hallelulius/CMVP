@@ -16,14 +16,10 @@ namespace CMVP.ControlStrategies
         private Car followed_car;
         private bool following_leader = false;
         private float desiredDistance = 2*73.0f; // Predetemined distance desired between the car and the leader in pixels. (73 pixels = 13 cm)
-        // private int searchDistance = 200;
         private int lastIndex = -1;
         private float control_error;
 
         // Control Parameters
-        //private float Kp = 0.01f;
-        //private float Ki = 0.0006f;
-        //private float Kd = 0.0006f;
         private float Kp = 0.002f;
         private float Ki = 0.0000f;
         private float Kd = 0.0000f;
@@ -120,8 +116,6 @@ namespace CMVP.ControlStrategies
                     Console.WriteLine("Track follower!");
                 }
 
-                IntPoint refPoint = new IntPoint();
-                bool pointIsFound = false;
                 // Start of JustFollow(). The code is adjusted to suit platooning but it use JustFollow() as a base. 
                 int index = -1;
                 float quality = 9999;

@@ -41,10 +41,11 @@ namespace CMVP
         }
         public void run()
         {
+            int carNotFoundCounter = 0;
             cars = Program.cars;
             while (true)
             {
-                whBrain.WaitOne(); //wait for imageprocessing to finish
+                whBrain.WaitOne();  //wait for imageprocessing to finish
                 whDataUsed.Reset(); // stop image processing
 
                 foreach (Car car in cars)
@@ -74,10 +75,10 @@ namespace CMVP
                         {
                             // car.stop();
                             car.send();
-                            Console.WriteLine("Car not found");
+                            Console.WriteLine("Car not found: "+carNotFoundCounter++);
                         }
                     }
-                    whDataUsed.Set();
+                    whDataUsed.Set(); // continue image processing
                 }
                 else
                 {

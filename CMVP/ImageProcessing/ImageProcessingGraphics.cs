@@ -11,9 +11,11 @@ using System.Windows.Forms;
 
 namespace CMVP
 {
+
+    // This class makes all the drawing to the graphical interface.
     class ImageProcessingGraphics
     {
-        //used for drawing
+        //static pens that is used for drawing
         static private Pen redPen = new Pen(Color.Red, 2);
         static private Pen bluePen = new Pen(Color.LightSkyBlue, 2);
         static private Pen greenPen = new Pen(Color.Green, 2);
@@ -22,11 +24,14 @@ namespace CMVP
         static private Pen[] penArray = { bluePen, greenPen, yellowPen, turquoisePen };
         private Graphics g;
 
-        private Bitmap img;
-        private ImageProcessing ip;
-        private System.Timers.Timer timer;
-        private Object locker;
-        private Panel panel;
+
+        private Bitmap img;                     // The image to display.
+        private ImageProcessing ip;             // The image process.
+        private System.Timers.Timer timer;      // Update Timer.
+        private Object locker;                  
+        private Panel panel;                    // The panel which needs to be updated.
+
+        //Variable used to determine what to draw
         public Boolean drawCirclesOnImg;
         public Boolean drawDirectionOnImg;
         public Boolean drawWindowsOnImg;
@@ -37,9 +42,11 @@ namespace CMVP
         public Boolean drawTailsOnImg;
 
 
-        static private int blobMin = 2;
-        static private int blobMax = 6;
+        static private int blobMin = 2;         //Determine how big blobs should be accepted. Do not forgett to change in both ImageProcessing and ImageProcessingGraphics.
+        static private int blobMax = 6;         //Determine how big blobs should be accepted. Do not forgett to change in both ImageProcessing and ImageProcessingGraphics.
 
+
+        //Creates the imageProcessingGraphics
         public ImageProcessingGraphics(ImageProcessing ip)
         {
             standardSettings();
@@ -59,6 +66,7 @@ namespace CMVP
         {
             this.panel = panel;
         }
+        //Settings when the window is opened.
         private void standardSettings(){
             this.drawCirclesOnImg = false;
             this.drawCenterOnImg = false;
@@ -66,6 +74,7 @@ namespace CMVP
             this.drawDirectionOnImg = false;
             this.drawTailsOnImg = false;
         }
+        //Draws the circels that has been found by blobfinder as red circles.
         private void drawCircles(List<Blob> cirkels)
         {
             foreach (Blob cirkel in cirkels)
@@ -73,7 +82,7 @@ namespace CMVP
                 g.DrawEllipse(redPen, cirkel.Rectangle);
             }
         }
-
+        //Draws features and updates the image if there is a panel to update-
         public void OnEvent(object source, ElapsedEventArgs e)
         {
             lock(locker){
@@ -85,45 +94,28 @@ namespace CMVP
             }    
             
         }
+        //Returns a bitmap that has all the animations on the image.
         Bitmap drawFeaturesOnImg()
         {
-
+            //If it cant get a image from the image process then just make an empty bitmap.
             if (ip.getImage() != null)
                 img = (Bitmap)ip.getImage();
             else
                 return new Bitmap(10, 10);
             this.g = Graphics.FromImage(img);
+
             foreach (Car car in Program.cars)
             {
+                //retain the blobs from the image process without disturbing it and draws them on the image.
                 if (drawCirclesOnImg)
                 {
                     List<Blob> cirkels = ip.getBlobsSlow(blobMin, blobMax, img);
                     drawCircles(cirkels);
                 }
+                //retain the position history of each car and draws it on the image.
                 if (drawTailsOnImg)
                 {
-                    //turquoise if the car is found else red
                     List<System.Drawing.Point> positionHistory = new List<System.Drawing.Point>();
-                    
-                    /*IntPoint p1 = car.getPositionHistory().First();
-                    bool b1 = car.getFoundList().First();
-                    for (int i = 0; i < car.HISTORY_LENGTH; i++)
-                    {
-                        IntPoint p2 = car.getPositionHistory().ElementAt(i);
-                        bool b2 = car.getFoundList().ElementAt(i);
-                        if (b1)
-                        {
-                            g.DrawLine(turquoisePen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
-
-                        }
-                        else
-                        {
-                            g.DrawLine(redPen, new System.Drawing.Point(p1.X, p1.Y), new System.Drawing.Point(p2.X, p2.Y));
-                        }
-                        p1 = p2;
-                        b1 = b2;
-                    }
-                     * */
                     foreach (AForge.IntPoint p in car.getPositionHistory())
                     {
                         positionHistory.Add(new System.Drawing.Point(p.X, p.Y));
@@ -132,6 +124,7 @@ namespace CMVP
 
                 }
 
+                //Draws the tracks on the image if there is one otherwise it will write no track
                 Controller controller = car.getController();
                 ControlStrategy controlStra = car.getControlStrategy();
                 float dir = controller.getRefHeading();
@@ -153,6 +146,7 @@ namespace CMVP
                         g.DrawString("This Car has no track", new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular), Brushes.Green, pos);
 
                     }
+                    //draws the direction to the next point.
                     if (drawRefHeadingOnImg)
                     {
                         float heading = car.getController().getRefHeading();
@@ -163,6 +157,7 @@ namespace CMVP
                     }
 
                 }
+                //Writes the car id on the image
                 if (drawCarIdOnImg)
                 {
                     Font f = new Font(FontFamily.GenericSansSerif, 12.0F, FontStyle.Regular);
@@ -188,6 +183,7 @@ namespace CMVP
                 }
                  */
             }
+            //Draws the window where the image process i croping the image.
             if (drawWindowsOnImg)
                 foreach (Car car in Program.cars)
                 {
@@ -206,6 +202,7 @@ namespace CMVP
                         cropY = img.Height - windowSize.Height;
                     g.DrawRectangle(redPen, new Rectangle(cropX, cropY, windowSize.Width, windowSize.Width));
                 }
+            //Draws the center of each car on the image.
             foreach (Car car in Program.cars)
             {
                 if (drawCenterOnImg)
